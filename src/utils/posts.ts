@@ -160,6 +160,30 @@ export function groupByYearMonth(
     }));
 }
 
+/**
+ * Resolve whether a post should display its featured (hero) image,
+ * considering the per-post override (`showFeaturedImage`) and the
+ * site-wide default (`SITE.showFeaturedImages`).
+ *
+ * Returns `false` when there is no `heroImage` to show.
+ */
+export function shouldShowHero(post: Post): boolean {
+  if (!post.data.heroImage) return false;
+  return post.data.showFeaturedImage ?? SITE.showFeaturedImages;
+}
+
+/** The hero image source URL/path for a post (or undefined). */
+export function heroImageSrc(post: Post): string | undefined {
+  const img = post.data.heroImage;
+  if (!img) return undefined;
+  if (typeof img === 'string') return img;
+  // Accept Astro image-import objects defensively (legacy posts)
+  if (typeof img === 'object' && 'src' in (img as Record<string, unknown>)) {
+    return (img as { src: string }).src;
+  }
+  return undefined;
+}
+
 /** Slugify a tag/category for use in URLs. */
 export function slugify(value: string): string {
   return value

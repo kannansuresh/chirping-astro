@@ -28,6 +28,10 @@ const baseFrontmatter = z.object({
   categories: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
   heroImage: z.string().optional(),
+  /** Optional alt-text for the hero/featured image. */
+  heroImageAlt: z.string().optional(),
+  /** Per-post override of SITE.showFeaturedImages (cards + hero). */
+  showFeaturedImage: z.boolean().optional(),
   canonicalURL: z.url().optional(),
   comments: z.boolean().optional(),
   toc: z.boolean().default(true),
@@ -47,15 +51,25 @@ const baseFrontmatter = z.object({
 
 export type PostFrontmatter = z.infer<typeof baseFrontmatter>;
 
+/**
+ * NOTE on `heroImage`:
+ *
+ * It is intentionally typed as a plain string (not `image()`) so it can
+ * accept either:
+ *   - a public path (e.g. `/images/sample.jpg`)
+ *   - an external URL (e.g. an Unsplash CDN link)
+ *   - any absolute http(s) URL
+ *
+ * Authors who want Astro's image-asset pipeline can still import the asset
+ * inside an MDX file and use `<Image>` directly.
+ */
+
 const posts = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
     base: './src/content/posts',
   }),
-  schema: ({ image }) =>
-    baseFrontmatter.extend({
-      heroImage: image().optional(),
-    }),
+  schema: baseFrontmatter,
 });
 
 const pages = defineCollection({
@@ -63,14 +77,12 @@ const pages = defineCollection({
     pattern: '**/*.{md,mdx}',
     base: './src/content/pages',
   }),
-  schema: ({ image }) =>
-    baseFrontmatter
-      .partial({ pubDate: true })
-      .extend({
-        heroImage: image().optional(),
-        /** Pages don't paginate or appear in archives. */
-        showInNav: z.boolean().default(false),
-      }),
+  schema: baseFrontmatter
+    .partial({ pubDate: true })
+    .extend({
+      /** Pages don't paginate or appear in archives. */
+      showInNav: z.boolean().default(false),
+    }),
 });
 
 export const collections = { posts, pages };

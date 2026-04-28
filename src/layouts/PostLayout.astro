@@ -14,7 +14,15 @@ import {
   localizedPath,
 } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
-import { type Post, tagPath, categoryPath, getTranslations, postPath } from '../utils/posts';
+import {
+  type Post,
+  tagPath,
+  categoryPath,
+  getTranslations,
+  postPath,
+  heroImageSrc,
+  shouldShowHero,
+} from '../utils/posts';
 import { buildSeo } from '../utils/seo';
 import type { MarkdownHeading } from 'astro';
 
@@ -43,26 +51,22 @@ for (const [lang, p] of Object.entries(translations)) {
 const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
 const pathWithoutLocale = stripLocale(Astro.url.pathname);
 
+const heroSrc = heroImageSrc(post);
+const showHero = shouldShowHero(post);
+const heroAlt = post.data.heroImageAlt ?? '';
+
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
   pathWithoutLocale,
   fullPath: Astro.url.pathname,
   locale,
-  ogImage:
-    typeof post.data.heroImage === 'string'
-      ? post.data.heroImage
-      : post.data.heroImage?.src,
+  ogImage: heroSrc,
   type: 'article',
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
 });
-
-const heroSrc =
-  typeof post.data.heroImage === 'string'
-    ? post.data.heroImage
-    : post.data.heroImage?.src;
 
 const crumbs = [
   { label: t('nav.posts'), href: localizedPath('/', locale) },
@@ -119,15 +123,20 @@ const crumbs = [
         </div>
       </header>
 
-      {heroSrc && (
-        <figure class="mb-8 -mx-5 sm:-mx-8">
+      {showHero && heroSrc && (
+        <figure class="post-hero mb-8 -mx-5 sm:-mx-8">
           <img
             src={heroSrc}
-            alt=""
+            alt={heroAlt}
             class="w-full border-y border-base-300"
             loading="eager"
             decoding="async"
           />
+          {heroAlt && (
+            <figcaption class="px-5 pt-2 text-center text-xs text-base-content/55 sm:px-8">
+              {heroAlt}
+            </figcaption>
+          )}
         </figure>
       )}
 

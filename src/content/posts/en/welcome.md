@@ -6,6 +6,8 @@ updatedDate: 2026-04-22
 tags: [astro, tailwind, daisyui, theme]
 categories: [Announcements]
 translationKey: welcome
+heroImage: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1600&q=80&auto=format&fit=crop
+heroImageAlt: A clean MacBook keyboard photographed close-up
 pinned: true
 toc: true
 ---

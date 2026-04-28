@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -38,6 +39,10 @@ export default defineConfig({
         light: 'github-light',
         dark: 'github-dark-dimmed',
       },
+      // Emit CSS variables so the active code-block theme follows the
+      // [data-theme] attribute on <html>. Pair with the CSS in global.css
+      // that swaps `--shiki-light` / `--shiki-dark`.
+      defaultColor: false,
       wrap: true,
     },
     remarkPlugins: [remarkGfm],
@@ -66,6 +71,11 @@ export default defineConfig({
   },
 
   integrations: [
+    icon({
+      // Astro-Icon will tree-shake from @iconify-json/lucide so only the
+      // icons actually referenced make it into the build.
+      iconDir: 'src/icons',
+    }),
     mdx(),
     sitemap({
       i18n: {

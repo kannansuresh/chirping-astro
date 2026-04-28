@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../config';
 import { formatDate, isoDate } from '../i18n/utils';
-import { type Post, postPath } from '../utils/posts';
+import { type Post, postPath, heroImageSrc, shouldShowHero } from '../utils/posts';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -11,11 +11,9 @@ interface Props {
 
 const { post, locale } = Astro.props;
 const href = postPath(post);
-const heroSrc =
-  typeof post.data.heroImage === 'string'
-    ? post.data.heroImage
-    : post.data.heroImage?.src;
-const hasImage = Boolean(heroSrc);
+const heroSrc = heroImageSrc(post);
+const hasImage = Boolean(heroSrc) && shouldShowHero(post);
+const heroAlt = post.data.heroImageAlt ?? '';
 ---
 <article class="chirpy-card">
   <a href={href} class:list={['chirpy-card-link', hasImage ? 'has-image' : '']}>
@@ -23,7 +21,7 @@ const hasImage = Boolean(heroSrc);
       <div class="chirpy-card-image-wrap">
         <img
           src={heroSrc}
-          alt=""
+          alt={heroAlt}
           class="chirpy-card-image"
           loading="lazy"
           decoding="async"
@@ -32,7 +30,7 @@ const hasImage = Boolean(heroSrc);
     )}
 
     <div class:list={['chirpy-card-body', hasImage ? '' : 'full']}>
-      <h2 class="mt-0 text-2xl font-bold leading-snug tracking-tight text-base-content sm:text-[1.55rem]">
+      <h2 class="chirpy-card-title">
         {post.data.title}
       </h2>
 

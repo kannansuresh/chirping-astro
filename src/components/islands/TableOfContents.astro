@@ -1,7 +1,16 @@
 ---
 /**
- * Sticky TOC with scroll-spy. Renders Astro's `headings` array (H2..H4)
- * and highlights the active entry based on viewport intersection.
+ * Sticky TOC with scroll-spy.
+ *
+ * Renders Astro's `headings` array (H2..H4) and highlights the active
+ * entry based on viewport intersection. Behavior:
+ *
+ *  - H2 entries are ALWAYS visible.
+ *  - H3 / H4 entries are hidden by default and only revealed for the
+ *    currently active H2 section (computed at render time: each child
+ *    item carries `data-toc-parent="<slug-of-its-H2>"`).
+ *  - The active H2 is the most recent H2 above (or containing) the
+ *    currently visible heading reported by IntersectionObserver.
  */
 import { useTranslations } from '../../i18n/utils';
 import type { Locale } from '../../config';
@@ -15,6 +24,15 @@ interface Props {
 const { headings, locale } = Astro.props;
 const t = useTranslations(locale);
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+
+// Pre-compute the "parent H2" slug for every item. For depth=2 it is the
+// item's own slug; for depth=3/4 it is the most recent depth=2 slug
+// encountered while iterating in document order.
+let currentH2: string | undefined;
+const decorated = items.map((h) => {
+  if (h.depth === 2) currentH2 = h.slug;
+  return { ...h, parent: h.depth === 2 ? h.slug : (currentH2 ?? h.slug) };
+});
 ---
 {items.length > 0 && (
   <nav
@@ -24,10 +42,10 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
     <h2 id="toc-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
       {t('post.toc')}
     </h2>
-    <ol class="space-y-1">
-      {items.map((h) => (
-        <li class={`toc-level-${h.depth}`}>
-          <a href={`#${h.slug}`} data-toc-link={h.slug}>
+    <ol class="toc-list space-y-1">
+      {decorated.map((h) => (
+        <li class={`toc-level-${h.depth}`} data-toc-parent={h.parent}>
+          <a href={`#${h.slug}`} data-toc-link={h.slug} data-toc-depth={h.depth}>
             {h.text}
           </a>
         </li>
@@ -37,20 +55,58 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 )}
 
 <script>
-  function initScrollSpy() {
-    const links = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+  function initSmartToc() {
+    const root = document.querySelector<HTMLElement>('.toc');
+    if (!root) return;
+    const links = root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
     if (!links.length) return;
-    const map = new Map<string, HTMLAnchorElement>();
+
+    const items = root.querySelectorAll<HTMLLIElement>('li[data-toc-parent]');
+
+    const linkBySlug = new Map<string, HTMLAnchorElement>();
     links.forEach((a) => {
       const id = a.dataset.tocLink;
-      if (id) map.set(id, a);
+      if (id) linkBySlug.set(id, a);
     });
 
-    const headings = Array.from(map.keys())
+    // Map slug -> parent H2 slug (for child entries) for quick lookups.
+    const parentBySlug = new Map<string, string>();
+    items.forEach((li) => {
+      const a = li.querySelector<HTMLAnchorElement>('[data-toc-link]');
+      const slug = a?.dataset.tocLink;
+      const parent = li.dataset.tocParent;
+      if (slug && parent) parentBySlug.set(slug, parent);
+    });
+
+    const headingEls = Array.from(linkBySlug.keys())
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
-    if (!headings.length) return;
+    if (!headingEls.length) return;
+
+    function setActiveSection(activeSlug: string) {
+      const activeH2 = parentBySlug.get(activeSlug) ?? activeSlug;
+
+      links.forEach((a) =>
+        a.dataset.tocLink === activeSlug
+          ? a.setAttribute('data-active', 'true')
+          : a.removeAttribute('data-active'),
+      );
+
+      items.forEach((li) => {
+        const a = li.querySelector<HTMLAnchorElement>('[data-toc-link]');
+        const depth = parseInt(a?.dataset.tocDepth ?? '2', 10);
+        const parent = li.dataset.tocParent ?? '';
+        if (depth === 2) {
+          li.dataset.sectionActive = parent === activeH2 ? 'current' : 'true';
+        } else {
+          li.dataset.sectionActive = parent === activeH2 ? 'true' : 'false';
+        }
+      });
+    }
+
+    // Default: open the first section before any scroll happens.
+    if (headingEls.length) setActiveSection(headingEls[0].id);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -58,19 +114,14 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
         if (!visible.length) return;
-        const id = visible[0].target.id;
-        links.forEach((a) =>
-          a.dataset.tocLink === id
-            ? a.setAttribute('data-active', 'true')
-            : a.removeAttribute('data-active'),
-        );
+        setActiveSection(visible[0].target.id);
       },
       { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
     );
 
-    headings.forEach((h) => observer.observe(h));
+    headingEls.forEach((h) => observer.observe(h));
   }
 
-  initScrollSpy();
-  document.addEventListener('astro:page-load', initScrollSpy);
+  initSmartToc();
+  document.addEventListener('astro:page-load', initSmartToc);
 </script>

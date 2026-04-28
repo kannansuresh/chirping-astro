@@ -1,0 +1,46 @@
+---
+title: Petit essai photo en bord de mer
+description: Un article court et illustré qui montre les images mises en avant servies depuis le dossier /public local, en plus d'images insérées dans le corps.
+pubDate: 2026-04-21
+tags: [photography, design, images]
+categories: [Essais]
+translationKey: coastal-photo-essay
+heroImage: /images/coastline.jpg
+heroImageAlt: Une vague s'écrasant sur une côte rocheuse à l'heure dorée
+toc: false
+---
+
+Les images mises en avant n'ont pas besoin de venir d'un CDN. L'image
+d'en-tête de cet article est livrée avec le thème, directement depuis
+`public/images/`. C'est parfait pour des couvertures qui doivent suivre
+l'article — chapitres de livre, numéros anniversaires, démos de thème.
+
+L'image ci-dessus se trouve à `/images/coastline.jpg` et est référencée
+dans le frontmatter :
+
+```yaml
+heroImage: /images/coastline.jpg
+heroImageAlt: Une vague s'écrasant sur une côte rocheuse à l'heure dorée
+```
+
+## Des images dans le corps également
+
+Vous pouvez tout à fait mêler des URLs distantes (Unsplash, votre CDN,
+GitHub raw) à l'intérieur du contenu. Ci-dessous, une photo issue d'Unsplash :
+
+![Une forêt brumeuse à l'aube, contre-jour](https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&q=80&auto=format&fit=crop)
+
+L'image est chargée en différé — rien n'est téléchargé tant qu'on ne
+défile pas jusqu'à elle.
+
+## Pourquoi supporter les deux ?
+
+- **Local** est idéal pour les ressources qui suivent le code source
+  (logos, démos de thème, photos retouchées à la main, illustrations).
+- **Distant** garde le dépôt léger et permet de changer une photo sans
+  redéployer.
+
+Vous pouvez aussi désactiver les images mises en avant article par
+article en plaçant `showFeaturedImage: false` dans le frontmatter — le
+corps de l'article continuera de contenir les images que vous y avez
+glissées vous-même.

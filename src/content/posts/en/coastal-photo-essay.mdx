@@ -1,0 +1,44 @@
+---
+title: A coastal photo essay
+description: A short, image-rich post that demonstrates featured images served from the local /public folder alongside inline body images.
+pubDate: 2026-04-21
+tags: [photography, design, images]
+categories: [Essays]
+translationKey: coastal-photo-essay
+heroImage: /images/coastline.jpg
+heroImageAlt: A wave crashing onto a rocky coastline at golden hour
+toc: false
+---
+
+Featured images don't have to come from a CDN. This article's hero image
+is bundled with the theme and served straight from `public/images/`. That
+makes it perfect for cover art that ships with the post itself — book
+chapters, anniversary specials, theme demos.
+
+The image above lives at `/images/coastline.jpg` and is referenced from
+the post's frontmatter:
+
+```yaml
+heroImage: /images/coastline.jpg
+heroImageAlt: A wave crashing onto a rocky coastline at golden hour
+```
+
+## Inline images, too
+
+You can keep mixing remote URLs (Unsplash, your CDN, a GitHub raw URL)
+inside the body. Below, an unrelated photo from Unsplash:
+
+![A misty forest at dawn, lit from behind](https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&q=80&auto=format&fit=crop)
+
+That image is loaded lazily — no work is done until you scroll near it.
+
+## Why support both?
+
+- **Local** is great for assets that ship with the source (logos, theme
+  demos, hand-edited photos, illustrations).
+- **Remote** keeps the repo small and lets you swap a photo without a
+  redeploy.
+
+You can also opt out of featured images on a per-post basis by setting
+`showFeaturedImage: false` in the frontmatter — the body will still
+contain whatever inline images you've placed yourself.

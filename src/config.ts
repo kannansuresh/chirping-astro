@@ -30,6 +30,12 @@ export interface SiteConfig {
   postsPerPage: number;
   /** Display ISO 8601 date format if true, otherwise locale-aware. */
   isoDates: boolean;
+  /**
+   * Site-wide default for whether posts should display their featured
+   * image (in cards on listings, and as a hero on the post page).
+   * Each post may override via the `showFeaturedImage` frontmatter flag.
+   */
+  showFeaturedImages: boolean;
 }
 
 export interface NavItem {
@@ -88,6 +94,7 @@ export const SITE: SiteConfig = {
   locales: ['en', 'fr'] as const,
   postsPerPage: 8,
   isoDates: false,
+  showFeaturedImages: true,
 };
 
 export const NAV: readonly NavItem[] = [

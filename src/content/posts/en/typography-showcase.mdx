@@ -1,0 +1,207 @@
+---
+title: The complete typography & Markdown showcase
+description: Every text element you'll meet on this theme — headings, lists, blockquotes, tables, callouts, inline code, fenced code blocks, footnotes and images.
+pubDate: 2026-04-26
+updatedDate: 2026-04-27
+tags: [typography, markdown, mdx, design]
+categories: [Reference]
+translationKey: typography-showcase
+heroImage: https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop
+heroImageAlt: An open book on a wooden desk with strong directional light
+toc: true
+---
+
+import Callout from '../../../components/Callout.astro';
+
+This post is a kitchen-sink reference for every text element the theme
+renders. Use it to verify that custom CSS, font choices, and code-block
+themes all stay coherent in **light** _and_ **dark** mode.
+
+## Paragraphs and inline formatting
+
+Astro fully supports the standard Markdown inline grammar. You can write
+**bold**, _italic_, ~~strikethrough~~, `inline code`, and even nested
+`**bold inside code**` (rendered as plain code). Combinations like
+**_bold italic_** and `code with **markup**` work too. Long URLs
+turn into clickable links: [astro.build](https://astro.build).
+
+> "Typography is the craft of endowing human language with a durable
+> visual form." — _Robert Bringhurst_
+
+A second paragraph keeps the rhythm. The line height, margin, and
+`max-width` are tuned for comfortable reading on both desktop and mobile.
+
+### A third-level heading
+
+Used to break up long sections. The TOC on the right will reveal these
+H3s only while you're inside this section's H2.
+
+#### And a fourth-level heading
+
+Useful for very dense material. Rarely needed, always supported.
+
+## Lists
+
+Unordered list:
+
+- A first item with a [link to the homepage](/).
+- A second item with **bold text** and `inline code`.
+- A nested item:
+  - With its own children.
+  - And a deeper nested item.
+    - Three levels deep, no problem.
+
+Ordered list:
+
+1. Pick a topic.
+2. Outline the post — H2 for sections, H3 for subsections.
+3. Write the first draft straight through, no editing.
+4. Sleep on it.
+5. Edit ruthlessly.
+
+Task list (GFM):
+
+- [x] Wire up Tailwind v4
+- [x] Theme switcher
+- [ ] Reach the bottom of the typography post
+
+## Blockquotes
+
+> Single-line blockquote.
+
+> A multi-line blockquote.
+>
+> > Nested quote that emphasises a sub-point — not used often, but the
+> > theme handles it gracefully.
+>
+> Continuing the outer quote after the nested fragment.
+
+## Tables
+
+| Feature        | Markdown | MDX | Notes                              |
+| -------------- | :------: | :-: | ---------------------------------- |
+| Headings       |    ✓     |  ✓  | H1–H4 with anchor links            |
+| Code blocks    |    ✓     |  ✓  | Shiki dual theme                   |
+| Components     |          |  ✓  | `<Callout>` and friends            |
+| JS expressions |          |  ✓  | `{new Date().toDateString()}`      |
+| Footnotes      |    ✓     |  ✓  | GFM-style[^1]                      |
+
+[^1]: Like this one.
+
+## Inline code and keyboard shortcuts
+
+Reach for `inline code` to highlight identifiers (`SITE.showFeaturedImages`)
+or short snippets (`bun astro dev`). For keyboard shortcuts, prefer the
+`<kbd>` tag: press <kbd>Cmd</kbd> + <kbd>K</kbd> to open search.
+
+## Fenced code blocks
+
+A TypeScript example:
+
+```ts
+// utils/posts.ts
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE, type Locale } from '../config';
+
+export function shouldShowHero(post: CollectionEntry<'posts'>): boolean {
+  if (!post.data.heroImage) return false;
+  return post.data.showFeaturedImage ?? SITE.showFeaturedImages;
+}
+```
+
+A bash example:
+
+```bash
+# Run the dev server, then build for production
+bun install
+bun run dev
+bun run build
+```
+
+A diff:
+
+```diff
+- const heroSrc = typeof img === 'string' ? img : img?.src;
++ const heroSrc = heroImageSrc(post);
++ const showHero = shouldShowHero(post);
+```
+
+A YAML frontmatter:
+
+```yaml
+title: Hello world
+pubDate: 2026-04-26
+tags: [astro, theme]
+heroImage: /images/coastline.jpg
+showFeaturedImage: true
+```
+
+## Callouts
+
+The `<Callout>` MDX component renders one of four semantic variants:
+
+<Callout type="info" title="Info">
+The active daisyUI theme drives every callout colour, so they stay
+readable in both light and dark mode.
+</Callout>
+
+<Callout type="success" title="Success">
+You just shipped a clean post. Treat yourself.
+</Callout>
+
+<Callout type="warning" title="Warning">
+Avoid manually setting `lang:` in frontmatter unless you really need to —
+the theme infers it from the file path.
+</Callout>
+
+<Callout type="error" title="Error">
+Forgetting `pubDate` will cause the build to fail with a clear Zod error.
+</Callout>
+
+In plain Markdown you can also reach for the lower-level callout class:
+
+<div class="callout callout-info">
+  <strong>Note:</strong> set <code>toc: false</code> in frontmatter to
+  hide the table of contents on a per-post basis.
+</div>
+
+## Images
+
+Inline images render edge-to-edge inside the prose column:
+
+![Light streaming through a window onto a wooden desk](https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=80&auto=format&fit=crop)
+
+You can also place a captioned figure with a small `<figcaption>`:
+
+<figure>
+  <img
+    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80&auto=format&fit=crop"
+    alt="A close-up of a MacBook keyboard"
+    loading="lazy"
+  />
+  <figcaption>Photo by Ales Nesetril on Unsplash</figcaption>
+</figure>
+
+## Horizontal rules
+
+Use them sparingly to mark a strong topic shift:
+
+---
+
+After a horizontal rule the rhythm restarts. Anything you put underneath
+(text, code, images) gets a fresh top margin.
+
+## Definition lists
+
+Term
+: Definition for the term, rendered with a slight indent.
+
+Another term
+: With a longer definition spread across multiple lines, useful for
+  glossaries and reference posts like this one.
+
+## Closing thought
+
+If something you'd expect to render gracefully looks broken on this page,
+that's a bug — please report it. The goal of this post is to be a single
+source of truth for every text element the theme supports.
