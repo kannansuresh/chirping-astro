@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
-import { getPosts, postSlug, type Post } from '../../utils/posts';
+import { getPosts, postSlug, sortPostsByDate, type Post } from '../../utils/posts';
 
 interface Props {
   post: Post;
@@ -12,10 +12,20 @@ interface Props {
 export async function getStaticPaths() {
   const locale = 'en';
   const posts = await getPosts(locale);
-  return posts.map((post, i) => ({
-    params: { slug: postSlug(post) },
-    props: { post, prev: posts[i + 1], next: posts[i - 1] } satisfies Props,
-  }));
+  // Compute prev/next from a strictly chronological order so pinned
+  // posts don't label a newer post as "Previous".
+  const chronological = sortPostsByDate(posts);
+  return posts.map((post) => {
+    const i = chronological.findIndex((p) => p.id === post.id);
+    return {
+      params: { slug: postSlug(post) },
+      props: {
+        post,
+        prev: chronological[i + 1],
+        next: chronological[i - 1],
+      } satisfies Props,
+    };
+  });
 }
 
 const { post, prev, next } = Astro.props as Props;

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations, localizedPath } from '../../i18n/utils';
 import { getPosts, getTagsWithCount, slugify } from '../../utils/posts';
 
 interface Props {
@@ -28,6 +28,10 @@ const posts = (await getPosts(locale)).filter((p) =>
 <BaseLayout
   title={`#${tagName}`}
   pathWithoutLocale={`/tags/${tag}/`}
+  crumbs={[
+    { label: t('tags.title'), href: localizedPath('/tags/', locale) },
+    { label: `#${tagName}` },
+  ]}
 >
   <header class="mb-6">
     <p class="text-sm uppercase tracking-wide text-base-content/60">{t('list.tagPosts')}</p>

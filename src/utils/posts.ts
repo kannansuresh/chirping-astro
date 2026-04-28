@@ -67,6 +67,21 @@ export function sortPosts(posts: Post[]): Post[] {
   });
 }
 
+/**
+ * Sort posts strictly by `pubDate` (newest first), ignoring `pinned`.
+ *
+ * Used for prev/next post navigation: pinned posts shouldn't yank the
+ * latest entry to position 0 and break the chronological chain (which
+ * would label a newer post as "Previous" of an older pinned post).
+ */
+export function sortPostsByDate(posts: Post[]): Post[] {
+  return [...posts].sort((a, b) => {
+    const at = a.data.pubDate?.valueOf?.() ?? 0;
+    const bt = b.data.pubDate?.valueOf?.() ?? 0;
+    return bt - at;
+  });
+}
+
 /** Get all posts for a locale (drafts hidden in prod, sorted). */
 export async function getPosts(locale: Locale): Promise<Post[]> {
   const all = await getCollection('posts', (entry) => {

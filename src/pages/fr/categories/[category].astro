@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PostList from '../../../components/PostList.astro';
-import { useTranslations } from '../../../i18n/utils';
+import { useTranslations, localizedPath } from '../../../i18n/utils';
 import { getPosts, getCategoriesWithCount, slugify } from '../../../utils/posts';
 
 interface Props {
@@ -25,7 +25,14 @@ const posts = (await getPosts(locale)).filter((p) =>
   p.data.categories.some((c) => slugify(c) === category),
 );
 ---
-<BaseLayout title={categoryName} pathWithoutLocale={`/categories/${category}/`}>
+<BaseLayout
+  title={categoryName}
+  pathWithoutLocale={`/categories/${category}/`}
+  crumbs={[
+    { label: t('categories.title'), href: localizedPath('/categories/', locale) },
+    { label: categoryName },
+  ]}
+>
   <header class="mb-6">
     <p class="text-sm uppercase tracking-wide text-base-content/60">{t('list.categoryPosts')}</p>
     <h1 class="text-3xl font-bold tracking-tight">{categoryName}</h1>
