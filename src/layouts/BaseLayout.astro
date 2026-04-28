@@ -113,24 +113,26 @@ const meta: SeoMeta =
     <Sidebar locale={locale} />
 
     <div class="chirpy-main-wrapper">
-      <Topbar locale={locale} crumbs={crumbs} />
+      <div class="chirpy-shell">
+        <Topbar locale={locale} crumbs={crumbs} />
 
-      <div class="flex flex-1 gap-8 py-6">
-        <main
-          id="main"
-          aria-label="Main Content"
-          class:list={[
-            'min-w-0 flex-1',
-            narrow ? 'mx-auto max-w-3xl' : '',
-          ]}
-        >
-          <slot />
-        </main>
+        <div class="flex flex-1 gap-8 py-6">
+          <main
+            id="main"
+            aria-label="Main Content"
+            class:list={[
+              'min-w-0 flex-1',
+              narrow ? 'mx-auto max-w-3xl' : '',
+            ]}
+          >
+            <slot />
+          </main>
 
-        {!hidePanel && <Panel locale={locale} />}
+          {!hidePanel && <Panel locale={locale} />}
+        </div>
+
+        <Footer locale={locale} />
       </div>
-
-      <Footer locale={locale} />
     </div>
 
     <BackToTop />

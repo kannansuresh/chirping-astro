@@ -184,7 +184,7 @@
 
 /* ---------- Layout chrome ---------- */
 @layer components {
-  /* Left sidebar */
+  /* Left sidebar — always pinned to the extreme left of the viewport. */
   .chirpy-sidebar {
     @apply fixed inset-y-0 left-0 z-40 flex w-72 flex-col items-center
            border-r border-base-300 px-4 py-6;
@@ -209,17 +209,17 @@
       margin-left: 18rem;
       width: calc(100% - 18rem);
       max-width: calc(100% - 18rem);
-      padding-left: 2.5rem;
-      padding-right: 2.5rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
     }
   }
-  /* Cap the readable area on very wide monitors so the content stays
-     comfortable (the sidebar already sits flush left, fixed). */
-  @media (min-width: 1600px) {
-    .chirpy-main-wrapper {
-      max-width: min(calc(100% - 18rem), 1280px);
-      margin-right: auto;
-    }
+
+  /* Inner shell that horizontally centers the main content (topbar +
+     post cards + panel + footer) inside the area to the right of the
+     sidebar. Caps comfortably wide on big monitors. */
+  .chirpy-shell {
+    @apply mx-auto flex w-full flex-1 flex-col;
+    max-width: 1180px;
   }
 
   /* Top bar */
@@ -236,6 +236,26 @@
   }
   @media (min-width: 1440px) {
     .chirpy-panel { width: 16rem; }
+  }
+
+  /* Subtle left rail for aside items (Recently Updated, TOC, etc.).
+     Each item gets a faint left border that turns primary on hover/active. */
+  .chirpy-aside-list {
+    @apply flex flex-col;
+    border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  }
+  .chirpy-aside-item {
+    @apply block py-1.5 pl-3 pr-2 text-sm text-base-content/75 transition;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+  }
+  .chirpy-aside-item:hover {
+    @apply text-primary;
+    border-left-color: var(--color-primary);
+  }
+  .chirpy-aside-item[data-active='true'] {
+    @apply font-semibold text-primary;
+    border-left-color: var(--color-primary);
   }
 
   /* Post card — horizontal Chirpy card */
@@ -335,35 +355,43 @@
   .code-copy-btn[data-copied='true'] { @apply text-success; }
 }
 
-/* ---------- TOC sticky highlight ---------- */
+/* ---------- TOC sticky highlight (uses chirpy-aside rail) ---------- */
 @layer components {
+  .toc ol {
+    border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  }
   .toc a {
-    @apply block rounded px-2 py-1 text-sm text-base-content/65 transition-colors hover:text-base-content;
+    @apply block py-1 pl-3 pr-2 text-sm text-base-content/70 transition-colors;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+  }
+  .toc a:hover {
+    @apply text-primary;
+    border-left-color: var(--color-primary);
   }
   .toc a[data-active='true'] {
     @apply font-semibold text-primary;
-    box-shadow: inset 2px 0 0 0 var(--color-primary);
+    border-left-color: var(--color-primary);
   }
-  .toc .toc-level-3 { @apply pl-4; }
-  .toc .toc-level-4 { @apply pl-8; }
+  .toc .toc-level-3 a { @apply pl-6; }
+  .toc .toc-level-4 a { @apply pl-9; }
 }
 
 /* ---------- Sidebar nav ---------- */
 @layer components {
+  .chirpy-nav {
+    @apply flex w-full flex-col gap-0.5;
+  }
   .chirpy-nav-link {
     @apply relative flex w-full items-center gap-3 rounded-md px-3 py-2.5
            text-[0.78rem] font-bold uppercase tracking-[0.07em];
     color: var(--color-sidebar-text);
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
   .chirpy-nav-link:hover { color: var(--color-base-content); }
   .chirpy-nav-link[aria-current='page'] {
     color: var(--color-primary);
-  }
-  .chirpy-nav-link[aria-current='page']::before {
-    content: '';
-    @apply absolute -left-4 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r;
-    background: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 8%, transparent);
   }
   .chirpy-nav-link i,
   .chirpy-nav-link svg {

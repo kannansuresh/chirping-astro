@@ -33,13 +33,10 @@ const trending = tags.slice(0, 8);
       <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
         {locale === 'fr' ? 'Mises à jour récentes' : 'Recently Updated'}
       </h2>
-      <ul class="space-y-1.5">
+      <ul class="chirpy-aside-list">
         {recent.map((post) => (
-          <li class="truncate">
-            <a
-              href={postPath(post)}
-              class="block truncate text-sm text-base-content/75 hover:text-primary"
-            >
+          <li>
+            <a href={postPath(post)} class="chirpy-aside-item truncate">
               {post.data.title}
             </a>
           </li>
