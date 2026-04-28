@@ -24,7 +24,7 @@ const t = useTranslations(locale);
 const otherLocales = SITE.locales.filter((l) => l !== locale);
 const fallbackBase = stripLocale(Astro.url.pathname);
 ---
-<div class="dropdown dropdown-top dropdown-end">
+<div class="dropdown dropdown-top">
   <button
     type="button"
     class="btn btn-ghost btn-sm btn-square"
@@ -36,7 +36,7 @@ const fallbackBase = stripLocale(Astro.url.pathname);
     <Icon name="globe" size={16} />
   </button>
   <ul
-    class="menu dropdown-content z-50 mt-2 w-44 rounded-box border border-base-300 bg-base-100 p-2 shadow"
+    class="menu dropdown-content z-50 mb-2 w-44 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg"
     role="menu"
     data-lang-switcher
   >
