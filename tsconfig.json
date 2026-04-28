@@ -10,15 +10,14 @@
     "node_modules"
   ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@i18n/*": ["src/i18n/*"],
-      "@utils/*": ["src/utils/*"],
-      "@styles/*": ["src/styles/*"],
-      "@content/*": ["src/content/*"]
+      "paths": {
+      "~/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@content/*": ["./src/content/*"]
     },
     "strict": true,
     "noImplicitAny": true,
