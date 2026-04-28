@@ -1,0 +1,44 @@
+---
+import { SITE } from '../config';
+import type { SeoMeta } from '../utils/seo';
+
+interface Props {
+  meta: SeoMeta;
+}
+
+const { meta } = Astro.props;
+---
+<title>{meta.title}</title>
+<meta name="description" content={meta.description} />
+<link rel="canonical" href={meta.canonical} />
+
+{/* Open Graph */}
+<meta property="og:site_name" content={SITE.title} />
+<meta property="og:title" content={meta.title} />
+<meta property="og:description" content={meta.description} />
+<meta property="og:type" content={meta.type} />
+<meta property="og:url" content={meta.canonical} />
+<meta property="og:image" content={meta.ogImage} />
+<meta property="og:locale" content={meta.locale === 'fr' ? 'fr_FR' : 'en_US'} />
+
+{/* Twitter */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={meta.title} />
+<meta name="twitter:description" content={meta.description} />
+<meta name="twitter:image" content={meta.ogImage} />
+
+{/* Article-specific */}
+{meta.type === 'article' && meta.publishedTime && (
+  <meta property="article:published_time" content={meta.publishedTime} />
+)}
+{meta.type === 'article' && meta.modifiedTime && (
+  <meta property="article:modified_time" content={meta.modifiedTime} />
+)}
+{meta.type === 'article' && meta.tags?.map((tag) => (
+  <meta property="article:tag" content={tag} />
+))}
+
+{/* hreflang alternates for SEO */}
+{meta.hreflangs.map(({ locale, href }) => (
+  <link rel="alternate" hreflang={locale} href={href} />
+))}

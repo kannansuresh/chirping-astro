@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <circle cx="40" cy="40" r="40" fill="#3b82f6" />
+  <text
+    x="50%"
+    y="55%"
+    text-anchor="middle"
+    fill="white"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-size="36"
+    font-weight="700"
+  >
+    C
+  </text>
+</svg>

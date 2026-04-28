@@ -1,0 +1,57 @@
+---
+title: Astro and MDX, in harmony
+description: Explore MDX-only superpowers — components inside Markdown, expressions, slots and a Chirpy-flavoured callout.
+pubDate: 2026-04-15
+tags: [astro, mdx, components]
+categories: [Tutorials]
+translationKey: astro-mdx-demo
+toc: true
+comments: true
+---
+
+import Callout from '../../../components/Callout.astro';
+
+When the lines between data and presentation blur, **MDX** is your friend.
+You can mix JSX-flavoured components inside Markdown without leaving the
+authoring flow.
+
+## The Callout component
+
+The theme ships with a small `Callout` component you can reach for in MDX:
+
+<Callout type="success" title="Shipped!">
+This callout was rendered by an Astro component embedded directly in MDX.
+</Callout>
+
+<Callout type="warning" title="Read me">
+The Callout supports `info`, `success`, `warning` and `error` variants and
+inherits the active daisyUI theme colours.
+</Callout>
+
+## Inline expressions
+
+You can also evaluate JavaScript inline. Today is **{new Date().toDateString()}**
+according to the build server.
+
+## A bit of code
+
+```tsx
+import type { CollectionEntry } from 'astro:content';
+
+export function preview(entry: CollectionEntry<'posts'>) {
+  return entry.data.description.slice(0, 140);
+}
+```
+
+## A simple table
+
+| Feature       | Status |
+| ------------- | ------ |
+| TOC           | ✓      |
+| Code highlight| ✓      |
+| Pagefind      | ✓      |
+| Giscus        | ✓      |
+
+## Comments are on for this post
+
+To turn them off, set `comments: false` in the frontmatter.

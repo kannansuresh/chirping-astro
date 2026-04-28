@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations, formatDate, isoDate } from '../../i18n/utils';
+import { getPosts, groupByYearMonth, postPath } from '../../utils/posts';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+const posts = await getPosts(locale);
+const groups = groupByYearMonth(posts, locale);
+---
+<BaseLayout
+  title={t('archives.title')}
+  pathWithoutLocale="/archives/"
+  crumbs={[{ label: t('archives.title') }]}
+>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">{t('archives.title')}</h1>
+  </header>
+  {groups.length === 0 ? (
+    <p class="text-base-content/70">{t('archives.empty')}</p>
+  ) : (
+    <div class="space-y-10">
+      {groups.map((g) => (
+        <section>
+          <h2 class="mb-4 border-b border-base-300 pb-1 text-2xl font-semibold">
+            {g.year}
+          </h2>
+          {g.months.map((m) => (
+            <section class="mb-6">
+              <h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                {m.label}
+              </h3>
+              <ul class="space-y-2">
+                {m.posts.map((p) => (
+                  <li class="flex items-baseline justify-between gap-4">
+                    <a href={postPath(p)} class="link link-hover flex-1">
+                      {p.data.title}
+                    </a>
+                    <time
+                      datetime={isoDate(p.data.pubDate)}
+                      class="shrink-0 text-xs text-base-content/60"
+                    >
+                      {formatDate(p.data.pubDate, locale, { month: 'short', day: 'numeric' })}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </section>
+      ))}
+    </div>
+  )}
+</BaseLayout>

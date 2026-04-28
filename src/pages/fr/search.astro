@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const locale = 'fr';
+const t = useTranslations(locale);
+---
+<BaseLayout
+  title={t('search.title')}
+  pathWithoutLocale="/search/"
+  hidePanel={true}
+  narrow={true}
+  crumbs={[{ label: t('search.title') }]}
+>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">{t('search.title')}</h1>
+    <p class="text-base-content/70">{t('search.placeholder')}</p>
+  </header>
+  <div data-pagefind-page-mount class="min-h-40">
+    <p class="text-sm text-base-content/70">{t('search.loading')}</p>
+  </div>
+</BaseLayout>
+
+<script is:inline define:vars={{ locale }}>
+  async function init() {
+    const mount = document.querySelector('[data-pagefind-page-mount]');
+    if (!mount) return;
+    if (!document.querySelector('link[data-pagefind-css]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/_pagefind/pagefind-ui.css';
+      link.dataset.pagefindCss = 'true';
+      document.head.appendChild(link);
+    }
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '/_pagefind/pagefind-ui.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    new window.PagefindUI({
+      element: mount,
+      showSubResults: true,
+      showImages: false,
+      translations: {
+        placeholder: 'Rechercher sur le site',
+        clear_search: 'Effacer',
+        load_more: 'Charger plus',
+        search_label: 'Recherche',
+        filters_label: 'Filtres',
+        zero_results: 'Aucun résultat pour [SEARCH_TERM]',
+        many_results: '[COUNT] résultats pour [SEARCH_TERM]',
+        one_result: '[COUNT] résultat pour [SEARCH_TERM]',
+        searching: 'Recherche de [SEARCH_TERM]…',
+      },
+    });
+  }
+  init();
+</script>

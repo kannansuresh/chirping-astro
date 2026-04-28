@@ -1,0 +1,138 @@
+---
+import '../styles/global.css';
+
+import Sidebar from '../components/Sidebar.astro';
+import Topbar from '../components/Topbar.astro';
+import Footer from '../components/Footer.astro';
+import Panel from '../components/Panel.astro';
+import SEO from '../components/SEO.astro';
+import BackToTop from '../components/islands/BackToTop.astro';
+import { SITE, type Locale } from '../config';
+import { detectLocale, htmlLang, useTranslations, stripLocale } from '../i18n/utils';
+import { buildSeo, type SeoMeta } from '../utils/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  /** Logical path WITHOUT locale prefix (used for hreflang). */
+  pathWithoutLocale?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  tags?: string[];
+  /** Hide the right panel (e.g. on post pages where TOC takes its place). */
+  hidePanel?: boolean;
+  /** Constrain main content width (used by Pages like About/404). */
+  narrow?: boolean;
+  /** Breadcrumb segments shown in the topbar. */
+  crumbs?: Array<{ label: string; href?: string }>;
+  /** Pre-built SEO meta override. */
+  seo?: SeoMeta;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  tags,
+  hidePanel = false,
+  narrow = false,
+  crumbs = [],
+  seo,
+} = Astro.props;
+
+const locale: Locale = detectLocale(Astro.url.pathname);
+const t = useTranslations(locale);
+const lang = htmlLang(locale);
+
+const pathWithoutLocale = Astro.props.pathWithoutLocale ?? stripLocale(Astro.url.pathname);
+const meta: SeoMeta =
+  seo ??
+  buildSeo({
+    title,
+    description,
+    pathWithoutLocale,
+    fullPath: Astro.url.pathname,
+    locale,
+    ogImage,
+    type,
+    publishedTime,
+    modifiedTime,
+    tags,
+  });
+---
+<!doctype html>
+<html lang={lang} data-theme="chirpy-light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f8" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} (EN)`} href="/rss.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.title} (FR)`}
+      href="/fr/rss.xml"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&family=Lato:wght@300;400&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
+    <SEO meta={meta} />
+    {/* Apply persisted theme as early as possible to avoid FOUC. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50
+             focus:rounded focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-content"
+    >
+      {t('site.skipToContent')}
+    </a>
+
+    <Sidebar locale={locale} />
+
+    <div class="chirpy-main-wrapper">
+      <Topbar locale={locale} crumbs={crumbs} />
+
+      <div class="flex flex-1 gap-8 py-6">
+        <main
+          id="main"
+          aria-label="Main Content"
+          class:list={[
+            'min-w-0 flex-1',
+            narrow ? 'mx-auto max-w-3xl' : '',
+          ]}
+        >
+          <slot />
+        </main>
+
+        {!hidePanel && <Panel locale={locale} />}
+      </div>
+
+      <Footer locale={locale} />
+    </div>
+
+    <BackToTop />
+  </body>
+</html>

@@ -1,0 +1,76 @@
+---
+import { useTranslations } from '../../i18n/utils';
+import type { Locale } from '../../config';
+import Icon from '../Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<button
+  type="button"
+  class="btn btn-ghost btn-sm btn-circle"
+  data-theme-toggle
+  aria-label={t('theme.toggle')}
+  title={t('theme.toggle')}
+>
+  <span data-theme-icon="light" class="hidden">
+    <Icon name="sun" size={18} ariaLabel={t('theme.light')} />
+  </span>
+  <span data-theme-icon="dark" class="hidden">
+    <Icon name="moon" size={18} ariaLabel={t('theme.dark')} />
+  </span>
+</button>
+
+<script>
+  type Theme = 'chirpy-light' | 'chirpy-dark';
+  const STORAGE_KEY = 'theme';
+
+  function currentTheme(): Theme {
+    return (document.documentElement.getAttribute('data-theme') as Theme) ?? 'chirpy-light';
+  }
+
+  function applyTheme(theme: Theme): void {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+      /* ignore */
+    }
+    updateIcons(theme);
+    document.dispatchEvent(new CustomEvent('theme-change', { detail: { theme } }));
+  }
+
+  function updateIcons(theme: Theme): void {
+    document.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach((el) => {
+      const want = theme === 'chirpy-dark' ? 'light' : 'dark';
+      el.classList.toggle('hidden', el.dataset.themeIcon !== want);
+    });
+  }
+
+  function init(): void {
+    updateIcons(currentTheme());
+    document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        applyTheme(currentTheme() === 'chirpy-dark' ? 'chirpy-light' : 'chirpy-dark');
+      });
+    });
+    // Sync with system preference if user hasn't pinned a theme yet.
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    mql.addEventListener('change', (e) => {
+      try {
+        if (localStorage.getItem(STORAGE_KEY)) return;
+      } catch {
+        /* ignore */
+      }
+      applyTheme(e.matches ? 'chirpy-dark' : 'chirpy-light');
+    });
+  }
+
+  init();
+  // Astro view-transitions friendly re-init.
+  document.addEventListener('astro:page-load', init);
+</script>

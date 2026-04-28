@@ -1,0 +1,71 @@
+---
+import type { Locale } from '../config';
+import { formatDate, isoDate } from '../i18n/utils';
+import { type Post, postPath } from '../utils/posts';
+import Icon from './Icon.astro';
+
+interface Props {
+  post: Post;
+  locale: Locale;
+}
+
+const { post, locale } = Astro.props;
+const href = postPath(post);
+const heroSrc =
+  typeof post.data.heroImage === 'string'
+    ? post.data.heroImage
+    : post.data.heroImage?.src;
+const hasImage = Boolean(heroSrc);
+---
+<article class="chirpy-card">
+  <a href={href} class:list={['chirpy-card-link', hasImage ? 'has-image' : '']}>
+    {hasImage && (
+      <div class="chirpy-card-image-wrap">
+        <img
+          src={heroSrc}
+          alt=""
+          class="chirpy-card-image"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <div class:list={['chirpy-card-body', hasImage ? '' : 'full']}>
+      <h2 class="mt-0 text-2xl font-bold leading-snug tracking-tight text-base-content sm:text-[1.55rem]">
+        {post.data.title}
+      </h2>
+
+      <p class="mt-2 mb-3 line-clamp-2 text-base text-base-content/70">
+        {post.data.description}
+      </p>
+
+      <div class="mt-auto flex items-end justify-between gap-2 text-xs text-base-content/55">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span class="inline-flex items-center gap-1">
+            <Icon name="clock" size={12} />
+            <time datetime={isoDate(post.data.pubDate)}>
+              {formatDate(post.data.pubDate, locale, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </time>
+          </span>
+          {post.data.categories.length > 0 && (
+            <span class="inline-flex items-center gap-1">
+              <Icon name="folder" size={12} />
+              <span>{post.data.categories.join(', ')}</span>
+            </span>
+          )}
+        </div>
+
+        {post.data.pinned && (
+          <span class="inline-flex items-center gap-1 text-primary" title="Pinned" aria-label="Pinned">
+            <Icon name="pin" size={14} />
+          </span>
+        )}
+      </div>
+    </div>
+  </a>
+</article>

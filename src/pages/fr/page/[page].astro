@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostList from '../../../components/PostList.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { SITE } from '../../../config';
+import { useTranslations } from '../../../i18n/utils';
+import { getPosts } from '../../../utils/posts';
+
+interface Props {
+  current: number;
+  last: number;
+}
+
+export async function getStaticPaths() {
+  const locale = 'fr';
+  const posts = await getPosts(locale);
+  const pageSize = SITE.postsPerPage;
+  const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
+  const params: Array<{ params: { page: string }; props: Props }> = [];
+  for (let p = 2; p <= lastPage; p++) {
+    params.push({ params: { page: String(p) }, props: { current: p, last: lastPage } });
+  }
+  return params;
+}
+
+const locale = 'fr';
+const t = useTranslations(locale);
+const { current, last } = Astro.props as Props;
+const allPosts = await getPosts(locale);
+const pageSize = SITE.postsPerPage;
+const start = (current - 1) * pageSize;
+const pagePosts = allPosts.slice(start, start + pageSize);
+
+const hrefForPage = (n: number) => (n === 1 ? '/fr/' : `/fr/page/${n}/`);
+---
+<BaseLayout
+  title={`${t('list.allPosts')} — ${t('pagination.page')} ${current}`}
+  pathWithoutLocale={`/page/${current}/`}
+>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">{t('list.allPosts')}</h1>
+    <p class="text-base-content/60 text-sm">
+      {t('pagination.page')} {current} {t('pagination.of')} {last}
+    </p>
+  </header>
+  <PostList posts={pagePosts} locale={locale} />
+  <Pagination
+    currentPage={current}
+    lastPage={last}
+    hrefForPage={hrefForPage}
+    locale={locale}
+  />
+</BaseLayout>

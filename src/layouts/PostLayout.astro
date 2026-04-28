@@ -1,0 +1,171 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PostNav from '../components/PostNav.astro';
+import TableOfContents from '../components/islands/TableOfContents.astro';
+import CodeCopy from '../components/islands/CodeCopy.astro';
+import Giscus from '../components/islands/Giscus.astro';
+import Icon from '../components/Icon.astro';
+import { GISCUS, type Locale } from '../config';
+import {
+  useTranslations,
+  stripLocale,
+  formatDate,
+  isoDate,
+  localizedPath,
+} from '../i18n/utils';
+import { readingTime } from '../utils/reading-time';
+import { type Post, tagPath, categoryPath, getTranslations, postPath } from '../utils/posts';
+import { buildSeo } from '../utils/seo';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  post: Post;
+  /** Astro's `headings` array from `await render(post)`. */
+  headings: MarkdownHeading[];
+  /** Raw body string used for reading time. */
+  body: string;
+  prev?: Post;
+  next?: Post;
+  locale: Locale;
+}
+
+const { post, headings, body, prev, next, locale } = Astro.props;
+const t = useTranslations(locale);
+const minutes = readingTime(body).minutes;
+
+// Translation siblings (used by language switcher links).
+const translations = await getTranslations(post);
+const translationLinks: Partial<Record<Locale, string>> = {};
+for (const [lang, p] of Object.entries(translations)) {
+  if (p) translationLinks[lang as Locale] = postPath(p);
+}
+
+const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
+const pathWithoutLocale = stripLocale(Astro.url.pathname);
+
+const seo = buildSeo({
+  title: post.data.title,
+  description: post.data.description,
+  pathWithoutLocale,
+  fullPath: Astro.url.pathname,
+  locale,
+  ogImage:
+    typeof post.data.heroImage === 'string'
+      ? post.data.heroImage
+      : post.data.heroImage?.src,
+  type: 'article',
+  publishedTime: post.data.pubDate,
+  modifiedTime: post.data.updatedDate,
+  tags: post.data.tags,
+});
+
+const heroSrc =
+  typeof post.data.heroImage === 'string'
+    ? post.data.heroImage
+    : post.data.heroImage?.src;
+
+const crumbs = [
+  { label: t('nav.posts'), href: localizedPath('/', locale) },
+  { label: post.data.title },
+];
+---
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  type="article"
+  publishedTime={post.data.pubDate}
+  modifiedTime={post.data.updatedDate}
+  tags={post.data.tags}
+  hidePanel={true}
+  crumbs={crumbs}
+  seo={seo}
+>
+  <div class="grid gap-10 xl:grid-cols-[minmax(0,1fr)_14rem]">
+    <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
+      <header class="mb-8">
+        <h1 class="text-3xl font-extrabold leading-tight tracking-tight text-base-content sm:text-[2.25rem]">
+          {post.data.title}
+        </h1>
+        <p class="mt-3 text-lg text-base-content/65">{post.data.description}</p>
+
+        <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-base-content/60">
+          <span class="inline-flex items-center gap-1">
+            <Icon name="calendar" size={14} />
+            <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
+          </span>
+          {post.data.updatedDate && (
+            <span class="inline-flex items-center gap-1">
+              <Icon name="check" size={14} />
+              <time datetime={isoDate(post.data.updatedDate)}>
+                {t('post.updatedOn')} {formatDate(post.data.updatedDate, locale)}
+              </time>
+            </span>
+          )}
+          {post.data.categories.length > 0 && (
+            <span class="inline-flex items-center gap-1">
+              <Icon name="folder" size={14} />
+              {post.data.categories.map((c, i) => (
+                <>
+                  {i > 0 && <span class="mx-0.5 text-base-content/40">,</span>}
+                  <a href={categoryPath(locale, c)} class="hover:text-primary">{c}</a>
+                </>
+              ))}
+            </span>
+          )}
+          <span class="inline-flex items-center gap-1">
+            <Icon name="clock" size={14} />
+            {minutes} {t('post.readingTime')}
+          </span>
+        </div>
+      </header>
+
+      {heroSrc && (
+        <figure class="mb-8 -mx-5 sm:-mx-8">
+          <img
+            src={heroSrc}
+            alt=""
+            class="w-full border-y border-base-300"
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
+      )}
+
+      <div class="prose-chirpy max-w-none">
+        <slot />
+      </div>
+
+      {post.data.tags.length > 0 && (
+        <footer class="mt-10 flex flex-wrap items-center gap-2 border-t border-base-300 pt-6">
+          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+            {t('post.tags')}
+          </span>
+          {post.data.tags.map((tag) => (
+            <a href={tagPath(locale, tag)} class="post-tag text-xs">{tag}</a>
+          ))}
+        </footer>
+      )}
+
+      <PostNav prev={prev} next={next} locale={locale} />
+
+      {commentsEnabled ? (
+        <Giscus locale={locale} />
+      ) : (
+        post.data.comments === false && (
+          <p class="mt-10 text-sm text-base-content/60">{t('post.commentsDisabled')}</p>
+        )
+      )}
+    </article>
+
+    {post.data.toc && headings.length > 0 && (
+      <TableOfContents headings={headings} locale={locale} />
+    )}
+  </div>
+
+  <CodeCopy locale={locale} />
+</BaseLayout>
+
+{/* Translation links exposed for the LanguageSwitcher to read at runtime */}
+<script is:inline define:vars={{ links: translationLinks }}>
+  window.__chirpyTranslations = links;
+</script>

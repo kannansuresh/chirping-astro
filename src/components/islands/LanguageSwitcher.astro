@@ -1,0 +1,82 @@
+---
+/**
+ * Accessible language switcher.
+ *
+ * On post pages, the PostLayout sets `window.__chirpyTranslations` with a
+ * map of locale -> absolute path to the translation sibling. The runtime
+ * script in this island reads that map and rewrites the per-locale hrefs
+ * so the user lands on the equivalent article.
+ *
+ * For other pages we strip the current pathname's locale prefix and
+ * rebuild it for the target — preserving the path 1:1.
+ */
+
+import { SITE, type Locale } from '../../config';
+import { useTranslations, localizedPath, stripLocale, localeLabel } from '../../i18n/utils';
+import Icon from '../Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const otherLocales = SITE.locales.filter((l) => l !== locale);
+const fallbackBase = stripLocale(Astro.url.pathname);
+---
+<div class="dropdown dropdown-top dropdown-end">
+  <button
+    type="button"
+    class="btn btn-ghost btn-sm btn-square"
+    aria-haspopup="menu"
+    aria-label={t('lang.switcher')}
+    title={t('lang.switcher')}
+    tabindex="0"
+  >
+    <Icon name="globe" size={16} />
+  </button>
+  <ul
+    class="menu dropdown-content z-50 mt-2 w-44 rounded-box border border-base-300 bg-base-100 p-2 shadow"
+    role="menu"
+    data-lang-switcher
+  >
+    <li class="menu-title px-2 py-1 text-xs uppercase tracking-wide text-base-content/60">
+      {t('lang.switcher')}
+    </li>
+    <li>
+      <a
+        href={localizedPath(fallbackBase, locale)}
+        aria-current="true"
+        class="font-medium"
+      >
+        <span class="badge badge-primary badge-sm">{locale.toUpperCase()}</span>
+        {localeLabel(locale)}
+      </a>
+    </li>
+    {otherLocales.map((target) => (
+      <li>
+        <a
+          href={localizedPath(fallbackBase, target)}
+          data-lang-target={target}
+        >
+          <span class="badge badge-ghost badge-sm">{target.toUpperCase()}</span>
+          {localeLabel(target)}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  function rewireLanguageLinks() {
+    const map = (window as unknown as { __chirpyTranslations?: Record<string, string> })
+      .__chirpyTranslations;
+    if (!map) return;
+    document.querySelectorAll<HTMLAnchorElement>('[data-lang-target]').forEach((a) => {
+      const target = a.dataset.langTarget;
+      if (target && map[target]) a.href = map[target];
+    });
+  }
+  rewireLanguageLinks();
+  document.addEventListener('astro:page-load', rewireLanguageLinks);
+</script>

@@ -1,0 +1,15 @@
+# Bun configuration for chirping-astro
+# https://bun.sh/docs/runtime/bunfig
+
+[install]
+# Use exact dependency versions in lockfile, but allow ranges in package.json
+exact = false
+# Save peer dependencies
+peer = true
+
+[install.cache]
+disable = false
+
+[run]
+bun = true
+silent = false

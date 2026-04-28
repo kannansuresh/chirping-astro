@@ -1,0 +1,46 @@
+---
+/**
+ * No-output island that augments every <pre> in the post body with a
+ * copy-to-clipboard button. Drop it into PostLayout once.
+ */
+import { useTranslations } from '../../i18n/utils';
+import type { Locale } from '../../config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<script is:inline define:vars={{ copy: t('code.copy'), copied: t('code.copied') }}>
+  function attachCopyButtons() {
+    const pres = document.querySelectorAll('article pre');
+    pres.forEach((pre) => {
+      if (pre.querySelector('.code-copy-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'code-copy-btn';
+      btn.setAttribute('aria-label', copy);
+      btn.textContent = copy;
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        const text = code ? code.innerText : pre.innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = copied;
+          btn.dataset.copied = 'true';
+          setTimeout(() => {
+            btn.textContent = copy;
+            btn.dataset.copied = 'false';
+          }, 2000);
+        } catch (err) {
+          console.error('Clipboard write failed', err);
+        }
+      });
+      pre.appendChild(btn);
+    });
+  }
+  attachCopyButtons();
+  document.addEventListener('astro:page-load', attachCopyButtons);
+</script>

@@ -1,0 +1,65 @@
+---
+/**
+ * Right-hand panel shown on XL screens, mirrors Chirpy's "Recently Updated"
+ * + "Trending Tags" widgets.
+ *
+ * On post pages we replace this with the article TOC (handled by PostLayout).
+ */
+import type { Locale } from '../config';
+import { getPosts, getTagsWithCount, postPath, tagPath } from '../utils/posts';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const [posts, tags] = await Promise.all([getPosts(locale), getTagsWithCount(locale)]);
+
+const recent = posts
+  .slice()
+  .sort((a, b) => {
+    const at = (a.data.updatedDate ?? a.data.pubDate)?.valueOf?.() ?? 0;
+    const bt = (b.data.updatedDate ?? b.data.pubDate)?.valueOf?.() ?? 0;
+    return bt - at;
+  })
+  .slice(0, 5);
+
+const trending = tags.slice(0, 8);
+---
+<aside class="chirpy-panel" aria-label="Panel">
+  {recent.length > 0 && (
+    <section class="mb-8">
+      <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
+        {locale === 'fr' ? 'Mises à jour récentes' : 'Recently Updated'}
+      </h2>
+      <ul class="space-y-1.5">
+        {recent.map((post) => (
+          <li class="truncate">
+            <a
+              href={postPath(post)}
+              class="block truncate text-sm text-base-content/75 hover:text-primary"
+            >
+              {post.data.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {trending.length > 0 && (
+    <section>
+      <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
+        {locale === 'fr' ? 'Étiquettes en vogue' : 'Trending Tags'}
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {trending.map((tag) => (
+          <a href={tagPath(locale, tag.name)} class="post-tag">
+            {tag.name}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</aside>

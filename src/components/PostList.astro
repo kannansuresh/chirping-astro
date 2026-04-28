@@ -1,0 +1,25 @@
+---
+import type { Locale } from '../config';
+import { useTranslations } from '../i18n/utils';
+import type { Post } from '../utils/posts';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  posts: Post[];
+  locale: Locale;
+}
+
+const { posts, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+{posts.length === 0 ? (
+  <p class="rounded-md border border-dashed border-base-300 px-6 py-10 text-center text-base-content/70">
+    {t('list.empty')}
+  </p>
+) : (
+  <div id="post-list">
+    {posts.map((post) => (
+      <PostCard post={post} locale={locale} />
+    ))}
+  </div>
+)}

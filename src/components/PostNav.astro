@@ -1,0 +1,55 @@
+---
+import type { Locale } from '../config';
+import { useTranslations } from '../i18n/utils';
+import { type Post, postPath } from '../utils/posts';
+import Icon from './Icon.astro';
+
+interface Props {
+  prev?: Post;
+  next?: Post;
+  locale: Locale;
+}
+
+const { prev, next, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<nav
+  aria-label="Post navigation"
+  class="mt-10 grid gap-4 border-t border-base-300 pt-6 sm:grid-cols-2"
+>
+  {prev ? (
+    <a
+      href={postPath(prev)}
+      rel="prev"
+      class="card bg-base-200 hover:bg-base-300 transition-colors"
+    >
+      <div class="card-body">
+        <p class="text-xs uppercase tracking-wide text-base-content/60">
+          <Icon name="arrowUp" size={12} class="inline -rotate-90 align-baseline" />
+          {t('post.previous')}
+        </p>
+        <p class="font-semibold">{prev.data.title}</p>
+      </div>
+    </a>
+  ) : (
+    <span aria-hidden="true" class="hidden sm:block"></span>
+  )}
+
+  {next ? (
+    <a
+      href={postPath(next)}
+      rel="next"
+      class="card bg-base-200 hover:bg-base-300 transition-colors sm:text-right"
+    >
+      <div class="card-body">
+        <p class="text-xs uppercase tracking-wide text-base-content/60">
+          {t('post.next')}
+          <Icon name="arrowUp" size={12} class="inline rotate-90 align-baseline" />
+        </p>
+        <p class="font-semibold">{next.data.title}</p>
+      </div>
+    </a>
+  ) : (
+    <span aria-hidden="true" class="hidden sm:block"></span>
+  )}
+</nav>

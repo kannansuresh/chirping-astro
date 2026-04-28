@@ -1,0 +1,129 @@
+---
+/**
+ * Header search trigger. Opens a Pagefind-powered modal lazily.
+ * All Pagefind code is loaded only when the modal is opened.
+ */
+import { useTranslations } from '../../i18n/utils';
+import type { Locale } from '../../config';
+import Icon from '../Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+<button
+  type="button"
+  class="btn btn-ghost btn-sm btn-circle"
+  aria-label={t('search.openLabel')}
+  title={t('search.openLabel')}
+  data-search-open
+>
+  <Icon name="search" size={18} />
+</button>
+
+<dialog
+  data-search-modal
+  class="modal modal-bottom sm:modal-middle"
+  aria-label={t('search.title')}
+>
+  <div class="modal-box max-w-2xl bg-base-100">
+    <div class="flex items-center justify-between gap-2 border-b border-base-300 pb-3">
+      <h2 class="text-lg font-semibold">{t('search.title')}</h2>
+      <form method="dialog">
+        <button class="btn btn-ghost btn-sm btn-circle" aria-label={t('search.closeLabel')}>
+          <Icon name="close" size={16} />
+        </button>
+      </form>
+    </div>
+    <div data-search-mount class="mt-4 min-h-40">
+      <p class="text-sm text-base-content/70" data-search-loading>
+        {t('search.loading')}
+      </p>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<script is:inline define:vars={{ locale }}>
+  const PAGEFIND_BUNDLE = '/_pagefind/pagefind-ui.js';
+  const PAGEFIND_CSS = '/_pagefind/pagefind-ui.css';
+
+  let loaded = false;
+
+  async function ensurePagefindLoaded(mount) {
+    if (loaded) return;
+    // Inject CSS once
+    if (!document.querySelector('link[data-pagefind-css]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = PAGEFIND_CSS;
+      link.dataset.pagefindCss = 'true';
+      document.head.appendChild(link);
+    }
+    // Dynamically import the UI module
+    try {
+      // The `pagefind-ui` script registers a global `PagefindUI` constructor.
+      await new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = PAGEFIND_BUNDLE;
+        script.onload = () => resolve();
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+      // eslint-disable-next-line no-undef
+      new window.PagefindUI({
+        element: mount,
+        showSubResults: true,
+        showImages: false,
+        translations:
+          locale === 'fr'
+            ? {
+                placeholder: 'Rechercher sur le site',
+                clear_search: 'Effacer',
+                load_more: 'Charger plus',
+                search_label: 'Recherche',
+                filters_label: 'Filtres',
+                zero_results: 'Aucun résultat pour [SEARCH_TERM]',
+                many_results: '[COUNT] résultats pour [SEARCH_TERM]',
+                one_result: '[COUNT] résultat pour [SEARCH_TERM]',
+                searching: 'Recherche de [SEARCH_TERM]…',
+              }
+            : undefined,
+      });
+      loaded = true;
+    } catch (err) {
+      console.error('Failed to load Pagefind', err);
+      mount.innerHTML =
+        '<p class="text-sm text-error">Search index not available. Run `bun run build` to generate it.</p>';
+    }
+  }
+
+  function init() {
+    const dialog = document.querySelector('[data-search-modal]');
+    const mount = document.querySelector('[data-search-mount]');
+    if (!dialog || !mount) return;
+
+    document.querySelectorAll('[data-search-open]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+        else dialog.setAttribute('open', '');
+        await ensurePagefindLoaded(mount);
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.querySelector('[data-search-open]')?.click();
+      }
+    });
+  }
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

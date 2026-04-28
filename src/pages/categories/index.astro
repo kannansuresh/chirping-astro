@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+import { getCategoriesWithCount, categoryPath } from '../../utils/posts';
+import Icon from '../../components/Icon.astro';
+
+const locale = 'en';
+const t = useTranslations(locale);
+const categories = await getCategoriesWithCount(locale);
+---
+<BaseLayout
+  title={t('categories.title')}
+  pathWithoutLocale="/categories/"
+  crumbs={[{ label: t('categories.title') }]}
+>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">{t('categories.title')}</h1>
+  </header>
+  {categories.length === 0 ? (
+    <p class="text-base-content/70">{t('categories.empty')}</p>
+  ) : (
+    <ul class="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+      {categories.map((cat) => (
+        <li>
+          <a
+            href={categoryPath(locale, cat.name)}
+            class="card bg-base-200 hover:bg-base-300"
+          >
+            <div class="card-body flex-row items-center gap-3 py-4">
+              <Icon name="folder" size={20} class="text-primary" />
+              <div class="flex-1">
+                <p class="font-semibold">{cat.name}</p>
+                <p class="text-xs text-base-content/60">
+                  {cat.count} {cat.count === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+                </p>
+              </div>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>

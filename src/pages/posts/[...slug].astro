@@ -1,0 +1,34 @@
+---
+import { render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { getPosts, postSlug, type Post } from '../../utils/posts';
+
+interface Props {
+  post: Post;
+  prev?: Post;
+  next?: Post;
+}
+
+export async function getStaticPaths() {
+  const locale = 'en';
+  const posts = await getPosts(locale);
+  return posts.map((post, i) => ({
+    params: { slug: postSlug(post) },
+    props: { post, prev: posts[i + 1], next: posts[i - 1] } satisfies Props,
+  }));
+}
+
+const { post, prev, next } = Astro.props as Props;
+const { Content, headings } = await render(post);
+const body = post.body ?? '';
+---
+<PostLayout
+  post={post}
+  headings={headings}
+  body={body}
+  prev={prev}
+  next={next}
+  locale="en"
+>
+  <Content />
+</PostLayout>

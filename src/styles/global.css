@@ -1,0 +1,411 @@
+/*
+ * Tailwind CSS v4 + daisyUI v5 entry point.
+ * See https://daisyui.com/docs/install/ for the canonical install steps.
+ *
+ * Theme palette closely matches the original Chirpy theme
+ * (https://chirpy.cotes.page/) — light grey page background, indigo-blue
+ * primary, white cards, generous typography.
+ */
+
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes: false; /* we provide our own themes below */
+  logs: false;
+}
+
+/* ---------- Chirpy LIGHT ---------- */
+@plugin "daisyui/theme" {
+  name: "chirpy-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Page bg / cards / dividers / body text */
+  --color-base-100: oklch(100% 0 0);             /* card bg (white)         */
+  --color-base-200: oklch(97% 0.0015 264);       /* page bg #f6f7f8         */
+  --color-base-300: oklch(91% 0.0025 264);       /* dividers #e8e8e8        */
+  --color-base-content: oklch(20% 0.012 264);    /* near-black text         */
+
+  /* Chirpy indigo-blue primary (~ #2a408e) */
+  --color-primary: oklch(45% 0.135 264);
+  --color-primary-content: oklch(99% 0.003 264);
+
+  --color-secondary: oklch(70% 0.110 200);
+  --color-secondary-content: oklch(15% 0.020 264);
+
+  --color-accent: oklch(76% 0.135 75);
+  --color-accent-content: oklch(20% 0.020 75);
+
+  --color-neutral: oklch(35% 0.010 264);
+  --color-neutral-content: oklch(98% 0.003 264);
+
+  --color-info: oklch(70% 0.130 230);
+  --color-info-content: oklch(15% 0.020 230);
+
+  --color-success: oklch(72% 0.150 145);
+  --color-success-content: oklch(15% 0.020 145);
+
+  --color-warning: oklch(80% 0.150 80);
+  --color-warning-content: oklch(20% 0.020 80);
+
+  --color-error: oklch(60% 0.220 27);
+  --color-error-content: oklch(99% 0.005 27);
+
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ---------- Chirpy DARK ---------- */
+@plugin "daisyui/theme" {
+  name: "chirpy-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  /* Chirpy dark uses #1b1b1e for the page and #1e1e1f for cards */
+  --color-base-100: oklch(22% 0.005 264);
+  --color-base-200: oklch(20% 0.005 264);
+  --color-base-300: oklch(28% 0.008 264);
+  --color-base-content: oklch(86% 0.010 264);
+
+  /* Lighter indigo for dark mode contrast (~ #7895d4) */
+  --color-primary: oklch(72% 0.110 264);
+  --color-primary-content: oklch(15% 0.015 264);
+
+  --color-secondary: oklch(75% 0.090 200);
+  --color-secondary-content: oklch(15% 0.015 264);
+
+  --color-accent: oklch(80% 0.130 75);
+  --color-accent-content: oklch(15% 0.015 75);
+
+  --color-neutral: oklch(28% 0.010 264);
+  --color-neutral-content: oklch(95% 0.005 264);
+
+  --color-info: oklch(72% 0.120 230);
+  --color-info-content: oklch(15% 0.015 230);
+
+  --color-success: oklch(72% 0.140 145);
+  --color-success-content: oklch(15% 0.015 145);
+
+  --color-warning: oklch(80% 0.150 80);
+  --color-warning-content: oklch(15% 0.015 80);
+
+  --color-error: oklch(72% 0.180 27);
+  --color-error-content: oklch(15% 0.015 27);
+
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ---------- Chirpy-specific tokens (non-daisyUI) ---------- */
+@theme {
+  /* Chirpy sidebar gradient */
+  --color-sidebar-from: oklch(99% 0 0);
+  --color-sidebar-to: oklch(95% 0.005 264);
+  --color-sidebar-text: oklch(40% 0.010 264);
+  --color-sidebar-muted: oklch(50% 0.012 264);
+
+  /* Sidebar/panel widths */
+  --width-sidebar: 18rem;        /* 288px - matches Chirpy */
+  --width-panel: 14rem;          /* 224px */
+
+  /* Top bar height */
+  --height-topbar: 3.25rem;      /* 52px */
+
+  /* Reading column max width on post pages */
+  --width-prose: 50rem;
+
+  /* Fonts */
+  --font-sans: 'Source Sans 3', 'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+[data-theme='chirpy-dark'] {
+  --color-sidebar-from: oklch(20% 0.005 264);
+  --color-sidebar-to: oklch(17% 0.005 264);
+  --color-sidebar-text: oklch(75% 0.010 264);
+  --color-sidebar-muted: oklch(55% 0.012 264);
+}
+
+/* ---------- Base layer ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply min-h-screen bg-base-200 text-base-content antialiased;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  ::selection {
+    @apply bg-primary/25 text-base-content;
+  }
+
+  /* Anchored headings (rehype-autolink-headings, behavior:"wrap") */
+  .heading-anchor {
+    @apply text-inherit no-underline;
+  }
+  .heading-anchor:hover::after {
+    content: '#';
+    @apply ml-2 text-base-content/30;
+  }
+
+  /* Custom scrollbar (Webkit) — Chirpy-like thin grey thumb */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-base-content) 35%, transparent);
+  }
+}
+
+/* ---------- Layout chrome ---------- */
+@layer components {
+  /* Left sidebar */
+  .chirpy-sidebar {
+    @apply fixed inset-y-0 left-0 z-40 flex w-72 flex-col items-center
+           border-r border-base-300 px-4 py-6;
+    background: linear-gradient(
+      180deg,
+      var(--color-sidebar-from) 0%,
+      var(--color-sidebar-to) 100%
+    );
+    color: var(--color-sidebar-text);
+    transition: transform 0.3s ease;
+  }
+  @media (max-width: 1023px) {
+    .chirpy-sidebar { transform: translateX(-100%); }
+    .chirpy-sidebar.is-open { transform: translateX(0); }
+  }
+
+  .chirpy-main-wrapper {
+    @apply flex min-h-screen w-full flex-col px-4 sm:px-6;
+  }
+  @media (min-width: 1024px) {
+    .chirpy-main-wrapper {
+      margin-left: 18rem;
+      width: calc(100% - 18rem);
+      max-width: calc(100% - 18rem);
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+  /* Cap the readable area on very wide monitors so the content stays
+     comfortable (the sidebar already sits flush left, fixed). */
+  @media (min-width: 1600px) {
+    .chirpy-main-wrapper {
+      max-width: min(calc(100% - 18rem), 1280px);
+      margin-right: auto;
+    }
+  }
+
+  /* Top bar */
+  .chirpy-topbar {
+    @apply sticky top-0 z-30 flex h-[var(--height-topbar)] items-center justify-between
+           gap-3 border-b border-base-300 bg-base-200/80 backdrop-blur
+           supports-[backdrop-filter]:bg-base-200/70;
+  }
+
+  /* Right panel */
+  .chirpy-panel {
+    @apply hidden shrink-0 self-start text-sm xl:block;
+    width: 14rem;
+  }
+  @media (min-width: 1440px) {
+    .chirpy-panel { width: 16rem; }
+  }
+
+  /* Post card — horizontal Chirpy card */
+  .chirpy-card {
+    @apply mb-5 rounded-md border border-base-300 bg-base-100 transition
+           hover:-translate-y-0.5 hover:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.08)];
+  }
+  .chirpy-card-link {
+    @apply grid grid-cols-1 gap-0 md:grid-cols-12;
+  }
+  .chirpy-card-link.has-image {
+    @apply md:grid-cols-12;
+  }
+  .chirpy-card-body {
+    @apply flex flex-col p-4 sm:p-5 md:col-span-7 md:p-6;
+  }
+  .chirpy-card-body.full {
+    @apply md:col-span-12;
+  }
+  .chirpy-card-image-wrap {
+    @apply order-first md:order-last md:col-span-5;
+  }
+  .chirpy-card-image {
+    @apply h-44 w-full object-cover md:h-full md:rounded-r-md;
+  }
+}
+
+/* ---------- Prose tuning for the post body ---------- */
+@layer components {
+  .prose-chirpy {
+    @apply text-base-content;
+    line-height: 1.75;
+    font-size: 1.0625rem;
+  }
+
+  .prose-chirpy h1,
+  .prose-chirpy h2,
+  .prose-chirpy h3,
+  .prose-chirpy h4 {
+    @apply scroll-mt-24 font-semibold tracking-tight text-base-content;
+  }
+  .prose-chirpy h1 { @apply mt-8 mb-4 text-3xl; }
+  .prose-chirpy h2 {
+    @apply mt-10 mb-4 border-b border-base-300 pb-2 text-2xl;
+  }
+  .prose-chirpy h3 { @apply mt-8 mb-3 text-xl; }
+  .prose-chirpy h4 { @apply mt-6 mb-2 text-lg; }
+  .prose-chirpy p { @apply my-4; }
+  .prose-chirpy a:not(.heading-anchor) {
+    @apply text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary;
+  }
+  .prose-chirpy a.heading-anchor {
+    @apply text-inherit no-underline;
+  }
+  .prose-chirpy ul { @apply my-4 list-disc pl-6; }
+  .prose-chirpy ol { @apply my-4 list-decimal pl-6; }
+  .prose-chirpy blockquote {
+    @apply my-6 rounded-r border-l-4 border-primary/50 bg-base-200 px-4 py-2 italic text-base-content/80;
+  }
+  .prose-chirpy hr { @apply my-10 border-base-300; }
+  .prose-chirpy code:not(pre code) {
+    @apply rounded bg-base-200 px-1.5 py-0.5 font-mono text-[0.92em] text-accent;
+    font-family: var(--font-mono);
+  }
+  .prose-chirpy pre {
+    @apply relative my-6 overflow-x-auto rounded-md border border-base-300 p-4 text-sm leading-relaxed;
+    font-family: var(--font-mono);
+  }
+  .prose-chirpy pre code { @apply bg-transparent p-0; }
+  .prose-chirpy img {
+    @apply mx-auto my-6 rounded-md border border-base-300;
+  }
+  .prose-chirpy table {
+    @apply my-6 w-full border-collapse text-left text-sm;
+  }
+  .prose-chirpy table th,
+  .prose-chirpy table td {
+    @apply border border-base-300 px-3 py-2;
+  }
+  .prose-chirpy table thead { @apply bg-base-200; }
+
+  /* Callouts (.callout.callout-info / -success / -warning / -error) */
+  .callout { @apply my-6 rounded-md border-l-4 px-4 py-3; }
+  .callout-info    { @apply border-info bg-info/10; }
+  .callout-success { @apply border-success bg-success/10; }
+  .callout-warning { @apply border-warning bg-warning/10; }
+  .callout-error   { @apply border-error bg-error/10; }
+}
+
+/* ---------- Code copy button (island target) ---------- */
+@layer components {
+  .code-copy-btn {
+    @apply absolute top-2 right-2 inline-flex items-center gap-1 rounded
+      bg-base-100/80 px-2 py-1 text-xs text-base-content/70 backdrop-blur
+      transition hover:bg-base-100 hover:text-base-content;
+  }
+  .code-copy-btn[data-copied='true'] { @apply text-success; }
+}
+
+/* ---------- TOC sticky highlight ---------- */
+@layer components {
+  .toc a {
+    @apply block rounded px-2 py-1 text-sm text-base-content/65 transition-colors hover:text-base-content;
+  }
+  .toc a[data-active='true'] {
+    @apply font-semibold text-primary;
+    box-shadow: inset 2px 0 0 0 var(--color-primary);
+  }
+  .toc .toc-level-3 { @apply pl-4; }
+  .toc .toc-level-4 { @apply pl-8; }
+}
+
+/* ---------- Sidebar nav ---------- */
+@layer components {
+  .chirpy-nav-link {
+    @apply relative flex w-full items-center gap-3 rounded-md px-3 py-2.5
+           text-[0.78rem] font-bold uppercase tracking-[0.07em];
+    color: var(--color-sidebar-text);
+    transition: color 0.2s ease;
+  }
+  .chirpy-nav-link:hover { color: var(--color-base-content); }
+  .chirpy-nav-link[aria-current='page'] {
+    color: var(--color-primary);
+  }
+  .chirpy-nav-link[aria-current='page']::before {
+    content: '';
+    @apply absolute -left-4 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r;
+    background: var(--color-primary);
+  }
+  .chirpy-nav-link i,
+  .chirpy-nav-link svg {
+    @apply h-4 w-4 shrink-0;
+  }
+
+  .chirpy-social {
+    @apply flex h-9 w-9 items-center justify-center rounded-md text-base-content/60 transition hover:text-primary;
+  }
+}
+
+/* ---------- Trending tag pill (Chirpy outline-primary) ---------- */
+@layer components {
+  .post-tag {
+    @apply inline-flex items-center rounded-full border border-primary/60
+           bg-base-100 px-3 py-1 text-xs font-medium text-primary
+           transition hover:bg-primary hover:text-primary-content;
+  }
+}
+
+/* ---------- Back-to-top floating button ---------- */
+@layer components {
+  .back-to-top {
+    @apply fixed bottom-6 right-6 z-30 flex h-11 w-11 items-center
+           justify-center rounded-full border border-base-300 bg-base-100
+           text-base-content shadow-md transition;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Locale } from '../config';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  crumbs?: Array<{ label: string; href?: string }>;
+}
+
+const { title, description, crumbs } = Astro.props;
+---
+<BaseLayout
+  title={title}
+  description={description}
+  hidePanel={true}
+  narrow={true}
+  crumbs={crumbs ?? [{ label: title }]}
+>
+  <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold leading-tight tracking-tight">{title}</h1>
+      {description && <p class="mt-2 text-base-content/70">{description}</p>}
+    </header>
+    <div class="prose-chirpy max-w-none">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

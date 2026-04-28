@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { useTranslations } from '../../i18n/utils';
+import { getPosts, getTagsWithCount, slugify } from '../../utils/posts';
+
+interface Props {
+  tagName: string;
+}
+
+export async function getStaticPaths() {
+  const locale = 'en';
+  const tags = await getTagsWithCount(locale);
+  return tags.map((tag) => ({
+    params: { tag: slugify(tag.name) },
+    props: { tagName: tag.name } satisfies Props,
+  }));
+}
+
+const { tagName } = Astro.props as Props;
+const { tag } = Astro.params;
+const locale = 'en';
+const t = useTranslations(locale);
+const posts = (await getPosts(locale)).filter((p) =>
+  p.data.tags.some((tg) => slugify(tg) === tag),
+);
+---
+<BaseLayout
+  title={`#${tagName}`}
+  pathWithoutLocale={`/tags/${tag}/`}
+>
+  <header class="mb-6">
+    <p class="text-sm uppercase tracking-wide text-base-content/60">{t('list.tagPosts')}</p>
+    <h1 class="text-3xl font-bold tracking-tight">#{tagName}</h1>
+    <p class="mt-1 text-sm text-base-content/60">
+      {posts.length} {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+    </p>
+  </header>
+  <PostList posts={posts} locale={locale} />
+</BaseLayout>

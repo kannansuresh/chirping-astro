@@ -1,0 +1,95 @@
+---
+/**
+ * Giscus comments island. Loads the giscus client script lazily and re-syncs
+ * the theme + locale whenever the user toggles the site theme or navigates.
+ *
+ * Set values in `src/config.ts` -> GISCUS, or via PUBLIC_GISCUS_* env vars.
+ */
+import { GISCUS, type Locale } from '../../config';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Per-post override; defaults to true. */
+  enabled?: boolean;
+}
+
+const { locale, enabled = true } = Astro.props;
+const t = useTranslations(locale);
+
+const showGiscus = GISCUS.enabled && enabled && GISCUS.repo && GISCUS.repoId;
+---
+<section class="mt-12 border-t border-base-300 pt-8" aria-labelledby="comments-heading">
+  <h2 id="comments-heading" class="mb-4 text-xl font-semibold">{t('post.comments')}</h2>
+
+  {showGiscus ? (
+    <div
+      data-giscus-mount
+      data-repo={GISCUS.repo}
+      data-repo-id={GISCUS.repoId}
+      data-category={GISCUS.category}
+      data-category-id={GISCUS.categoryId}
+      data-mapping={GISCUS.mapping}
+      data-strict={GISCUS.strict}
+      data-reactions-enabled={GISCUS.reactionsEnabled}
+      data-emit-metadata={GISCUS.emitMetadata}
+      data-input-position={GISCUS.inputPosition}
+      data-loading={GISCUS.loading}
+      data-locale={locale === 'fr' ? 'fr' : 'en'}
+    ></div>
+  ) : (
+    <p class="text-sm text-base-content/70">{t('post.commentsDisabled')}</p>
+  )}
+</section>
+
+{showGiscus && (
+  <script>
+    function giscusTheme() {
+      const t = document.documentElement.getAttribute('data-theme');
+      return t === 'chirpy-dark' ? 'dark' : 'light';
+    }
+
+    function mountGiscus() {
+      const mount = document.querySelector<HTMLElement>('[data-giscus-mount]');
+      if (!mount || mount.dataset.mounted === 'true') return;
+      mount.dataset.mounted = 'true';
+
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+
+      const set = (key: string, value: string | undefined) => {
+        if (value !== undefined) script.setAttribute(key, value);
+      };
+
+      set('data-repo', mount.dataset.repo);
+      set('data-repo-id', mount.dataset.repoId);
+      set('data-category', mount.dataset.category);
+      set('data-category-id', mount.dataset.categoryId);
+      set('data-mapping', mount.dataset.mapping);
+      set('data-strict', mount.dataset.strict);
+      set('data-reactions-enabled', mount.dataset.reactionsEnabled);
+      set('data-emit-metadata', mount.dataset.emitMetadata);
+      set('data-input-position', mount.dataset.inputPosition);
+      set('data-loading', mount.dataset.loading);
+      set('data-lang', mount.dataset.locale);
+      set('data-theme', giscusTheme());
+
+      mount.appendChild(script);
+    }
+
+    function syncTheme() {
+      const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+      if (!iframe?.contentWindow) return;
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme() } } },
+        'https://giscus.app',
+      );
+    }
+
+    mountGiscus();
+    document.addEventListener('theme-change', syncTheme);
+    document.addEventListener('astro:page-load', mountGiscus);
+  </script>
+)}

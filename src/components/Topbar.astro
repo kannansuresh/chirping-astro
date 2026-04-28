@@ -1,0 +1,62 @@
+---
+/**
+ * Chirpy-style topbar: hamburger (mobile only) | breadcrumb | site title (mobile) | search
+ * Sits inside the main column, below the header.
+ */
+import { SITE, type Locale } from '../config';
+import { useTranslations, localizedPath } from '../i18n/utils';
+import Icon from './Icon.astro';
+import SearchButton from './islands/SearchButton.astro';
+
+interface Props {
+  locale: Locale;
+  /**
+   * Breadcrumb segments. The last segment is treated as the current page.
+   * Pass [] to show only "Home".
+   */
+  crumbs?: Array<{ label: string; href?: string }>;
+}
+
+const { locale, crumbs = [] } = Astro.props;
+const t = useTranslations(locale);
+const home = localizedPath('/', locale);
+---
+<header class="chirpy-topbar" aria-label="Top Bar">
+  <div class="flex flex-1 items-center gap-2 px-1">
+    <button
+      type="button"
+      data-sidebar-toggle
+      class="btn btn-ghost btn-sm btn-square lg:hidden"
+      aria-label={t('nav.toggleMenu')}
+    >
+      <Icon name="menu" size={18} />
+    </button>
+
+    <nav aria-label="Breadcrumb" class="hidden truncate text-sm text-base-content/70 sm:block">
+      <ol class="flex items-center gap-1">
+        <li>
+          <a href={home} class="hover:text-primary">{t('nav.home')}</a>
+        </li>
+        {crumbs.map((crumb, i) => (
+          <li class="flex items-center gap-1 truncate">
+            <span aria-hidden="true" class="text-base-content/40">/</span>
+            {crumb.href && i < crumbs.length - 1 ? (
+              <a href={crumb.href} class="hover:text-primary">{crumb.label}</a>
+            ) : (
+              <span class="truncate font-medium text-base-content">{crumb.label}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    {/* Mobile site title */}
+    <a href={home} class="ml-1 truncate text-base font-semibold sm:hidden" aria-label={SITE.title}>
+      {SITE.title}
+    </a>
+  </div>
+
+  <div class="flex items-center gap-1 px-1">
+    <SearchButton locale={locale} />
+  </div>
+</header>
