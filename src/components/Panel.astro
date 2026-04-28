@@ -27,7 +27,7 @@ const recent = posts
 
 const trending = tags.slice(0, 8);
 ---
-<aside class="chirpy-panel" aria-label="Panel">
+<div class="chirpy-panel">
   {recent.length > 0 && (
     <section class="mb-8">
       <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
@@ -59,4 +59,4 @@ const trending = tags.slice(0, 8);
       </div>
     </section>
   )}
-</aside>
+</div>

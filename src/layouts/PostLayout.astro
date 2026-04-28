@@ -80,12 +80,14 @@ const crumbs = [
   publishedTime={post.data.pubDate}
   modifiedTime={post.data.updatedDate}
   tags={post.data.tags}
-  hidePanel={true}
   crumbs={crumbs}
   seo={seo}
 >
-  <div class="grid gap-10 xl:grid-cols-[minmax(0,1fr)_14rem]">
-    <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
+  {post.data.toc && headings.length > 0 && (
+    <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
+  )}
+
+  <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
       <header class="mb-8">
         <h1 class="text-3xl font-extrabold leading-tight tracking-tight text-base-content sm:text-[2.25rem]">
           {post.data.title}
@@ -165,11 +167,6 @@ const crumbs = [
         )
       )}
     </article>
-
-    {post.data.toc && headings.length > 0 && (
-      <TableOfContents headings={headings} locale={locale} />
-    )}
-  </div>
 
   <CodeCopy locale={locale} />
 </BaseLayout>

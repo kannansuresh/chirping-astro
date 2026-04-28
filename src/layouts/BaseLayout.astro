@@ -128,7 +128,12 @@ const meta: SeoMeta =
             <slot />
           </main>
 
-          {!hidePanel && <Panel locale={locale} />}
+          {!hidePanel && (
+            <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
+              <Panel locale={locale} />
+              <slot name="aside-bottom" />
+            </aside>
+          )}
         </div>
 
         <Footer locale={locale} />

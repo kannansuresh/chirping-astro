@@ -37,6 +37,18 @@ export const messages = {
     'post.next': 'Next',
     'post.comments': 'Comments',
     'post.commentsDisabled': 'Comments are disabled for this post.',
+    'post.commentsSetupTitle': 'Comments need configuration',
+    'post.commentsSetupBody':
+      'Giscus is enabled but not yet configured. Add the repository details below to start collecting comments.',
+    'post.commentsSetupStep1':
+      'Visit `giscus.app` and select your public GitHub repository (Discussions must be enabled).',
+    'post.commentsSetupStep2':
+      'Copy the generated `data-repo-id`, `data-category` and `data-category-id` values.',
+    'post.commentsSetupStep3':
+      'Set the `PUBLIC_GISCUS_ENABLED`, `PUBLIC_GISCUS_REPO`, `PUBLIC_GISCUS_REPO_ID`, `PUBLIC_GISCUS_CATEGORY` and `PUBLIC_GISCUS_CATEGORY_ID` env vars in your `.env` file.',
+    'post.commentsSetupStep4':
+      'Rebuild the site — this notice will be replaced by the live comments thread.',
+    'post.commentsSetupDocs': 'Open giscus.app',
     'post.share': 'Share',
     'post.copyLink': 'Copy link',
     'post.copied': 'Copied!',
@@ -112,6 +124,18 @@ export const messages = {
     'post.next': 'Suivant',
     'post.comments': 'Commentaires',
     'post.commentsDisabled': 'Les commentaires sont désactivés pour cet article.',
+    'post.commentsSetupTitle': 'Les commentaires doivent être configurés',
+    'post.commentsSetupBody':
+      'Giscus est activé mais pas encore configuré. Renseignez les informations du dépôt ci-dessous pour activer les commentaires.',
+    'post.commentsSetupStep1':
+      'Rendez-vous sur `giscus.app` et sélectionnez votre dépôt GitHub public (les Discussions doivent être activées).',
+    'post.commentsSetupStep2':
+      'Copiez les valeurs générées de `data-repo-id`, `data-category` et `data-category-id`.',
+    'post.commentsSetupStep3':
+      'Définissez les variables d\u2019environnement `PUBLIC_GISCUS_ENABLED`, `PUBLIC_GISCUS_REPO`, `PUBLIC_GISCUS_REPO_ID`, `PUBLIC_GISCUS_CATEGORY` et `PUBLIC_GISCUS_CATEGORY_ID` dans votre fichier `.env`.',
+    'post.commentsSetupStep4':
+      'Reconstruisez le site — cet avis sera remplacé par le fil de commentaires en direct.',
+    'post.commentsSetupDocs': 'Ouvrir giscus.app',
     'post.share': 'Partager',
     'post.copyLink': 'Copier le lien',
     'post.copied': 'Copié !',

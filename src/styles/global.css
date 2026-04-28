@@ -229,13 +229,26 @@
            supports-[backdrop-filter]:bg-base-200/70;
   }
 
-  /* Right panel */
-  .chirpy-panel {
-    @apply hidden shrink-0 self-start text-sm xl:block;
+  /* Right rail wrapper. Holds the global Panel widget followed by an
+     optional aside-bottom slot (e.g. the post TOC). The rail intentionally
+     does NOT use `self-start` so that, on long pages, it stretches to
+     match `<main>`'s height — giving any sticky child (e.g. the TOC)
+     enough vertical room to remain pinned while the article scrolls. */
+  .chirpy-panel-rail {
+    @apply hidden shrink-0 text-sm xl:block;
     width: 14rem;
   }
   @media (min-width: 1440px) {
-    .chirpy-panel { width: 16rem; }
+    .chirpy-panel-rail { width: 16rem; }
+  }
+  .chirpy-panel-rail > * + * {
+    margin-top: 2rem;
+  }
+
+  /* Inner Panel widget (Recently Updated + Trending Tags). Width and
+     visibility are owned by the rail wrapper, so this is content-only. */
+  .chirpy-panel {
+    @apply block text-sm;
   }
 
   /* Subtle left rail for aside items (Recently Updated, TOC, etc.).

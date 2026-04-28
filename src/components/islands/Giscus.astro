@@ -1,7 +1,12 @@
 ---
 /**
- * Giscus comments island. Loads the giscus client script lazily and re-syncs
- * the theme + locale whenever the user toggles the site theme or navigates.
+ * Giscus comments island. Renders one of three states:
+ *   - "live"     -> mounts the giscus.app client iframe (configured + enabled).
+ *   - "setup"    -> shows a friendly setup notice when comments are globally
+ *                   enabled and allowed for the post, but the repo isn't
+ *                   configured yet (so authors aren't met with silence).
+ *   - "disabled" -> renders the simple "comments are disabled" line, used
+ *                   when the post opts out or the global flag is off.
  *
  * Set values in `src/config.ts` -> GISCUS, or via PUBLIC_GISCUS_* env vars.
  */
@@ -17,12 +22,58 @@ interface Props {
 const { locale, enabled = true } = Astro.props;
 const t = useTranslations(locale);
 
-const showGiscus = GISCUS.enabled && enabled && GISCUS.repo && GISCUS.repoId;
+const giscusGloballyEnabled = GISCUS.enabled;
+const giscusPostEnabled = enabled;
+
+/**
+ * Detect placeholder values shipped in `.env.example` (e.g. `R_xxxxxxxxxxx`
+ * or `your-handle/your-repo`) so the setup notice surfaces even when the
+ * env vars exist but haven't been replaced with real values.
+ */
+function looksUnconfigured(value: string): boolean {
+  if (!value) return true;
+  const lower = value.toLowerCase();
+  return lower.includes('xxx') || lower.includes('your-');
+}
+
+const giscusConfigured =
+  !looksUnconfigured(GISCUS.repo) &&
+  !looksUnconfigured(GISCUS.repoId) &&
+  !looksUnconfigured(GISCUS.categoryId);
+
+type CommentState = 'live' | 'setup' | 'disabled';
+const state: CommentState =
+  !giscusGloballyEnabled || !giscusPostEnabled
+    ? 'disabled'
+    : giscusConfigured
+      ? 'live'
+      : 'setup';
+
+/**
+ * Render a string that may contain `backticks` as inline <code> elements.
+ * Keeps i18n step copy editable as plain strings without raw HTML.
+ */
+function renderInlineCode(input: string): string {
+  return input.replace(/`([^`]+)`/g, (_, code: string) => {
+    const escaped = code
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;');
+    return `<code class="rounded bg-base-200 px-1 py-0.5 text-[0.85em] font-mono">${escaped}</code>`;
+  });
+}
+
+const setupSteps = [
+  t('post.commentsSetupStep1'),
+  t('post.commentsSetupStep2'),
+  t('post.commentsSetupStep3'),
+  t('post.commentsSetupStep4'),
+];
 ---
 <section class="mt-12 border-t border-base-300 pt-8" aria-labelledby="comments-heading">
   <h2 id="comments-heading" class="mb-4 text-xl font-semibold">{t('post.comments')}</h2>
 
-  {showGiscus ? (
+  {state === 'live' && (
     <div
       data-giscus-mount
       data-repo={GISCUS.repo}
@@ -37,12 +88,41 @@ const showGiscus = GISCUS.enabled && enabled && GISCUS.repo && GISCUS.repoId;
       data-loading={GISCUS.loading}
       data-locale={locale === 'fr' ? 'fr' : 'en'}
     ></div>
-  ) : (
+  )}
+
+  {state === 'setup' && (
+    <div
+      role="note"
+      class="rounded-md border border-warning/40 bg-warning/10 p-5 text-sm text-base-content"
+    >
+      <p class="mb-1 font-semibold text-warning-content">
+        {t('post.commentsSetupTitle')}
+      </p>
+      <p class="mb-3 text-base-content/80">{t('post.commentsSetupBody')}</p>
+      <ol class="list-decimal space-y-1.5 pl-5 text-base-content/80">
+        {setupSteps.map((step) => (
+          <li set:html={renderInlineCode(step)} />
+        ))}
+      </ol>
+      <p class="mt-4">
+        <a
+          href="https://giscus.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link link-primary text-sm font-medium"
+        >
+          {t('post.commentsSetupDocs')} &rarr;
+        </a>
+      </p>
+    </div>
+  )}
+
+  {state === 'disabled' && (
     <p class="text-sm text-base-content/70">{t('post.commentsDisabled')}</p>
   )}
 </section>
 
-{showGiscus && (
+{state === 'live' && (
   <script>
     function giscusTheme() {
       const t = document.documentElement.getAttribute('data-theme');
