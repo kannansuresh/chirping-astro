@@ -98,18 +98,18 @@ export const SITE: SiteConfig = {
 };
 
 export const NAV: readonly NavItem[] = [
-  { key: 'home', href: '/', icon: 'home' },
-  { key: 'categories', href: '/categories', icon: 'stream' },
-  { key: 'tags', href: '/tags', icon: 'tag' },
-  { key: 'archives', href: '/archives', icon: 'archive' },
-  { key: 'about', href: '/about', icon: 'info' },
+  { key: 'home', href: '/', icon: 'lucide:home' },
+  { key: 'categories', href: '/categories', icon: 'lucide:layers' },
+  { key: 'tags', href: '/tags', icon: 'lucide:tag' },
+  { key: 'archives', href: '/archives', icon: 'lucide:archive' },
+  { key: 'about', href: '/about', icon: 'lucide:info' },
 ] as const;
 
 export const SOCIALS: readonly SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/your-handle', icon: 'github' },
-  { label: 'Twitter', href: 'https://twitter.com/your-handle', icon: 'twitter' },
-  { label: 'Email', href: 'mailto:hello@example.com', icon: 'envelope' },
-  { label: 'RSS', href: '/rss.xml', icon: 'rss' },
+  { label: 'GitHub', href: 'https://github.com/your-handle', icon: 'lucide:github' },
+  { label: 'Twitter', href: 'https://twitter.com/your-handle', icon: 'lucide:twitter' },
+  { label: 'Email', href: 'mailto:hello@example.com', icon: 'lucide:mail' },
+  { label: 'RSS', href: '/rss.xml', icon: 'lucide:rss' },
 ] as const;
 
 /**

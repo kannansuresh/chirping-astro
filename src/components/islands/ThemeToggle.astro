@@ -1,7 +1,7 @@
 ---
 import { useTranslations } from '../../i18n/utils';
 import type { Locale } from '../../config';
-import Icon from '../Icon.astro';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   locale: Locale;
@@ -19,10 +19,10 @@ const t = useTranslations(locale);
   title={t('theme.toggle')}
 >
   <span data-theme-icon="light" class="hidden">
-    <Icon name="sun" size={18} ariaLabel={t('theme.light')} />
+    <Icon name="lucide:sun" width={18} height={18} aria-label={t('theme.light')} role="img" />
   </span>
   <span data-theme-icon="dark" class="hidden">
-    <Icon name="moon" size={18} ariaLabel={t('theme.dark')} />
+    <Icon name="lucide:moon" width={18} height={18} aria-label={t('theme.dark')} role="img" />
   </span>
 </button>
 

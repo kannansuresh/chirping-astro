@@ -4,15 +4,9 @@ import PostNav from '../components/PostNav.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import CodeCopy from '../components/islands/CodeCopy.astro';
 import Giscus from '../components/islands/Giscus.astro';
-import Icon from '../components/Icon.astro';
+import { Icon } from 'astro-icon/components';
 import { GISCUS, type Locale } from '../config';
-import {
-  useTranslations,
-  stripLocale,
-  formatDate,
-  isoDate,
-  localizedPath,
-} from '../i18n/utils';
+import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
 import {
   type Post,
@@ -73,6 +67,7 @@ const crumbs = [
   { label: post.data.title },
 ];
 ---
+
 <BaseLayout
   title={post.data.title}
   description={post.data.description}
@@ -83,90 +78,109 @@ const crumbs = [
   crumbs={crumbs}
   seo={seo}
 >
-  {post.data.toc && headings.length > 0 && (
-    <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
-  )}
+  {
+    post.data.toc && headings.length > 0 && (
+      <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
+    )
+  }
 
-  <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
-      <header class="mb-8">
-        <h1 class="text-3xl font-extrabold leading-tight tracking-tight text-base-content sm:text-[2.25rem]">
-          {post.data.title}
-        </h1>
-        <p class="mt-3 text-lg text-base-content/65">{post.data.description}</p>
+  <article class="border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10">
+    <header class="mb-8">
+      <h1
+        class="text-base-content text-3xl leading-tight font-extrabold tracking-tight sm:text-[2.25rem]"
+      >
+        {post.data.title}
+      </h1>
+      <p class="text-base-content/65 mt-3 text-lg">{post.data.description}</p>
 
-        <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-base-content/60">
-          <span class="inline-flex items-center gap-1">
-            <Icon name="calendar" size={14} />
-            <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
-          </span>
-          {post.data.updatedDate && (
+      <div class="text-base-content/60 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <span class="inline-flex items-center gap-1">
+          <Icon name="lucide:calendar-days" width={14} height={14} />
+          <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
+        </span>
+        {
+          post.data.updatedDate && (
             <span class="inline-flex items-center gap-1">
-              <Icon name="check" size={14} />
+              <Icon name="lucide:check" width={14} height={14} />
               <time datetime={isoDate(post.data.updatedDate)}>
                 {t('post.updatedOn')} {formatDate(post.data.updatedDate, locale)}
               </time>
             </span>
-          )}
-          {post.data.categories.length > 0 && (
+          )
+        }
+        {
+          post.data.categories.length > 0 && (
             <span class="inline-flex items-center gap-1">
-              <Icon name="folder" size={14} />
+              <Icon name="lucide:folder" width={14} height={14} />
               {post.data.categories.map((c, i) => (
                 <>
-                  {i > 0 && <span class="mx-0.5 text-base-content/40">,</span>}
-                  <a href={categoryPath(locale, c)} class="hover:text-primary">{c}</a>
+                  {i > 0 && <span class="text-base-content/40 mx-0.5">,</span>}
+                  <a href={categoryPath(locale, c)} class="hover:text-primary">
+                    {c}
+                  </a>
                 </>
               ))}
             </span>
-          )}
-          <span class="inline-flex items-center gap-1">
-            <Icon name="clock" size={14} />
-            {minutes} {t('post.readingTime')}
-          </span>
-        </div>
-      </header>
+          )
+        }
+        <span class="inline-flex items-center gap-1">
+          <Icon name="lucide:clock" width={14} height={14} />
+          {minutes}
+          {t('post.readingTime')}
+        </span>
+      </div>
+    </header>
 
-      {showHero && heroSrc && (
-        <figure class="post-hero mb-8 -mx-5 sm:-mx-8">
+    {
+      showHero && heroSrc && (
+        <figure class="post-hero -mx-5 mb-8 sm:-mx-8">
           <img
             src={heroSrc}
             alt={heroAlt}
-            class="w-full border-y border-base-300"
+            class="border-base-300 w-full border-y"
             loading="eager"
             decoding="async"
           />
           {heroAlt && (
-            <figcaption class="px-5 pt-2 text-center text-xs text-base-content/55 sm:px-8">
+            <figcaption class="text-base-content/55 px-5 pt-2 text-center text-xs sm:px-8">
               {heroAlt}
             </figcaption>
           )}
         </figure>
-      )}
+      )
+    }
 
-      <div class="prose-chirpy max-w-none">
-        <slot />
-      </div>
+    <div class="prose-chirpy max-w-none">
+      <slot />
+    </div>
 
-      {post.data.tags.length > 0 && (
-        <footer class="mt-10 flex flex-wrap items-center gap-2 border-t border-base-300 pt-6">
-          <span class="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+    {
+      post.data.tags.length > 0 && (
+        <footer class="border-base-300 mt-10 flex flex-wrap items-center gap-2 border-t pt-6">
+          <span class="text-base-content/60 text-sm font-semibold tracking-wide uppercase">
             {t('post.tags')}
           </span>
           {post.data.tags.map((tag) => (
-            <a href={tagPath(locale, tag)} class="post-tag text-xs">{tag}</a>
+            <a href={tagPath(locale, tag)} class="post-tag text-xs">
+              {tag}
+            </a>
           ))}
         </footer>
-      )}
+      )
+    }
 
-      <PostNav prev={prev} next={next} locale={locale} />
+    <PostNav prev={prev} next={next} locale={locale} />
 
-      {commentsEnabled ? (
+    {
+      commentsEnabled ? (
         <Giscus locale={locale} />
       ) : (
         post.data.comments === false && (
-          <p class="mt-10 text-sm text-base-content/60">{t('post.commentsDisabled')}</p>
+          <p class="text-base-content/60 mt-10 text-sm">{t('post.commentsDisabled')}</p>
         )
-      )}
-    </article>
+      )
+    }
+  </article>
 
   <CodeCopy locale={locale} />
 </BaseLayout>

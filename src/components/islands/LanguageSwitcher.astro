@@ -13,7 +13,7 @@
 
 import { SITE, type Locale } from '../../config';
 import { useTranslations, localizedPath, stripLocale, localeLabel } from '../../i18n/utils';
-import Icon from '../Icon.astro';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   locale: Locale;
@@ -24,6 +24,7 @@ const t = useTranslations(locale);
 const otherLocales = SITE.locales.filter((l) => l !== locale);
 const fallbackBase = stripLocale(Astro.url.pathname);
 ---
+
 <div class="dropdown dropdown-top">
   <button
     type="button"
@@ -33,37 +34,32 @@ const fallbackBase = stripLocale(Astro.url.pathname);
     title={t('lang.switcher')}
     tabindex="0"
   >
-    <Icon name="globe" size={16} />
+    <Icon name="lucide:globe" width={16} height={16} />
   </button>
   <ul
-    class="menu dropdown-content z-50 mb-2 w-44 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg"
+    class="menu dropdown-content rounded-box border-base-300 bg-base-100 z-50 mb-2 w-44 border p-2 shadow-lg"
     role="menu"
     data-lang-switcher
   >
-    <li class="menu-title px-2 py-1 text-xs uppercase tracking-wide text-base-content/60">
+    <li class="menu-title text-base-content/60 px-2 py-1 text-xs tracking-wide uppercase">
       {t('lang.switcher')}
     </li>
     <li>
-      <a
-        href={localizedPath(fallbackBase, locale)}
-        aria-current="true"
-        class="font-medium"
-      >
+      <a href={localizedPath(fallbackBase, locale)} aria-current="true" class="font-medium">
         <span class="badge badge-primary badge-sm">{locale.toUpperCase()}</span>
         {localeLabel(locale)}
       </a>
     </li>
-    {otherLocales.map((target) => (
-      <li>
-        <a
-          href={localizedPath(fallbackBase, target)}
-          data-lang-target={target}
-        >
-          <span class="badge badge-ghost badge-sm">{target.toUpperCase()}</span>
-          {localeLabel(target)}
-        </a>
-      </li>
-    ))}
+    {
+      otherLocales.map((target) => (
+        <li>
+          <a href={localizedPath(fallbackBase, target)} data-lang-target={target}>
+            <span class="badge badge-ghost badge-sm">{target.toUpperCase()}</span>
+            {localeLabel(target)}
+          </a>
+        </li>
+      ))
+    }
   </ul>
 </div>
 

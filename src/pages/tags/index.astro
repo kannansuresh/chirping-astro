@@ -2,12 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations } from '../../i18n/utils';
 import { getTagsWithCount, tagPath } from '../../utils/posts';
-import Icon from '../../components/Icon.astro';
+import { Icon } from 'astro-icon/components';
 
 const locale = 'en';
 const t = useTranslations(locale);
 const tags = await getTagsWithCount(locale);
 ---
+
 <BaseLayout
   title={t('tags.title')}
   pathWithoutLocale="/tags/"
@@ -16,19 +17,21 @@ const tags = await getTagsWithCount(locale);
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('tags.title')}</h1>
   </header>
-  {tags.length === 0 ? (
-    <p class="text-base-content/70">{t('tags.empty')}</p>
-  ) : (
-    <ul class="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <li>
-          <a href={tagPath(locale, tag.name)} class="badge badge-lg gap-1">
-            <Icon name="tag" size={12} />
-            {tag.name}
-            <span class="text-base-content/60">{tag.count}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
+  {
+    tags.length === 0 ? (
+      <p class="text-base-content/70">{t('tags.empty')}</p>
+    ) : (
+      <ul class="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <li>
+            <a href={tagPath(locale, tag.name)} class="badge badge-lg gap-1">
+              <Icon name="lucide:tag" width={12} height={12} />
+              {tag.name}
+              <span class="text-base-content/60">{tag.count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </BaseLayout>

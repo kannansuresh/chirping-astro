@@ -5,7 +5,7 @@
  */
 import { SITE, type Locale } from '../config';
 import { useTranslations, localizedPath } from '../i18n/utils';
-import Icon from './Icon.astro';
+import { Icon } from 'astro-icon/components';
 import SearchButton from './islands/SearchButton.astro';
 
 interface Props {
@@ -21,6 +21,7 @@ const { locale, crumbs = [] } = Astro.props;
 const t = useTranslations(locale);
 const home = localizedPath('/', locale);
 ---
+
 <header class="chirpy-topbar" aria-label="Top Bar">
   <div class="flex flex-1 items-center gap-2 px-1">
     <button
@@ -29,24 +30,30 @@ const home = localizedPath('/', locale);
       class="btn btn-ghost btn-sm btn-square lg:hidden"
       aria-label={t('nav.toggleMenu')}
     >
-      <Icon name="menu" size={18} />
+      <Icon name="lucide:menu" width={18} height={18} />
     </button>
 
-    <nav aria-label="Breadcrumb" class="hidden truncate text-sm text-base-content/70 sm:block">
+    <nav aria-label="Breadcrumb" class="text-base-content/70 hidden truncate text-sm sm:block">
       <ol class="flex items-center gap-1">
         <li>
           <a href={home} class="hover:text-primary">{t('nav.home')}</a>
         </li>
-        {crumbs.map((crumb, i) => (
-          <li class="flex items-center gap-1 truncate">
-            <span aria-hidden="true" class="text-base-content/40">/</span>
-            {crumb.href && i < crumbs.length - 1 ? (
-              <a href={crumb.href} class="hover:text-primary">{crumb.label}</a>
-            ) : (
-              <span class="truncate font-medium text-base-content">{crumb.label}</span>
-            )}
-          </li>
-        ))}
+        {
+          crumbs.map((crumb, i) => (
+            <li class="flex items-center gap-1 truncate">
+              <span aria-hidden="true" class="text-base-content/40">
+                /
+              </span>
+              {crumb.href && i < crumbs.length - 1 ? (
+                <a href={crumb.href} class="hover:text-primary">
+                  {crumb.label}
+                </a>
+              ) : (
+                <span class="text-base-content truncate font-medium">{crumb.label}</span>
+              )}
+            </li>
+          ))
+        }
       </ol>
     </nav>
 

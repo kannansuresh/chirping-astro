@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '../config';
 import { useTranslations } from '../i18n/utils';
-import Icon from './Icon.astro';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   currentPage: number;
@@ -31,6 +31,7 @@ for (let p = Math.max(2, currentPage - 1); p <= Math.min(lastPage - 1, currentPa
 if (currentPage + 1 < lastPage - 1) push('…');
 if (lastPage > 1) push(lastPage);
 ---
+
 <nav
   aria-label={`${t('pagination.page')} ${currentPage} ${t('pagination.of')} ${lastPage}`}
   class="my-10 flex items-center justify-between"
@@ -39,46 +40,39 @@ if (lastPage > 1) push(lastPage);
     rel="prev"
     href={prev ?? '#'}
     aria-disabled={prev ? undefined : 'true'}
-    class:list={[
-      'btn btn-sm btn-ghost gap-1',
-      prev ? '' : 'pointer-events-none opacity-40',
-    ]}
+    class:list={['btn btn-sm btn-ghost gap-1', prev ? '' : 'pointer-events-none opacity-40']}
   >
-    <Icon name="arrowUp" size={14} class="-rotate-90" />
+    <Icon name="lucide:arrow-up" width={14} height={14} class="-rotate-90" />
     {t('pagination.previous')}
   </a>
 
   <ul class="join">
-    {numbers.map((n) =>
-      n === '…' ? (
-        <li class="join-item btn btn-ghost btn-sm pointer-events-none">…</li>
-      ) : (
-        <li>
-          <a
-            href={hrefForPage(n)}
-            aria-current={n === currentPage ? 'page' : undefined}
-            class:list={[
-              'join-item btn btn-sm',
-              n === currentPage ? 'btn-primary' : 'btn-ghost',
-            ]}
-          >
-            {n}
-          </a>
-        </li>
-      ),
-    )}
+    {
+      numbers.map((n) =>
+        n === '…' ? (
+          <li class="join-item btn btn-ghost btn-sm pointer-events-none">…</li>
+        ) : (
+          <li>
+            <a
+              href={hrefForPage(n)}
+              aria-current={n === currentPage ? 'page' : undefined}
+              class:list={['join-item btn btn-sm', n === currentPage ? 'btn-primary' : 'btn-ghost']}
+            >
+              {n}
+            </a>
+          </li>
+        ),
+      )
+    }
   </ul>
 
   <a
     rel="next"
     href={next ?? '#'}
     aria-disabled={next ? undefined : 'true'}
-    class:list={[
-      'btn btn-sm btn-ghost gap-1',
-      next ? '' : 'pointer-events-none opacity-40',
-    ]}
+    class:list={['btn btn-sm btn-ghost gap-1', next ? '' : 'pointer-events-none opacity-40']}
   >
     {t('pagination.next')}
-    <Icon name="arrowUp" size={14} class="rotate-90" />
+    <Icon name="lucide:arrow-up" width={14} height={14} class="rotate-90" />
   </a>
 </nav>

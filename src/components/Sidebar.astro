@@ -8,7 +8,7 @@
 import { SITE, NAV, SOCIALS, type Locale } from '../config';
 import { useTranslations, localizedPath, withBase } from '../i18n/utils';
 import type { UIKey } from '../i18n/ui';
-import Icon from './Icon.astro';
+import { Icon } from 'astro-icon/components';
 import ThemeToggle from './islands/ThemeToggle.astro';
 import LanguageSwitcher from './islands/LanguageSwitcher.astro';
 
@@ -88,7 +88,7 @@ const navItems = NAV.map((item) => ({
                 aria-current={isActive ? 'page' : undefined}
                 class="chirpy-nav-link"
               >
-                <Icon name={item.icon ?? 'home'} size={16} />
+                <Icon name={item.icon ?? 'lucide:home'} width={16} height={16} />
                 <span>{item.label}</span>
               </a>
             </li>
@@ -114,7 +114,7 @@ const navItems = NAV.map((item) => ({
           aria-label={s.label}
           target={s.href.startsWith('http') ? '_blank' : undefined}
         >
-          <Icon name={s.icon} size={16} />
+          <Icon name={s.icon} width={16} height={16} />
         </a>
       ))
     }
