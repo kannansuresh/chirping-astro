@@ -12,6 +12,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import { SITE, type Locale } from '../config';
+import { withBase } from '../i18n/utils';
 
 export type Post = CollectionEntry<'posts'> & {
   data: CollectionEntry<'posts'>['data'] & { lang: Locale; translationKey: string };
@@ -53,8 +54,11 @@ export function postSlug(entry: Post): string {
 /** Full localized URL path for a post. */
 export function postPath(entry: Post): string {
   const slug = postSlug(entry);
-  if (entry.data.lang === SITE.defaultLocale) return `/posts/${slug}/`;
-  return `/${entry.data.lang}/posts/${slug}/`;
+  const path =
+    entry.data.lang === SITE.defaultLocale
+      ? `/posts/${slug}/`
+      : `/${entry.data.lang}/posts/${slug}/`;
+  return withBase(path);
 }
 
 /** Sort posts: pinned first, then by pubDate desc. */
@@ -191,12 +195,15 @@ export function shouldShowHero(post: Post): boolean {
 export function heroImageSrc(post: Post): string | undefined {
   const img = post.data.heroImage;
   if (!img) return undefined;
-  if (typeof img === 'string') return img;
+  let src: string | undefined;
+  if (typeof img === 'string') src = img;
   // Accept Astro image-import objects defensively (legacy posts)
-  if (typeof img === 'object' && 'src' in (img as Record<string, unknown>)) {
-    return (img as { src: string }).src;
+  else if (typeof img === 'object' && 'src' in (img as Record<string, unknown>)) {
+    src = (img as { src: string }).src;
   }
-  return undefined;
+  if (!src) return undefined;
+  // Prefix the configured base for absolute paths into /public.
+  return src.startsWith('/') ? withBase(src) : src;
 }
 
 /** Slugify a tag/category for use in URLs. */
@@ -212,13 +219,14 @@ export function slugify(value: string): string {
 /** Build the URL for a tag listing page in a given locale. */
 export function tagPath(locale: Locale, tag: string): string {
   const slug = slugify(tag);
-  return locale === SITE.defaultLocale ? `/tags/${slug}/` : `/${locale}/tags/${slug}/`;
+  const path = locale === SITE.defaultLocale ? `/tags/${slug}/` : `/${locale}/tags/${slug}/`;
+  return withBase(path);
 }
 
 /** Build the URL for a category listing page in a given locale. */
 export function categoryPath(locale: Locale, category: string): string {
   const slug = slugify(category);
-  return locale === SITE.defaultLocale
-    ? `/categories/${slug}/`
-    : `/${locale}/categories/${slug}/`;
+  const path =
+    locale === SITE.defaultLocale ? `/categories/${slug}/` : `/${locale}/categories/${slug}/`;
+  return withBase(path);
 }

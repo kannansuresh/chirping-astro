@@ -31,13 +31,9 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Setup Pages
-        id: pages
         uses: actions/configure-pages@v5
 
       - name: Build with Astro
-        env:
-          SITE: ${{ steps.pages.outputs.origin }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: bun run build
 
       - name: Upload artifact

@@ -6,7 +6,7 @@
  */
 
 import { SITE, NAV, SOCIALS, type Locale } from '../config';
-import { useTranslations, localizedPath } from '../i18n/utils';
+import { useTranslations, localizedPath, withBase } from '../i18n/utils';
 import type { UIKey } from '../i18n/ui';
 import Icon from './Icon.astro';
 import ThemeToggle from './islands/ThemeToggle.astro';
@@ -26,80 +26,98 @@ const navItems = NAV.map((item) => ({
   label: t(`nav.${item.key}` as UIKey),
 }));
 ---
+
 <aside id="sidebar" class="chirpy-sidebar" aria-label="Sidebar">
   {/* Profile */}
   <header class="flex w-full flex-col items-center pt-4 pb-6 text-center">
     <a href={home} class="block" aria-label={SITE.title}>
       <span
-        class="block h-28 w-28 overflow-hidden rounded-full border-4 border-base-100 shadow-sm transition hover:scale-[1.02]"
+        class="border-base-100 block h-28 w-28 overflow-hidden rounded-full border-4 shadow-sm transition hover:scale-[1.02]"
         style="background:linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, white));"
       >
-        {SITE.author.avatar ? (
-          <img
-            src={SITE.author.avatar}
-            alt={SITE.author.name}
-            width="112"
-            height="112"
-            class="h-full w-full object-cover"
-            loading="eager"
-            decoding="async"
-          />
-        ) : (
-          <span class="flex h-full w-full items-center justify-center text-3xl font-bold text-primary-content">
-            {SITE.title.charAt(0)}
-          </span>
-        )}
+        {
+          SITE.author.avatar ? (
+            <img
+              src={
+                SITE.author.avatar.startsWith('/')
+                  ? withBase(SITE.author.avatar)
+                  : SITE.author.avatar
+              }
+              alt={SITE.author.name}
+              width="112"
+              height="112"
+              class="h-full w-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <span class="text-primary-content flex h-full w-full items-center justify-center text-3xl font-bold">
+              {SITE.title.charAt(0)}
+            </span>
+          )
+        }
       </span>
     </a>
-    <a href={home} class="mt-4 text-xl font-semibold tracking-wide text-base-content hover:text-primary">
+    <a
+      href={home}
+      class="text-base-content hover:text-primary mt-4 text-xl font-semibold tracking-wide"
+    >
       {SITE.title}
     </a>
-    {SITE.author.bio && (
-      <p class="mt-1 max-w-[14rem] text-sm italic text-base-content/60">{SITE.author.bio}</p>
-    )}
+    {
+      SITE.author.bio && (
+        <p class="text-base-content/60 mt-1 max-w-[14rem] text-sm italic">{SITE.author.bio}</p>
+      )
+    }
   </header>
 
   {/* Vertical nav */}
   <nav class="chirpy-nav flex-1" aria-label="Main">
     <ul class="contents flex-col gap-0.5">
-      {navItems.map((item) => {
-        const stripped = item.href.replace(/\/+$/, '') || '/';
-        const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
-        const isActive =
-          stripped === current ||
-          (stripped !== home.replace(/\/+$/, '') && current.startsWith(stripped + '/'));
-        return (
-          <li>
-            <a
-              href={item.href}
-              aria-current={isActive ? 'page' : undefined}
-              class="chirpy-nav-link"
-            >
-              <Icon name={item.icon ?? 'home'} size={16} />
-              <span>{item.label}</span>
-            </a>
-          </li>
-        );
-      })}
+      {
+        navItems.map((item) => {
+          const stripped = item.href.replace(/\/+$/, '') || '/';
+          const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+          const isActive =
+            stripped === current ||
+            (stripped !== home.replace(/\/+$/, '') && current.startsWith(stripped + '/'));
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                class="chirpy-nav-link"
+              >
+                <Icon name={item.icon ?? 'home'} size={16} />
+                <span>{item.label}</span>
+              </a>
+            </li>
+          );
+        })
+      }
     </ul>
   </nav>
 
   {/* Bottom row: theme toggle + language + socials */}
-  <div class="mt-4 flex w-full flex-wrap items-center justify-center gap-1 border-t border-base-300 pt-4">
+  <div
+    class="border-base-300 mt-4 flex w-full flex-wrap items-center justify-center gap-1 border-t pt-4"
+  >
     <ThemeToggle locale={locale} />
     <LanguageSwitcher locale={locale} />
-    <span class="mx-1 h-6 w-px bg-base-300" aria-hidden="true"></span>
-    {SOCIALS.map((s) => (
-      <a
-        href={s.href}
-        rel="noopener"
-        class="chirpy-social"
-        aria-label={s.label}
-        target={s.href.startsWith('http') ? '_blank' : undefined}
-      >
-        <Icon name={s.icon} size={16} />
-      </a>
-    ))}
+    <span class="bg-base-300 mx-1 h-6 w-px" aria-hidden="true"></span>
+    {
+      SOCIALS.map((s) => (
+        <a
+          href={s.href.startsWith('/') ? withBase(s.href) : s.href}
+          rel="noopener"
+          class="chirpy-social"
+          aria-label={s.label}
+          target={s.href.startsWith('http') ? '_blank' : undefined}
+        >
+          <Icon name={s.icon} size={16} />
+        </a>
+      ))
+    }
   </div>
 </aside>
 
@@ -109,8 +127,7 @@ const navItems = NAV.map((item) => ({
   data-sidebar-mask
   class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"
   aria-label="Close sidebar"
-  tabindex="-1"
-></button>
+  tabindex="-1"></button>
 
 <script>
   function setupSidebar() {

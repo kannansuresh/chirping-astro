@@ -13,6 +13,21 @@ import { messages, type UIKey } from './ui';
 
 const DEFAULT_LOCALE: Locale = SITE.defaultLocale;
 
+/** Configured base path (no trailing slash). E.g. '/chirping-astro' or ''. */
+const BASE = (import.meta.env.BASE_URL ?? '/').replace(/\/+$/, '');
+
+/**
+ * Prefix an absolute path with the configured `base`. Safe to call with
+ * already-prefixed paths (it won't double up) or with empty/relative
+ * paths (returned unchanged).
+ */
+export function withBase(path: string): string {
+  if (!path || !path.startsWith('/')) return path;
+  if (!BASE) return path;
+  if (path === BASE || path.startsWith(`${BASE}/`)) return path;
+  return `${BASE}${path}`;
+}
+
 /** Returns the leading locale prefix or '' for the default locale. */
 export function localePrefix(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
@@ -24,12 +39,15 @@ export function localePrefix(locale: Locale): string {
  *   localizedPath('/posts/foo', 'en') -> '/posts/foo'
  *   localizedPath('/posts/foo', 'fr') -> '/fr/posts/foo'
  *   localizedPath('/', 'fr')          -> '/fr/'
+ *
+ * The configured `base` (e.g. `/chirping-astro`) is automatically
+ * prefixed when set.
  */
 export function localizedPath(path: string, locale: Locale): string {
   const cleaned = path.startsWith('/') ? path : `/${path}`;
-  if (locale === DEFAULT_LOCALE) return cleaned;
-  if (cleaned === '/') return `/${locale}/`;
-  return `/${locale}${cleaned}`;
+  const localized =
+    locale === DEFAULT_LOCALE ? cleaned : cleaned === '/' ? `/${locale}/` : `/${locale}${cleaned}`;
+  return withBase(localized);
 }
 
 /**
@@ -38,13 +56,22 @@ export function localizedPath(path: string, locale: Locale): string {
  * the default locale is returned.
  */
 export function detectLocale(pathname: string): Locale {
+  const p = stripBase(pathname);
   for (const locale of SITE.locales) {
     if (locale === DEFAULT_LOCALE) continue;
-    if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
+    if (p === `/${locale}` || p.startsWith(`/${locale}/`)) {
       return locale;
     }
   }
   return DEFAULT_LOCALE;
+}
+
+/** Strip the configured base path prefix from a pathname. */
+function stripBase(pathname: string): string {
+  if (!BASE) return pathname;
+  if (pathname === BASE) return '/';
+  if (pathname.startsWith(`${BASE}/`)) return pathname.slice(BASE.length);
+  return pathname;
 }
 
 /**
@@ -55,12 +82,13 @@ export function detectLocale(pathname: string): Locale {
  *   stripLocale('/fr')            -> '/'
  */
 export function stripLocale(pathname: string): string {
+  const p = stripBase(pathname);
   for (const locale of SITE.locales) {
     if (locale === DEFAULT_LOCALE) continue;
-    if (pathname === `/${locale}` || pathname === `/${locale}/`) return '/';
-    if (pathname.startsWith(`/${locale}/`)) return pathname.slice(`/${locale}`.length);
+    if (p === `/${locale}` || p === `/${locale}/`) return '/';
+    if (p.startsWith(`/${locale}/`)) return p.slice(`/${locale}`.length);
   }
-  return pathname;
+  return p;
 }
 
 /**

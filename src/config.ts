@@ -79,7 +79,7 @@ export interface GiscusConfig {
 }
 
 export const SITE: SiteConfig = {
-  url: import.meta.env.SITE_URL ?? 'https://chirping-astro.example.com',
+  url: import.meta.env.SITE_URL ?? 'https://aneejian.com',
   title: 'Chirping Astro',
   description:
     'A modern, multilingual Astro v6 theme inspired by Chirpy — built with Tailwind v4, daisyUI, MDX, Pagefind, and Giscus.',

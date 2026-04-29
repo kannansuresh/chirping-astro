@@ -8,7 +8,7 @@ import Panel from '../components/Panel.astro';
 import SEO from '../components/SEO.astro';
 import BackToTop from '../components/islands/BackToTop.astro';
 import { SITE, type Locale } from '../config';
-import { detectLocale, htmlLang, useTranslations, stripLocale } from '../i18n/utils';
+import { detectLocale, htmlLang, useTranslations, stripLocale, withBase } from '../i18n/utils';
 import { buildSeo, type SeoMeta } from '../utils/seo';
 
 interface Props {
@@ -65,6 +65,7 @@ const meta: SeoMeta =
     tags,
   });
 ---
+
 <!doctype html>
 <html lang={lang} data-theme="chirpy-light">
   <head>
@@ -73,13 +74,18 @@ const meta: SeoMeta =
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f8" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} (EN)`} href="/rss.xml" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.title} (EN)`}
+      href={withBase('/rss.xml')}
+    />
     <link
       rel="alternate"
       type="application/rss+xml"
       title={`${SITE.title} (FR)`}
-      href="/fr/rss.xml"
+      href={withBase('/fr/rss.xml')}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -104,8 +110,7 @@ const meta: SeoMeta =
   <body>
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50
-             focus:rounded focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-content"
+      class="focus:bg-primary focus:text-primary-content sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:px-3 focus:py-2"
     >
       {t('site.skipToContent')}
     </a>
@@ -120,20 +125,19 @@ const meta: SeoMeta =
           <main
             id="main"
             aria-label="Main Content"
-            class:list={[
-              'min-w-0 flex-1',
-              narrow ? 'mx-auto max-w-3xl' : '',
-            ]}
+            class:list={['min-w-0 flex-1', narrow ? 'mx-auto max-w-3xl' : '']}
           >
             <slot />
           </main>
 
-          {!hidePanel && (
-            <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
-              <Panel locale={locale} />
-              <slot name="aside-bottom" />
-            </aside>
-          )}
+          {
+            !hidePanel && (
+              <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
+                <Panel locale={locale} />
+                <slot name="aside-bottom" />
+              </aside>
+            )
+          }
         </div>
 
         <Footer locale={locale} />

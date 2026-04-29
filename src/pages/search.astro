@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations } from '../i18n/utils';
+import { useTranslations, withBase } from '../i18n/utils';
 
 const locale = 'en';
 const t = useTranslations(locale);
+const pagefindBundle = withBase('/_pagefind/pagefind-ui.js');
+const pagefindCss = withBase('/_pagefind/pagefind-ui.css');
 ---
+
 <BaseLayout
   title={t('search.title')}
   pathWithoutLocale="/search/"
@@ -16,24 +19,24 @@ const t = useTranslations(locale);
     <p class="text-base-content/70">{t('search.placeholder')}</p>
   </header>
   <div data-pagefind-page-mount class="min-h-40">
-    <p class="text-sm text-base-content/70">{t('search.loading')}</p>
+    <p class="text-base-content/70 text-sm">{t('search.loading')}</p>
   </div>
 </BaseLayout>
 
-<script is:inline define:vars={{ locale }}>
+<script is:inline define:vars={{ locale, pagefindBundle, pagefindCss }}>
   async function init() {
     const mount = document.querySelector('[data-pagefind-page-mount]');
     if (!mount) return;
     if (!document.querySelector('link[data-pagefind-css]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = '/_pagefind/pagefind-ui.css';
+      link.href = pagefindCss;
       link.dataset.pagefindCss = 'true';
       document.head.appendChild(link);
     }
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src = '/_pagefind/pagefind-ui.js';
+      s.src = pagefindBundle;
       s.onload = resolve;
       s.onerror = reject;
       document.head.appendChild(s);
