@@ -599,3 +599,41 @@
     animation: none !important;
   }
 }
+
+/* ---------- Custom search modal (Pagefind headless API) ---------- */
+/*
+ * The site uses Pagefind's headless `pagefind.js` API and renders all
+ * results with our own Tailwind / daisyUI markup. We intentionally do
+ * NOT load `pagefind-ui.css`, so none of Pagefind's default styles
+ * apply. The rules below cover the few visual states the JS layer
+ * cannot express purely with utility classes.
+ */
+
+/* Highlight the keyboard-focused result. */
+.search-result[data-active='true'] {
+  background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+}
+.search-result[data-active='true'] h3 {
+  color: var(--color-primary);
+}
+
+/* Hover wash mirrors the keyboard-focus state. */
+.search-result:hover {
+  background: color-mix(in oklab, var(--color-primary) 5%, transparent);
+}
+
+/* `<mark>` in result excerpts (Pagefind wraps matched terms). */
+[data-search-results] mark {
+  background: color-mix(in oklab, var(--color-warning) 30%, transparent);
+  color: var(--color-base-content);
+  padding: 0 0.15em;
+  border-radius: 0.2rem;
+  font-weight: 600;
+}
+
+/* Hide the native clear (×) the browser adds to <input type="search">. */
+[data-search-input]::-webkit-search-cancel-button,
+[data-search-input]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}

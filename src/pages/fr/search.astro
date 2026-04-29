@@ -1,11 +1,21 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations, withBase } from '../../i18n/utils';
+import { Icon } from 'astro-icon/components';
 
 const locale = 'fr';
 const t = useTranslations(locale);
-const pagefindBundle = withBase('/_pagefind/pagefind-ui.js');
-const pagefindCss = withBase('/_pagefind/pagefind-ui.css');
+const pagefindScript = withBase('/_pagefind/pagefind.js');
+
+const i18n = {
+  placeholder: t('search.placeholder'),
+  clearLabel: t('search.clearLabel'),
+  typeToStart: t('search.typeToStart'),
+  searching: t('search.searching'),
+  noResultsFor: t('search.noResultsFor'),
+  resultsCount: t('search.resultsCount'),
+  resultsCountOne: t('search.resultsCountOne'),
+};
 ---
 
 <BaseLayout
@@ -16,47 +26,216 @@ const pagefindCss = withBase('/_pagefind/pagefind-ui.css');
 >
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('search.title')}</h1>
-    <p class="text-base-content/70">{t('search.placeholder')}</p>
+    <p class="text-base-content/70 mt-1">{t('search.placeholder')}</p>
   </header>
-  <div data-pagefind-page-mount class="min-h-40">
-    <p class="text-base-content/70 text-sm">{t('search.loading')}</p>
+
+  <div class="bg-base-100 border-base-300 overflow-hidden rounded-xl border shadow-sm">
+    <div class="border-base-300 flex items-center gap-3 border-b px-4 py-3 sm:px-5 sm:py-3.5">
+      <Icon
+        name="lucide:search"
+        width={18}
+        height={18}
+        class="text-base-content/55 shrink-0"
+        aria-hidden="true"
+      />
+      <input
+        type="search"
+        data-search-page-input
+        class="text-base-content placeholder:text-base-content/45 min-w-0 flex-1 border-0 bg-transparent text-base font-medium outline-none focus:ring-0"
+        placeholder={i18n.placeholder}
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        autofocus
+      />
+      <button
+        type="button"
+        data-search-page-clear
+        class="text-base-content/55 hover:bg-base-200 hover:text-base-content hidden h-7 items-center rounded-md px-2 text-xs font-medium transition"
+      >
+        {i18n.clearLabel}
+      </button>
+    </div>
+
+    <div data-search-page-results class="min-h-40">
+      <div class="px-5 py-12 text-center">
+        <div
+          class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full"
+          aria-hidden="true"
+        >
+          <Icon name="lucide:search" width={18} height={18} />
+        </div>
+        <p class="text-base-content/60 mt-3 text-sm">{i18n.typeToStart}</p>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
-<script is:inline define:vars={{ locale, pagefindBundle, pagefindCss }}>
-  async function init() {
-    const mount = document.querySelector('[data-pagefind-page-mount]');
-    if (!mount) return;
-    if (!document.querySelector('link[data-pagefind-css]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = pagefindCss;
-      link.dataset.pagefindCss = 'true';
-      document.head.appendChild(link);
-    }
-    await new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = pagefindBundle;
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-    new window.PagefindUI({
-      element: mount,
-      showSubResults: true,
-      showImages: false,
-      translations: {
-        placeholder: 'Rechercher sur le site',
-        clear_search: 'Effacer',
-        load_more: 'Charger plus',
-        search_label: 'Recherche',
-        filters_label: 'Filtres',
-        zero_results: 'Aucun résultat pour [SEARCH_TERM]',
-        many_results: '[COUNT] résultats pour [SEARCH_TERM]',
-        one_result: '[COUNT] résultat pour [SEARCH_TERM]',
-        searching: 'Recherche de [SEARCH_TERM]…',
-      },
-    });
+<script is:inline define:vars={{ pagefindScript, i18n }}>
+  const PAGEFIND_SCRIPT = pagefindScript;
+  const I18N = i18n;
+
+  let pagefindModule = null;
+  let loadPromise = null;
+  let searchToken = 0;
+  let debounceTimer = null;
+
+  function loadPagefind() {
+    if (pagefindModule) return Promise.resolve(pagefindModule);
+    if (loadPromise) return loadPromise;
+    loadPromise = import(/* @vite-ignore */ PAGEFIND_SCRIPT)
+      .then(async (mod) => {
+        if (typeof mod.init === 'function') await mod.init();
+        pagefindModule = mod;
+        return mod;
+      })
+      .catch((err) => {
+        loadPromise = null;
+        throw err;
+      });
+    return loadPromise;
   }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+  function sanitizeExcerpt(html) {
+    return escapeHtml(html ?? '')
+      .replaceAll('&lt;mark&gt;', '<mark>')
+      .replaceAll('&lt;/mark&gt;', '</mark>');
+  }
+  function formatCrumb(url) {
+    try {
+      const u = new URL(url, window.location.origin);
+      const parts = u.pathname.replace(/\/+$/g, '').split('/').filter(Boolean);
+      return parts.length ? parts.join(' › ') : '/';
+    } catch {
+      return url;
+    }
+  }
+
+  function init() {
+    const input = document.querySelector('[data-search-page-input]');
+    const clearBtn = document.querySelector('[data-search-page-clear]');
+    const results = document.querySelector('[data-search-page-results]');
+    if (!input || !clearBtn || !results) return;
+
+    function setIdle() {
+      results.innerHTML = `<div class="px-5 py-12 text-center">
+        <div class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <p class="text-base-content/60 mt-3 text-sm">${escapeHtml(I18N.typeToStart)}</p>
+      </div>`;
+    }
+    function setSearching() {
+      results.innerHTML = `<div class="px-5 py-12 text-center">
+        <p class="text-base-content/60 inline-flex items-center gap-2 text-sm">
+          <span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
+          ${escapeHtml(I18N.searching)}
+        </p>
+      </div>`;
+    }
+    function setNoResults(term) {
+      results.innerHTML = `<div class="px-5 py-12 text-center">
+        <div class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/></svg>
+        </div>
+        <p class="text-base-content/70 mt-3 text-sm">
+          ${escapeHtml(I18N.noResultsFor)}
+          <span class="text-base-content font-semibold">"${escapeHtml(term)}"</span>
+        </p>
+      </div>`;
+    }
+    function setResults(data) {
+      const count = data.length;
+      const label = count === 1 ? I18N.resultsCountOne : I18N.resultsCount;
+      const items = data
+        .map((r) => {
+          const title = escapeHtml(r.meta?.title || r.url);
+          const crumb = escapeHtml(formatCrumb(r.url));
+          const excerpt = sanitizeExcerpt(r.excerpt || '');
+          return `<li>
+            <a href="${escapeHtml(r.url)}" class="search-result group block px-4 py-3 sm:px-5">
+              <div class="text-base-content/45 group-hover:text-primary/70 flex items-center gap-1.5 text-[0.7rem] tracking-wide uppercase">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                <span class="truncate">${crumb}</span>
+              </div>
+              <h3 class="text-base-content group-hover:text-primary mt-0.5 text-[0.95rem] leading-snug font-semibold">${title}</h3>
+              <p class="text-base-content/65 mt-1 line-clamp-2 text-[0.825rem] leading-snug">${excerpt}</p>
+            </a>
+          </li>`;
+        })
+        .join('');
+      results.innerHTML = `<div>
+        <div class="text-base-content/55 border-base-300 border-b px-4 py-2 text-[0.7rem] tracking-wide uppercase sm:px-5">${count} ${escapeHtml(label)}</div>
+        <ul class="divide-base-300 divide-y">${items}</ul>
+      </div>`;
+    }
+
+    async function runSearch(term) {
+      const myToken = ++searchToken;
+      try {
+        const pf = await loadPagefind();
+        if (myToken !== searchToken) return;
+        setSearching();
+        const search = await pf.search(term);
+        if (myToken !== searchToken) return;
+        if (!search?.results?.length) {
+          setNoResults(term);
+          return;
+        }
+        const top = search.results.slice(0, 25);
+        const data = await Promise.all(top.map((r) => r.data()));
+        if (myToken !== searchToken) return;
+        setResults(data);
+      } catch (err) {
+        console.error(err);
+        results.innerHTML = `<p class="text-error px-5 py-6 text-sm">Search index not available.</p>`;
+      }
+    }
+
+    input.addEventListener('input', () => {
+      const term = input.value.trim();
+      if (term) {
+        clearBtn.classList.remove('hidden');
+        clearBtn.classList.add('inline-flex');
+      } else {
+        clearBtn.classList.add('hidden');
+        clearBtn.classList.remove('inline-flex');
+      }
+      clearTimeout(debounceTimer);
+      if (!term) {
+        searchToken++;
+        setIdle();
+        return;
+      }
+      debounceTimer = setTimeout(() => runSearch(term), 140);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      clearBtn.classList.add('hidden');
+      clearBtn.classList.remove('inline-flex');
+      searchToken++;
+      setIdle();
+      input.focus();
+    });
+
+    loadPagefind().catch(() => {});
+
+    const q = new URL(window.location.href).searchParams.get('q');
+    if (q) {
+      input.value = q;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
+
   init();
+  document.addEventListener('astro:page-load', init);
 </script>
