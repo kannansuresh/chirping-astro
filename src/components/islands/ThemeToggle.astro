@@ -10,6 +10,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
+
 <button
   type="button"
   class="btn btn-ghost btn-sm btn-circle"
@@ -33,7 +34,7 @@ const t = useTranslations(locale);
     return (document.documentElement.getAttribute('data-theme') as Theme) ?? 'chirpy-light';
   }
 
-  function applyTheme(theme: Theme): void {
+  function commitTheme(theme: Theme): void {
     document.documentElement.setAttribute('data-theme', theme);
     try {
       localStorage.setItem(STORAGE_KEY, theme);
@@ -42,6 +43,43 @@ const t = useTranslations(locale);
     }
     updateIcons(theme);
     document.dispatchEvent(new CustomEvent('theme-change', { detail: { theme } }));
+  }
+
+  /**
+   * Apply a theme. When the View Transitions API is available and the
+   * caller supplies a click event, animate a circular reveal from the
+   * cursor; otherwise fall back to an instant swap.
+   */
+  function applyTheme(theme: Theme, origin?: { x: number; y: number }): void {
+    const supportsVT =
+      typeof (document as unknown as { startViewTransition?: unknown }).startViewTransition ===
+      'function';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!supportsVT || reduceMotion || !origin) {
+      commitTheme(theme);
+      return;
+    }
+
+    const root = document.documentElement;
+    root.style.setProperty('--theme-x', `${origin.x}px`);
+    root.style.setProperty('--theme-y', `${origin.y}px`);
+    const dx = Math.max(origin.x, window.innerWidth - origin.x);
+    const dy = Math.max(origin.y, window.innerHeight - origin.y);
+    const radius = Math.hypot(dx, dy);
+    root.style.setProperty('--theme-radius', `${radius}px`);
+    root.dataset.themeAnim = theme === 'chirpy-dark' ? 'to-dark' : 'to-light';
+
+    const transition = (
+      document as unknown as {
+        startViewTransition: (cb: () => void) => { finished: Promise<void> };
+      }
+    ).startViewTransition(() => {
+      commitTheme(theme);
+    });
+    transition.finished.finally(() => {
+      delete root.dataset.themeAnim;
+    });
   }
 
   function updateIcons(theme: Theme): void {
@@ -54,8 +92,14 @@ const t = useTranslations(locale);
   function init(): void {
     updateIcons(currentTheme());
     document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        applyTheme(currentTheme() === 'chirpy-dark' ? 'chirpy-light' : 'chirpy-dark');
+      btn.addEventListener('click', (event) => {
+        const next: Theme = currentTheme() === 'chirpy-dark' ? 'chirpy-light' : 'chirpy-dark';
+        const rect = btn.getBoundingClientRect();
+        const origin = {
+          x: (event as MouseEvent).clientX || rect.left + rect.width / 2,
+          y: (event as MouseEvent).clientY || rect.top + rect.height / 2,
+        };
+        applyTheme(next, origin);
       });
     });
     // Sync with system preference if user hasn't pinned a theme yet.
