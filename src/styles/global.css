@@ -15,40 +15,40 @@
 
 /* ---------- Chirpy LIGHT ---------- */
 @plugin "daisyui/theme" {
-  name: "chirpy-light";
+  name: 'chirpy-light';
   default: true;
   prefersdark: false;
   color-scheme: light;
 
   /* Page bg / cards / dividers / body text */
-  --color-base-100: oklch(100% 0 0);             /* card bg (white)         */
-  --color-base-200: oklch(97% 0.0015 264);       /* page bg #f6f7f8         */
-  --color-base-300: oklch(91% 0.0025 264);       /* dividers #e8e8e8        */
-  --color-base-content: oklch(20% 0.012 264);    /* near-black text         */
+  --color-base-100: oklch(100% 0 0); /* card bg (white)         */
+  --color-base-200: oklch(97% 0.0015 264); /* page bg #f6f7f8         */
+  --color-base-300: oklch(91% 0.0025 264); /* dividers #e8e8e8        */
+  --color-base-content: oklch(20% 0.012 264); /* near-black text         */
 
   /* Chirpy indigo-blue primary (~ #2a408e) */
   --color-primary: oklch(45% 0.135 264);
   --color-primary-content: oklch(99% 0.003 264);
 
-  --color-secondary: oklch(70% 0.110 200);
-  --color-secondary-content: oklch(15% 0.020 264);
+  --color-secondary: oklch(70% 0.11 200);
+  --color-secondary-content: oklch(15% 0.02 264);
 
   --color-accent: oklch(76% 0.135 75);
-  --color-accent-content: oklch(20% 0.020 75);
+  --color-accent-content: oklch(20% 0.02 75);
 
-  --color-neutral: oklch(35% 0.010 264);
+  --color-neutral: oklch(35% 0.01 264);
   --color-neutral-content: oklch(98% 0.003 264);
 
-  --color-info: oklch(70% 0.130 230);
-  --color-info-content: oklch(15% 0.020 230);
+  --color-info: oklch(70% 0.13 230);
+  --color-info-content: oklch(15% 0.02 230);
 
-  --color-success: oklch(72% 0.150 145);
-  --color-success-content: oklch(15% 0.020 145);
+  --color-success: oklch(72% 0.15 145);
+  --color-success-content: oklch(15% 0.02 145);
 
-  --color-warning: oklch(80% 0.150 80);
-  --color-warning-content: oklch(20% 0.020 80);
+  --color-warning: oklch(80% 0.15 80);
+  --color-warning-content: oklch(20% 0.02 80);
 
-  --color-error: oklch(60% 0.220 27);
+  --color-error: oklch(60% 0.22 27);
   --color-error-content: oklch(99% 0.005 27);
 
   --radius-selector: 0.375rem;
@@ -63,7 +63,7 @@
 
 /* ---------- Chirpy DARK ---------- */
 @plugin "daisyui/theme" {
-  name: "chirpy-dark";
+  name: 'chirpy-dark';
   default: false;
   prefersdark: true;
   color-scheme: dark;
@@ -72,31 +72,31 @@
   --color-base-100: oklch(22% 0.005 264);
   --color-base-200: oklch(20% 0.005 264);
   --color-base-300: oklch(28% 0.008 264);
-  --color-base-content: oklch(86% 0.010 264);
+  --color-base-content: oklch(86% 0.01 264);
 
   /* Lighter indigo for dark mode contrast (~ #7895d4) */
-  --color-primary: oklch(72% 0.110 264);
+  --color-primary: oklch(72% 0.11 264);
   --color-primary-content: oklch(15% 0.015 264);
 
-  --color-secondary: oklch(75% 0.090 200);
+  --color-secondary: oklch(75% 0.09 200);
   --color-secondary-content: oklch(15% 0.015 264);
 
-  --color-accent: oklch(80% 0.130 75);
+  --color-accent: oklch(80% 0.13 75);
   --color-accent-content: oklch(15% 0.015 75);
 
-  --color-neutral: oklch(28% 0.010 264);
+  --color-neutral: oklch(28% 0.01 264);
   --color-neutral-content: oklch(95% 0.005 264);
 
-  --color-info: oklch(72% 0.120 230);
+  --color-info: oklch(72% 0.12 230);
   --color-info-content: oklch(15% 0.015 230);
 
-  --color-success: oklch(72% 0.140 145);
+  --color-success: oklch(72% 0.14 145);
   --color-success-content: oklch(15% 0.015 145);
 
-  --color-warning: oklch(80% 0.150 80);
+  --color-warning: oklch(80% 0.15 80);
   --color-warning-content: oklch(15% 0.015 80);
 
-  --color-error: oklch(72% 0.180 27);
+  --color-error: oklch(72% 0.18 27);
   --color-error-content: oklch(15% 0.015 27);
 
   --radius-selector: 0.375rem;
@@ -114,28 +114,29 @@
   /* Chirpy sidebar gradient */
   --color-sidebar-from: oklch(99% 0 0);
   --color-sidebar-to: oklch(95% 0.005 264);
-  --color-sidebar-text: oklch(40% 0.010 264);
+  --color-sidebar-text: oklch(40% 0.01 264);
   --color-sidebar-muted: oklch(50% 0.012 264);
 
   /* Sidebar/panel widths */
-  --width-sidebar: 18rem;        /* 288px - matches Chirpy */
-  --width-panel: 14rem;          /* 224px */
+  --width-sidebar: 18rem; /* 288px - matches Chirpy */
+  --width-panel: 14rem; /* 224px */
 
   /* Top bar height */
-  --height-topbar: 3.25rem;      /* 52px */
+  --height-topbar: 3.25rem; /* 52px */
 
   /* Reading column max width on post pages */
   --width-prose: 50rem;
 
   /* Fonts */
   --font-sans: 'Source Sans 3', 'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono:
+    'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 [data-theme='chirpy-dark'] {
   --color-sidebar-from: oklch(20% 0.005 264);
   --color-sidebar-to: oklch(17% 0.005 264);
-  --color-sidebar-text: oklch(75% 0.010 264);
+  --color-sidebar-text: oklch(75% 0.01 264);
   --color-sidebar-muted: oklch(55% 0.012 264);
 }
 
@@ -148,14 +149,14 @@
   }
 
   body {
-    @apply min-h-screen bg-base-200 text-base-content antialiased;
+    @apply bg-base-200 text-base-content min-h-screen antialiased;
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.65;
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+    @apply outline-primary outline-2 outline-offset-2;
   }
 
   ::selection {
@@ -168,11 +169,14 @@
   }
   .heading-anchor:hover::after {
     content: '#';
-    @apply ml-2 text-base-content/30;
+    @apply text-base-content/30 ml-2;
   }
 
   /* Custom scrollbar (Webkit) — Chirpy-like thin grey thumb */
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
   ::-webkit-scrollbar-thumb {
     background: color-mix(in oklab, var(--color-base-content) 20%, transparent);
     border-radius: 999px;
@@ -186,19 +190,18 @@
 @layer components {
   /* Left sidebar — always pinned to the extreme left of the viewport. */
   .chirpy-sidebar {
-    @apply fixed inset-y-0 left-0 z-40 flex w-72 flex-col items-center
-           border-r border-base-300 px-4 py-6;
-    background: linear-gradient(
-      180deg,
-      var(--color-sidebar-from) 0%,
-      var(--color-sidebar-to) 100%
-    );
+    @apply border-base-300 fixed inset-y-0 left-0 z-40 flex w-72 flex-col items-center border-r px-4 py-6;
+    background: linear-gradient(180deg, var(--color-sidebar-from) 0%, var(--color-sidebar-to) 100%);
     color: var(--color-sidebar-text);
     transition: transform 0.3s ease;
   }
   @media (max-width: 1023px) {
-    .chirpy-sidebar { transform: translateX(-100%); }
-    .chirpy-sidebar.is-open { transform: translateX(0); }
+    .chirpy-sidebar {
+      transform: translateX(-100%);
+    }
+    .chirpy-sidebar.is-open {
+      transform: translateX(0);
+    }
   }
 
   .chirpy-main-wrapper {
@@ -224,9 +227,7 @@
 
   /* Top bar */
   .chirpy-topbar {
-    @apply sticky top-0 z-30 flex h-[var(--height-topbar)] items-center justify-between
-           gap-3 border-b border-base-300 bg-base-200/80 backdrop-blur
-           supports-[backdrop-filter]:bg-base-200/70;
+    @apply h-topbar border-base-300 bg-base-200/80 supports-backdrop-filter:bg-base-200/70 sticky top-0 z-30 flex items-center justify-between gap-3 border-b backdrop-blur;
   }
 
   /* Right rail wrapper. Holds the global Panel widget followed by an
@@ -239,7 +240,9 @@
     width: 14rem;
   }
   @media (min-width: 1440px) {
-    .chirpy-panel-rail { width: 16rem; }
+    .chirpy-panel-rail {
+      width: 16rem;
+    }
   }
   .chirpy-panel-rail > * + * {
     margin-top: 2rem;
@@ -258,7 +261,7 @@
     border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
   }
   .chirpy-aside-item {
-    @apply block py-1.5 pl-3 pr-2 text-sm text-base-content/75 transition;
+    @apply text-base-content/75 block py-1.5 pr-2 pl-3 text-sm transition;
     margin-left: -1px;
     border-left: 1px solid transparent;
   }
@@ -267,14 +270,13 @@
     border-left-color: var(--color-primary);
   }
   .chirpy-aside-item[data-active='true'] {
-    @apply font-semibold text-primary;
+    @apply text-primary font-semibold;
     border-left-color: var(--color-primary);
   }
 
   /* Post card — horizontal Chirpy card */
   .chirpy-card {
-    @apply mb-5 overflow-hidden rounded-md border border-base-300 bg-base-100 transition
-           hover:-translate-y-0.5 hover:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.08)];
+    @apply border-base-300 bg-base-100 mb-5 overflow-hidden rounded-md border transition hover:-translate-y-0.5 hover:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.08)];
   }
   .chirpy-card-link {
     @apply grid grid-cols-1 gap-0 md:grid-cols-12;
@@ -299,9 +301,10 @@
   /* Title and description gain line-clamps so a very long title (or a
      verbose description) cannot push the card past the fixed height. */
   .chirpy-card-title {
-    @apply mt-0 text-2xl font-bold leading-snug tracking-tight text-base-content sm:text-[1.55rem];
+    @apply text-base-content mt-0 text-2xl leading-snug font-bold tracking-tight sm:text-[1.55rem];
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -325,54 +328,82 @@
   .prose-chirpy h2,
   .prose-chirpy h3,
   .prose-chirpy h4 {
-    @apply scroll-mt-24 font-semibold tracking-tight text-base-content;
+    @apply text-base-content scroll-mt-24 font-semibold tracking-tight;
   }
-  .prose-chirpy h1 { @apply mt-8 mb-4 text-3xl; }
+  .prose-chirpy h1 {
+    @apply mt-8 mb-4 text-3xl;
+  }
   .prose-chirpy h2 {
-    @apply mt-10 mb-4 border-b border-base-300 pb-2 text-2xl;
+    @apply border-base-300 mt-10 mb-4 border-b pb-2 text-2xl;
   }
-  .prose-chirpy h3 { @apply mt-8 mb-3 text-xl; }
-  .prose-chirpy h4 { @apply mt-6 mb-2 text-lg; }
-  .prose-chirpy p { @apply my-4; }
+  .prose-chirpy h3 {
+    @apply mt-8 mb-3 text-xl;
+  }
+  .prose-chirpy h4 {
+    @apply mt-6 mb-2 text-lg;
+  }
+  .prose-chirpy p {
+    @apply my-4;
+  }
   .prose-chirpy a:not(.heading-anchor) {
-    @apply text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary;
+    @apply text-primary decoration-primary/30 hover:decoration-primary underline underline-offset-2;
   }
   .prose-chirpy a.heading-anchor {
     @apply text-inherit no-underline;
   }
-  .prose-chirpy ul { @apply my-4 list-disc pl-6; }
-  .prose-chirpy ol { @apply my-4 list-decimal pl-6; }
-  .prose-chirpy blockquote {
-    @apply my-6 rounded-r border-l-4 border-primary/50 bg-base-200 px-4 py-2 italic text-base-content/80;
+  .prose-chirpy ul {
+    @apply my-4 list-disc pl-6;
   }
-  .prose-chirpy hr { @apply my-10 border-base-300; }
+  .prose-chirpy ol {
+    @apply my-4 list-decimal pl-6;
+  }
+  .prose-chirpy blockquote {
+    @apply border-primary/50 bg-base-200 text-base-content/80 my-6 rounded-r-sm border-l-4 px-4 py-2 italic;
+  }
+  .prose-chirpy hr {
+    @apply border-base-300 my-10;
+  }
   .prose-chirpy code:not(pre code) {
-    @apply rounded bg-base-200 px-1.5 py-0.5 font-mono text-[0.92em] text-accent;
+    @apply bg-base-200 text-accent rounded px-1.5 py-0.5 font-mono text-[0.92em];
     font-family: var(--font-mono);
   }
   .prose-chirpy pre {
-    @apply relative my-6 overflow-x-auto rounded-md border border-base-300 p-4 text-sm leading-relaxed;
+    @apply border-base-300 relative my-6 overflow-x-auto rounded-md border p-4 text-sm leading-relaxed;
     font-family: var(--font-mono);
   }
-  .prose-chirpy pre code { @apply bg-transparent p-0; }
+  .prose-chirpy pre code {
+    @apply bg-transparent p-0;
+  }
   .prose-chirpy img {
-    @apply mx-auto my-6 rounded-md border border-base-300;
+    @apply border-base-300 mx-auto my-6 rounded-md border;
   }
   .prose-chirpy table {
     @apply my-6 w-full border-collapse text-left text-sm;
   }
   .prose-chirpy table th,
   .prose-chirpy table td {
-    @apply border border-base-300 px-3 py-2;
+    @apply border-base-300 border px-3 py-2;
   }
-  .prose-chirpy table thead { @apply bg-base-200; }
+  .prose-chirpy table thead {
+    @apply bg-base-200;
+  }
 
   /* Callouts (.callout.callout-info / -success / -warning / -error) */
-  .callout { @apply my-6 rounded-md border-l-4 px-4 py-3; }
-  .callout-info    { @apply border-info bg-info/10; }
-  .callout-success { @apply border-success bg-success/10; }
-  .callout-warning { @apply border-warning bg-warning/10; }
-  .callout-error   { @apply border-error bg-error/10; }
+  .callout {
+    @apply my-6 rounded-md border-l-4 px-4 py-3;
+  }
+  .callout-info {
+    @apply border-info bg-info/10;
+  }
+  .callout-success {
+    @apply border-success bg-success/10;
+  }
+  .callout-warning {
+    @apply border-warning bg-warning/10;
+  }
+  .callout-error {
+    @apply border-error bg-error/10;
+  }
 }
 
 /* ---------- Shiki dual-theme switching ---------------
@@ -416,11 +447,11 @@
 /* ---------- Code copy button (island target) ---------- */
 @layer components {
   .code-copy-btn {
-    @apply absolute top-2 right-2 inline-flex items-center gap-1 rounded
-      bg-base-100/80 px-2 py-1 text-xs text-base-content/70 backdrop-blur
-      transition hover:bg-base-100 hover:text-base-content;
+    @apply bg-base-100/80 text-base-content/70 hover:bg-base-100 hover:text-base-content absolute top-2 right-2 inline-flex items-center gap-1 rounded px-2 py-1 text-xs backdrop-blur transition;
   }
-  .code-copy-btn[data-copied='true'] { @apply text-success; }
+  .code-copy-btn[data-copied='true'] {
+    @apply text-success;
+  }
 }
 
 /* ---------- TOC sticky highlight (uses chirpy-aside rail) ---------- */
@@ -429,7 +460,7 @@
     border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
   }
   .toc a {
-    @apply block py-1 pl-3 pr-2 text-sm text-base-content/70 transition-colors;
+    @apply text-base-content/70 block py-1 pr-2 pl-3 text-sm transition-colors;
     margin-left: -1px;
     border-left: 1px solid transparent;
   }
@@ -438,11 +469,15 @@
     border-left-color: var(--color-primary);
   }
   .toc a[data-active='true'] {
-    @apply font-semibold text-primary;
+    @apply text-primary font-semibold;
     border-left-color: var(--color-primary);
   }
-  .toc .toc-level-3 a { @apply pl-6; }
-  .toc .toc-level-4 a { @apply pl-9; }
+  .toc .toc-level-3 a {
+    @apply pl-6;
+  }
+  .toc .toc-level-4 a {
+    @apply pl-9;
+  }
 
   /* Smart TOC: H3/H4 entries are hidden until their parent H2 is the
      active section (set by the scroll-spy script via data-section-active).
@@ -458,8 +493,14 @@
   }
 
   @keyframes toc-fade-in {
-    from { opacity: 0; transform: translateY(-2px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -469,12 +510,15 @@
     @apply flex w-full flex-col gap-0.5;
   }
   .chirpy-nav-link {
-    @apply relative flex w-full items-center gap-3 rounded-md px-3 py-2.5
-           text-[0.78rem] font-bold uppercase tracking-[0.07em];
+    @apply relative flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-[0.78rem] font-bold tracking-[0.07em] uppercase;
     color: var(--color-sidebar-text);
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
   }
-  .chirpy-nav-link:hover { color: var(--color-base-content); }
+  .chirpy-nav-link:hover {
+    color: var(--color-base-content);
+  }
   .chirpy-nav-link[aria-current='page'] {
     color: var(--color-primary);
     background: color-mix(in oklab, var(--color-primary) 8%, transparent);
@@ -485,25 +529,21 @@
   }
 
   .chirpy-social {
-    @apply flex h-9 w-9 items-center justify-center rounded-md text-base-content/60 transition hover:text-primary;
+    @apply text-base-content/60 hover:text-primary flex h-9 w-9 items-center justify-center rounded-md transition;
   }
 }
 
 /* ---------- Trending tag pill (Chirpy outline-primary) ---------- */
 @layer components {
   .post-tag {
-    @apply inline-flex items-center rounded-full border border-primary/60
-           bg-base-100 px-3 py-1 text-xs font-medium text-primary
-           transition hover:bg-primary hover:text-primary-content;
+    @apply border-primary/60 bg-base-100 text-primary hover:bg-primary hover:text-primary-content inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition;
   }
 }
 
 /* ---------- Back-to-top floating button ---------- */
 @layer components {
   .back-to-top {
-    @apply fixed bottom-6 right-6 z-30 flex h-11 w-11 items-center
-           justify-center rounded-full border border-base-300 bg-base-100
-           text-base-content shadow-md transition;
+    @apply border-base-300 bg-base-100 text-base-content fixed right-6 bottom-6 z-30 flex h-11 w-11 items-center justify-center rounded-full border shadow-md transition;
     opacity: 0;
     pointer-events: none;
   }
