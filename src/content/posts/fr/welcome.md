@@ -1,70 +1,92 @@
 ---
-title: Bienvenue sur Chirping Astro
-description: Une visite guidée de ce thème Astro v6 + Tailwind v4 + daisyUI — i18n, MDX, Pagefind et Giscus, tout est inclus.
-pubDate: 2026-04-12
-updatedDate: 2026-04-22
-tags: [astro, tailwind, daisyui, theme]
+title: 'Bienvenue sur Chirping Astro'
+description: "Commencez ici. Une visite guidée de toutes les fonctionnalités de ce thème Astro v6 + Tailwind v4 + daisyUI — et la liste des articles dédiés qui détaillent chacune d'entre elles."
+pubDate: 2026-04-30
+updatedDate: 2026-04-30
+tags: [astro, tailwind, daisyui, theme, demarrage]
 categories: [Annonces]
 translationKey: welcome
-heroImage: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1600&q=80&auto=format&fit=crop
-heroImageAlt: Un clavier MacBook photographié en gros plan
+heroImage: /images/og-default.svg
+heroImageAlt: 'Le logo Chirping Astro sur un fond dégradé doux'
 pinned: true
 toc: true
 ---
 
-Bonjour ! Voici le premier article de **Chirping Astro**, un thème distribuable
-au format unique, inspiré de [Chirpy](https://chirpy.cotes.page/) et écrit
-de zéro de manière idiomatique avec [Astro](https://astro.build).
+Bonjour, et bienvenue. **Chirping Astro** est un thème mono-template
+multilingue inspiré de [Chirpy](https://chirpy.cotes.page/), réécrit
+intégralement en TypeScript strict, avec Tailwind v4, daisyUI v5, MDX,
+Pagefind et Giscus.
 
-## Le contenu de la boîte
+Cet article est la porte d'entrée. Tous les autres articles de ce site
+sont des tutoriels ciblés sur une seule fonctionnalité — commencez par
+celui qui correspond à ce que vous voulez apprendre en premier.
 
-Le thème embarque tout ce que vous attendez d'un blog technique moderne :
+## Ce que ce thème vous offre
 
-- Une mise en page éditoriale familière à trois colonnes, façon Chirpy.
-- Internationalisation **EN + FR** prête à l'emploi, avec l'anglais à la racine.
-- Pages de tags, catégories et archives annuelles.
-- Temps de lecture et **table des matières** par article avec scroll-spy.
-- Recherche embarquée alimentée par **Pagefind** à la compilation.
-- Commentaires **Giscus** synchronisés avec le thème et la langue du site.
+- **Mise en page Chirpy à trois colonnes** — barre latérale avec avatar
+  et navigation, colonne de lecture centrale, et panneau de droite
+  affichant la table des matières sur les articles ou « Récemment mis
+  à jour / Tags populaires » sur les listings.
+- **i18n de premier ordre** — anglais à la racine de l'URL, français
+  sous `/fr`, avec un sélecteur de langue intelligent qui retombe sur
+  l'article traduit équivalent quand il existe.
+- **Markdown + MDX** avec [Expressive Code](https://expressive-code.com)
+  pour la coloration syntaxique, les boutons de copie, les titres de
+  cadre, les marqueurs de lignes, les diffs et les sections repliables.
+- **Mathématiques LaTeX** via KaTeX, pré-rendues à la compilation avec
+  **zéro JavaScript côté client** — la feuille de style ne se charge
+  que sur les pages qui en font la demande.
+- **Recherche Pagefind** — une modale dans l'en-tête avec les
+  raccourcis `/` et `Cmd/Ctrl+K`, plus une page dédiée `/fr/search/`.
+- **Commentaires Giscus** branchés sur GitHub Discussions, synchronisés
+  avec le thème et la locale, avec un override par article.
+- **Deux thèmes daisyUI** (`chirpy-light` / `chirpy-dark`) avec un
+  bouton de bascule animé qui utilise l'API View Transitions quand
+  elle est disponible.
+- **Temps de lecture, table des matières flottante avec scroll-spy,
+  RSS par locale, sitemap hreflang, gestion accessible du focus** —
+  les détails ennuyeux faits correctement.
 
-## Un exemple de code
+## Découvrez les fonctionnalités, un article à la fois
 
-L'écriture de code est une priorité. Chaque bloc clos est rendu avec
-[Expressive Code](https://expressive-code.com) : coloration syntaxique,
-cadres avec titre, bouton « copier » et marqueurs de lignes inclus.
+Chacun des articles ci-dessous est dédié à une seule fonctionnalité.
+Ils servent aussi de démos : l'article qui parle de mathématiques
+active lui-même `math: true`, celui qui parle d'images à la une
+arbore une image à la une, etc.
 
-```ts title="src/content.config.ts"
-import { defineCollection, z } from 'astro:content';
+| Fonctionnalité         | Lisez cet article                                                           |
+| ---------------------- | --------------------------------------------------------------------------- |
+| Frontmatter & schéma   | [Référence du frontmatter](/fr/posts/frontmatter-reference)                 |
+| Typographie & Markdown | [Typographie & Markdown](/fr/posts/typography-and-markdown)                 |
+| Blocs de code          | [Blocs de code & coloration](/fr/posts/code-blocks-and-syntax-highlighting) |
+| Mathématiques LaTeX    | [Mathématiques LaTeX avec KaTeX](/fr/posts/latex-math-with-katex)           |
+| Composants MDX         | [Composants MDX & callouts](/fr/posts/mdx-components-and-callouts)          |
+| i18n                   | [Contenu bilingue & i18n](/fr/posts/i18n-bilingual-content)                 |
+| Recherche              | [Recherche avec Pagefind](/fr/posts/search-with-pagefind)                   |
+| Commentaires           | [Commentaires avec Giscus](/fr/posts/comments-with-giscus)                  |
+| Thème                  | [Thème & mode sombre](/fr/posts/theming-and-dark-mode)                      |
+| Images à la une        | [Images à la une & médias](/fr/posts/featured-images-and-media)             |
 
-export const collections = {
-  posts: defineCollection({
-    schema: z.object({
-      title: z.string(),
-      pubDate: z.coerce.date(),
-      tags: z.array(z.string()).default([]),
-    }),
-  }),
-};
-```
+## Épinglé ou non
 
-## Encadrés (callouts)
+Cet article est épinglé — c'est le drapeau `pinned: true` du
+frontmatter qui s'en charge. Les articles épinglés se classent toujours
+en tête des listings et de la page d'accueil, même si des articles
+plus récents existent.
 
-Vous pouvez ajouter des encadrés réutilisables en MDX via le composant
-`<Callout>`. En Markdown classique, il suffit d'envelopper un paragraphe
-dans un `div.callout` :
+## À propos du code idiomatique
 
-<div class="callout callout-info">
-  <strong>Astuce :</strong> définissez <code>toc: false</code> dans le
-  frontmatter pour masquer la table des matières d'un article.
-</div>
+Tout dans ce projet est conçu pour se lire comme un projet Astro
+normal, pas comme un magma de configuration. Pour l'étendre :
 
-## Et les images ?
+- Les composants vivent dans [src/components/](src/components/) et
+  [src/components/islands/](src/components/islands/).
+- Les layouts vivent dans [src/layouts/](src/layouts/).
+- Tous les boutons du site sont dans [src/config.ts](src/config.ts).
+- Les traductions sont dans [src/i18n/ui.ts](src/i18n/ui.ts).
 
-Les images peuvent être référencées via un chemin public ou importées via le
-pipeline d'assets d'Astro (recommandé pour les articles écrits en MDX).
+L'installation du thème depuis un clone vierge est documentée en
+détail dans le [README.md](https://github.com/your-handle/chirping-astro/blob/main/README.md)
+du projet.
 
-## La suite ?
-
-Explorez la [démo Astro & MDX](/fr/posts/astro-mdx-demo) pour voir les
-fonctionnalités exclusives à MDX, ou utilisez le [sélecteur de langue](#)
-pour lire ce même article en anglais.
+Bonne écriture. ✨

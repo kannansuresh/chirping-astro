@@ -1,0 +1,157 @@
+---
+title: 'MDX components & callouts: Markdown with superpowers'
+description: 'Use Astro components inside Markdown — the bundled <Callout>, JS expressions, slots, and a cookbook for building your own MDX-friendly components.'
+pubDate: 2026-04-25
+tags: [astro, mdx, components, callout]
+categories: [Tutorials]
+translationKey: mdx-components-and-callouts
+heroImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1600&q=80&auto=format&fit=crop'
+heroImageAlt: 'Source code displayed on a monitor in a dim room'
+toc: true
+---
+
+import Callout from '../../../components/Callout.astro';
+
+When the lines between data and presentation blur, **MDX** is your
+friend. You can mix JSX-flavoured components inside Markdown without
+leaving the authoring flow.
+
+This post is itself an `.mdx` file. Open
+[src/content/posts/en/mdx-components-and-callouts.mdx](src/content/posts/en/mdx-components-and-callouts.mdx)
+to see exactly how the demos below are written.
+
+## When to use `.md` vs `.mdx`
+
+| Use `.md` when…                     | Use `.mdx` when…                             |
+| ----------------------------------- | -------------------------------------------- |
+| You only need standard Markdown.    | You want to import an Astro component.       |
+| You want the file to stay portable. | You need JS expressions like `{new Date()}`. |
+| You write a lot of `{}` literally.  | You want to compose layout-aware widgets.    |
+
+Both formats live side-by-side in the same `posts/` folder — the build
+picks them up via `**/*.{md,mdx}`.
+
+## The `<Callout>` component
+
+The theme ships a small, accessible `Callout` component you can import
+in any MDX post:
+
+```mdx title="src/content/posts/en/example.mdx"
+---
+title: Example
+---
+
+import Callout from '../../../components/Callout.astro';
+
+<Callout type="info" title="Heads up">
+  This is an info callout.
+</Callout>
+```
+
+It supports four semantic variants — they share daisyUI's semantic
+colour tokens, so they stay readable in both themes.
+
+<Callout type="info" title="Info">
+  Neutral context the reader should notice but not act on.
+</Callout>
+
+<Callout type="success" title="Success">
+  This callout was rendered by an Astro component embedded directly in MDX.
+</Callout>
+
+<Callout type="warning" title="Warning">
+  Avoid setting `lang:` in frontmatter unless you really need to — it's inferred from the file path.
+</Callout>
+
+<Callout type="error" title="Error">
+  Forgetting `pubDate` will fail the build with a Zod validation error.
+</Callout>
+
+## Inline JavaScript expressions
+
+MDX evaluates `{ ... }` as JavaScript at build time. Today is **{new Date().toDateString()}**
+according to the build server, and 2 + 2 is {2 + 2}.
+
+Variables defined at the top of the file are also in scope:
+
+```mdx
+export const release = 'v6.0.0';
+
+The latest release is **{release}**.
+```
+
+## Importing other components
+
+You are not limited to `Callout`. Any Astro component can be imported
+with a relative path. From a post at `src/content/posts/en/foo.mdx`,
+the path to a component is `../../../components/Foo.astro`:
+
+```mdx
+import Panel from '../../../components/Panel.astro';
+
+<Panel>
+  <p>Embedded Panel content here.</p>
+</Panel>
+```
+
+## Slots and children
+
+Astro components inside MDX accept default slots. Anything between the
+opening and closing tag is passed as `<slot />`:
+
+```mdx
+<Callout type="success">
+  **Anything** can go in here — _Markdown_, [links](/), even nested components.
+</Callout>
+```
+
+Named slots work too if your component declares them:
+
+```mdx
+<MyWidget>
+  <Fragment slot="header">A heading</Fragment>
+  Body content goes in the default slot.
+</MyWidget>
+```
+
+## A cookbook: building your own callout
+
+Want a `<Tip>` shorthand? Drop a tiny wrapper into
+`src/components/Tip.astro`:
+
+```astro title="src/components/Tip.astro"
+---
+import Callout from './Callout.astro';
+---
+
+<Callout type="info" title="Tip">
+  <slot />
+</Callout>
+```
+
+…then use it from any MDX file:
+
+```mdx
+import Tip from '../../../components/Tip.astro';
+
+<Tip>Restart `bun run dev` after editing `astro.config.mjs`.</Tip>
+```
+
+## Tables and other Markdown features still work
+
+Inside MDX, GFM tables, footnotes, and task lists keep working
+unchanged:
+
+| Feature        | Status |
+| -------------- | ------ |
+| TOC            | ✓      |
+| Code highlight | ✓      |
+| Pagefind       | ✓      |
+| Giscus         | ✓      |
+
+## Comments are explicitly enabled here
+
+This post sets `comments: true` to demonstrate that flag. To turn
+comments off on a single post, set `comments: false` instead — see the
+[frontmatter reference](/posts/frontmatter-reference) and the
+[Giscus post](/posts/comments-with-giscus) for the full picture.

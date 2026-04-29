@@ -1,0 +1,206 @@
+---
+title: 'Typography & Markdown: every text element this theme renders'
+description: 'A kitchen-sink reference for headings, lists, blockquotes, tables, inline formatting, footnotes, definition lists, callouts and more — verified in both light and dark mode.'
+pubDate: 2026-04-28
+updatedDate: 2026-04-29
+tags: [typography, markdown, mdx, design, reference]
+categories: [Reference]
+translationKey: typography-and-markdown
+heroImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop'
+heroImageAlt: 'An open book on a wooden desk with strong directional light'
+toc: true
+---
+
+import Callout from '../../../components/Callout.astro';
+
+This post is the **typography test page** for the theme. If you change
+fonts, prose sizing, or anything in the `prose-chirpy` typography stack,
+load this page in both light and dark mode and confirm everything still
+looks balanced.
+
+The theme's body font is **Source Sans 3**, the code font is
+**JetBrains Mono**, and the prose column is capped at `--width-prose`
+(50 rem) so line lengths stay comfortable.
+
+## Paragraphs and inline formatting
+
+You can write **bold**, _italic_, ~~strikethrough~~, `inline code`, and
+nested **_bold italic_**. Long URLs become clickable: visit
+[astro.build](https://astro.build). External links open in a new tab
+with `rel="nofollow noopener"` thanks to `rehype-external-links`.
+
+Use the `<kbd>` tag for keyboard shortcuts: press <kbd>Cmd</kbd> + <kbd>K</kbd>
+or <kbd>/</kbd> to open the search modal.
+
+> "Typography is the craft of endowing human language with a durable
+> visual form." — _Robert Bringhurst_
+
+A second paragraph keeps the rhythm. Line height, vertical margin and
+maximum width are tuned for comfortable reading on both phone and
+desktop.
+
+## Headings
+
+Headings are auto-slugged by `rehype-slug` and given hover anchors by
+`rehype-autolink-headings` — hover to the left of any heading on this
+page to reveal the `#` link.
+
+### Third-level heading
+
+The right-hand TOC reveals H3s only while you are scrolled inside the
+parent H2 section.
+
+#### Fourth-level heading
+
+H4s are supported and styled, but they are dense — reach for them only
+when really needed.
+
+## Lists
+
+Unordered list:
+
+- A first item with a [link to the home page](/).
+- A second item with **bold text** and `inline code`.
+- A nested item:
+  - With its own children.
+  - And a deeper nested item.
+    - Three levels deep, no problem.
+
+Ordered list:
+
+1. Pick a topic.
+2. Outline it — H2 for sections, H3 for subsections.
+3. Write a first draft straight through, no editing.
+4. Sleep on it.
+5. Edit ruthlessly.
+
+GitHub-flavoured task list (thanks to `remark-gfm`):
+
+- [x] Wire up Tailwind v4
+- [x] Animated theme switcher
+- [x] Bilingual routing
+- [ ] Reach the bottom of this page
+
+## Blockquotes
+
+> A single-line blockquote.
+
+> A multi-line blockquote.
+>
+> > Nested quote that emphasises a sub-point — used rarely, but the
+> > theme handles it gracefully.
+>
+> Continuing the outer quote after the nested fragment.
+
+## Tables
+
+| Feature        | Markdown | MDX | Notes                         |
+| -------------- | :------: | :-: | ----------------------------- |
+| Headings       |    ✓     |  ✓  | H1–H4 with anchor links       |
+| Code blocks    |    ✓     |  ✓  | Shiki dual theme              |
+| Components     |          |  ✓  | `<Callout>` and friends       |
+| JS expressions |          |  ✓  | `{new Date().toDateString()}` |
+| Footnotes      |    ✓     |  ✓  | GFM-style[^1]                 |
+
+[^1]: Footnote rendering is provided by `remark-gfm`.
+
+## Inline code, code spans and keyboard shortcuts
+
+Use `inline code` for identifiers (`SITE.showFeaturedImages`) or short
+snippets (`bun astro dev`). Within tables and lists it stays readable
+thanks to a slightly muted background.
+
+## Fenced code blocks
+
+A short example — the dedicated
+[code blocks post](/posts/code-blocks-and-syntax-highlighting) covers
+every Expressive Code option in detail.
+
+```ts title="src/utils/posts.ts" ins={5-8}
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE, type Locale } from '../config';
+
+export function shouldShowHero(post: CollectionEntry<'posts'>): boolean {
+  if (!post.data.heroImage) return false;
+  return post.data.showFeaturedImage ?? SITE.showFeaturedImages;
+}
+```
+
+## Callouts
+
+The theme ships an MDX `<Callout>` component with four semantic
+variants. They inherit daisyUI semantic colours, so they stay legible
+in both themes.
+
+<Callout type="info" title="Info">
+  Use this for neutral context that the reader should notice but not act on.
+</Callout>
+
+<Callout type="success" title="Success">
+  You just shipped a clean post. Treat yourself to a tea.
+</Callout>
+
+<Callout type="warning" title="Warning">
+  Avoid setting `lang:` in frontmatter unless you really need to — the theme infers it from the file
+  path.
+</Callout>
+
+<Callout type="error" title="Error">
+  Forgetting `pubDate` will fail the build with a clear Zod validation error.
+</Callout>
+
+In plain Markdown, you can also reach for the lower-level CSS class:
+
+<div class="callout callout-info">
+  <strong>Note:</strong> set <code>toc: false</code> in frontmatter to hide the table of contents on
+  a per-post basis.
+</div>
+
+## Images
+
+Inline Markdown images render edge-to-edge inside the prose column:
+
+![Light streaming through a window onto a wooden desk](https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=80&auto=format&fit=crop)
+
+A captioned figure with a `<figcaption>`:
+
+<figure>
+  <img
+    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80&auto=format&fit=crop"
+    alt="A close-up of a MacBook keyboard"
+    loading="lazy"
+  />
+  <figcaption>Photo by Ales Nesetril on Unsplash</figcaption>
+</figure>
+
+## Horizontal rules
+
+Use them sparingly to mark a strong topic shift:
+
+---
+
+After a horizontal rule, anything that follows (text, code, images)
+gets a fresh top margin so the rhythm restarts cleanly.
+
+## Definition lists
+
+Term
+: Definition for the term, rendered with a slight indent.
+
+Another term
+: With a longer definition spread across multiple lines, useful for
+glossary-style content. Definition lists come from `remark-gfm` /
+plain Markdown extensions and are styled by the prose stack.
+
+## Math (inline)
+
+For full LaTeX math you must opt in with `math: true` (see the
+[math post](/posts/latex-math-with-katex)). This page intentionally
+omits that flag so we can verify that without it, KaTeX styles do
+**not** load.
+
+## Wrap-up
+
+If anything here looks off — uneven spacing, oversized headings,
+unreadable code colours in dark mode — that's a regression. This page
+is your safety net.

@@ -1,0 +1,208 @@
+---
+title: 'Typographie & Markdown : tous les éléments de texte rendus par ce thème'
+description: 'Référence exhaustive — titres, listes, citations, tableaux, formatage en ligne, notes de bas de page, listes de définitions, callouts et plus — vérifiée en mode clair et sombre.'
+pubDate: 2026-04-28
+updatedDate: 2026-04-29
+tags: [typographie, markdown, mdx, design, reference]
+categories: [Référence]
+translationKey: typography-and-markdown
+heroImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop'
+heroImageAlt: 'Un livre ouvert sur un bureau en bois sous une lumière directionnelle'
+toc: true
+---
+
+import Callout from '../../../components/Callout.astro';
+
+Cet article est la **page de test typographique** du thème. Si vous
+modifiez les polices, la taille de la prose ou tout élément de la
+pile typographique `prose-chirpy`, ouvrez cette page en mode clair et
+sombre et vérifiez que tout reste équilibré.
+
+La police de corps est **Source Sans 3**, la police de code est
+**JetBrains Mono**, et la colonne de prose est plafonnée à
+`--width-prose` (50 rem) pour que la longueur de ligne reste
+confortable.
+
+## Paragraphes et formatage en ligne
+
+Vous pouvez écrire en **gras**, _italique_, ~~barré~~, `code en ligne`,
+ou imbriqué **_gras italique_**. Les URL longues deviennent
+cliquables : visitez [astro.build](https://astro.build). Les liens
+externes s'ouvrent dans un nouvel onglet avec `rel="nofollow noopener"`
+grâce à `rehype-external-links`.
+
+Utilisez la balise `<kbd>` pour les raccourcis clavier : appuyez sur
+
+<kbd>Cmd</kbd> + <kbd>K</kbd> ou <kbd>/</kbd> pour ouvrir la modale de recherche.
+
+> « La typographie est l'art de donner au langage humain une forme
+> visuelle durable. » — _Robert Bringhurst_
+
+Un deuxième paragraphe maintient le rythme. Hauteur de ligne, marge
+verticale et largeur maximale sont calibrées pour une lecture
+confortable sur mobile et desktop.
+
+## Titres
+
+Les titres sont auto-slugifiés par `rehype-slug` et reçoivent une ancre
+au survol par `rehype-autolink-headings` — survolez la gauche d'un
+titre pour révéler le lien `#`.
+
+### Titre de niveau 3
+
+La table des matières flottante de droite affiche les H3 uniquement
+quand vous êtes dans la section H2 parente.
+
+#### Titre de niveau 4
+
+Les H4 sont supportés et stylés, mais denses — à utiliser seulement
+quand c'est vraiment nécessaire.
+
+## Listes
+
+Liste non ordonnée :
+
+- Un premier élément avec un [lien vers l'accueil](/fr/).
+- Un deuxième élément avec du **texte en gras** et `du code`.
+- Un élément imbriqué :
+  - Avec ses propres enfants.
+  - Et un élément encore plus profond.
+    - Trois niveaux, sans souci.
+
+Liste ordonnée :
+
+1. Choisir un sujet.
+2. Faire le plan — H2 pour les sections, H3 pour les sous-sections.
+3. Écrire un premier jet d'un trait, sans rien éditer.
+4. Dormir dessus.
+5. Éditer sans pitié.
+
+Liste de tâches GFM (grâce à `remark-gfm`) :
+
+- [x] Brancher Tailwind v4
+- [x] Bouton de bascule de thème animé
+- [x] Routage bilingue
+- [ ] Atteindre la fin de cette page
+
+## Citations
+
+> Une citation sur une ligne.
+
+> Une citation multi-lignes.
+>
+> > Citation imbriquée pour insister sur un sous-point — rare, mais le
+> > thème la gère élégamment.
+>
+> Suite de la citation extérieure après le fragment imbriqué.
+
+## Tableaux
+
+| Fonctionnalité | Markdown | MDX | Notes                         |
+| -------------- | :------: | :-: | ----------------------------- |
+| Titres         |    ✓     |  ✓  | H1–H4 avec ancres             |
+| Blocs de code  |    ✓     |  ✓  | Shiki double thème            |
+| Composants     |          |  ✓  | `<Callout>` et compagnie      |
+| Expressions JS |          |  ✓  | `{new Date().toDateString()}` |
+| Notes          |    ✓     |  ✓  | Style GFM[^1]                 |
+
+[^1]: Les notes de bas de page sont fournies par `remark-gfm`.
+
+## Code en ligne et raccourcis clavier
+
+Utilisez `du code en ligne` pour les identifiants
+(`SITE.showFeaturedImages`) ou les snippets courts (`bun astro dev`).
+Dans les tableaux et les listes il reste lisible grâce à un fond
+légèrement atténué.
+
+## Blocs de code
+
+Un exemple court — l'[article dédié aux blocs de code](/fr/posts/code-blocks-and-syntax-highlighting)
+détaille toutes les options Expressive Code.
+
+```ts title="src/utils/posts.ts" ins={5-8}
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE, type Locale } from '../config';
+
+export function shouldShowHero(post: CollectionEntry<'posts'>): boolean {
+  if (!post.data.heroImage) return false;
+  return post.data.showFeaturedImage ?? SITE.showFeaturedImages;
+}
+```
+
+## Callouts
+
+Le thème embarque un composant MDX `<Callout>` à quatre variantes
+sémantiques. Elles héritent des couleurs sémantiques de daisyUI, donc
+restent lisibles dans les deux thèmes.
+
+<Callout type="info" title="Info">
+  À utiliser pour un contexte neutre que le lecteur doit remarquer sans agir.
+</Callout>
+
+<Callout type="success" title="Réussi">
+  Vous venez de publier un article propre. Offrez-vous un thé.
+</Callout>
+
+<Callout type="warning" title="Attention">
+  Évitez de définir `lang:` dans le frontmatter sauf nécessité absolue — le thème l'infère depuis le
+  chemin du fichier.
+</Callout>
+
+<Callout type="error" title="Erreur">
+  Oublier `pubDate` fait échouer le build avec une erreur Zod claire.
+</Callout>
+
+En Markdown pur, vous pouvez aussi utiliser la classe CSS bas-niveau :
+
+<div class="callout callout-info">
+  <strong>Note :</strong> mettez <code>toc: false</code> dans le frontmatter pour masquer la table
+  des matières par article.
+</div>
+
+## Images
+
+Les images Markdown en ligne occupent toute la largeur de la prose :
+
+![Lumière entrant par une fenêtre sur un bureau en bois](https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=80&auto=format&fit=crop)
+
+Une figure légendée avec `<figcaption>` :
+
+<figure>
+  <img
+    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80&auto=format&fit=crop"
+    alt="Gros plan sur un clavier de MacBook"
+    loading="lazy"
+  />
+  <figcaption>Photo de Ales Nesetril sur Unsplash</figcaption>
+</figure>
+
+## Filets horizontaux
+
+À utiliser avec parcimonie pour marquer un changement de sujet fort :
+
+---
+
+Après un filet horizontal, ce qui suit (texte, code, images) reçoit
+une marge supérieure fraîche pour repartir nettement.
+
+## Listes de définitions
+
+Terme
+: Définition du terme, rendue avec une légère indentation.
+
+Autre terme
+: Avec une définition plus longue sur plusieurs lignes, utile pour
+le contenu de type glossaire.
+
+## Mathématiques (en ligne)
+
+Pour des maths LaTeX complètes, il faut activer `math: true` (voir
+l'[article sur KaTeX](/fr/posts/latex-math-with-katex)). Cette page
+n'active intentionnellement pas le drapeau pour vérifier que les
+styles KaTeX **ne** se chargent **pas**.
+
+## Conclusion
+
+Si quelque chose ici cloche — espacement irrégulier, titres trop
+gros, couleurs de code illisibles en mode sombre — c'est une
+régression. Cette page est votre filet de sécurité.

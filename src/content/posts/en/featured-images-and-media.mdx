@@ -1,0 +1,168 @@
+---
+title: 'Featured images & media: heroes, cards, and a photo-essay layout'
+description: 'Pick the right kind of image source, control where it shows up, write good alt text, and turn off the TOC for prose-light photo essays.'
+pubDate: 2026-04-20
+tags: [images, media, hero, photography, design]
+categories: [Authoring]
+translationKey: featured-images-and-media
+heroImage: /images/coastline.jpg
+heroImageAlt: 'A long exposure of waves washing across a rocky coastline at dusk'
+showFeaturedImage: true
+toc: false
+---
+
+import Callout from '../../../components/Callout.astro';
+
+This post is a small **photo essay** that demonstrates the theme's
+image features end-to-end. Notice the things this page is doing that
+others aren't:
+
+- The hero is a **local image** from `public/images/coastline.jpg`, not
+  a remote CDN URL.
+- `toc: false` — no right-hand table of contents. Photo essays read
+  better without one.
+- `showFeaturedImage: true` is set explicitly, even though that's the
+  site default. Authors can turn it off per post if they prefer.
+
+## Where images go
+
+You have three storage options for images in this theme:
+
+### 1. Public path (the simplest)
+
+Drop the file into `public/images/` (or anywhere under `public/`) and
+reference it by absolute path:
+
+```yaml
+heroImage: /images/coastline.jpg
+heroImageAlt: A long exposure of waves on a rocky coastline
+```
+
+Pros: zero ceremony, easy to swap. Cons: no automatic optimisation
+(Astro doesn't process anything in `public/`).
+
+### 2. Imported asset (in MDX)
+
+If you want Astro's image pipeline — automatic resizing, modern
+formats, dimensions injection — import the asset inside an MDX file
+and use `<Image>`:
+
+```mdx title="src/content/posts/en/example.mdx"
+import { Image } from 'astro:assets';
+import coastline from '../../../assets/coastline.jpg';
+
+<Image src={coastline} alt="A coastline at dusk" widths={[400, 800, 1600]} />
+```
+
+Note that `heroImage` in frontmatter is a plain string and does not
+support imported assets — for the **hero**, stick with public paths or
+external URLs. For inline images, MDX + `<Image>` is the better choice
+when you want optimised output.
+
+### 3. External URL
+
+Remote URLs work fine. Useful for Unsplash, your CDN, or a previous
+host:
+
+```yaml
+heroImage: https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1600&q=80&auto=format&fit=crop
+heroImageAlt: Soft daylight on a wooden desk
+```
+
+Pros: no commit-bloat. Cons: external dependency; the image goes away
+if the host does.
+
+## Hero image rules
+
+The hero shows up in two places:
+
+1. As a **thumbnail on cards** (home page, listings, archives, tag
+   and category pages).
+2. As a **large hero on the post page** itself.
+
+Both are controlled by:
+
+- `SITE.showFeaturedImages` in [`src/config.ts`](src/config.ts) — the
+  site-wide default.
+- `showFeaturedImage` per-post — overrides the site default.
+- `heroImage` per-post — provides the actual image source.
+
+If `heroImage` is missing, no hero is rendered regardless of the
+flags. If `heroImage` is set but `showFeaturedImage: false`, the post
+page is text-only — but the card on listings can still use the hero,
+depending on your layout customisations.
+
+## Inline images in prose
+
+Inline Markdown images render edge-to-edge inside the prose column:
+
+![Coastline rocks photographed under overcast skies](https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=80&auto=format&fit=crop)
+
+A captioned figure with a `<figcaption>`:
+
+<figure>
+  <img
+    src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1600&q=80&auto=format&fit=crop"
+    alt="Sunlight breaking through clouds over the ocean"
+    loading="lazy"
+  />
+  <figcaption>Sunlight on the horizon. Photo by Sean O. on Unsplash.</figcaption>
+</figure>
+
+Side-by-side images? Drop them inside an HTML `<div>` with Tailwind
+classes (this is MDX, after all):
+
+<div class="grid gap-3 sm:grid-cols-2">
+  <img
+    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80&auto=format&fit=crop"
+    alt="A sandy beach"
+    loading="lazy"
+    class="rounded-lg"
+  />
+  <img
+    src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=900&q=80&auto=format&fit=crop"
+    alt="A coastal cliff"
+    loading="lazy"
+    class="rounded-lg"
+  />
+</div>
+
+## Alt text — please write some
+
+`heroImageAlt` is technically optional. Don't treat it that way.
+
+- **Decorative images** (a coloured stripe at the top of a post): use
+  empty alt — `heroImageAlt: ""`.
+- **Content images** (a screenshot, a photograph, a chart): describe
+  what the image conveys, not the file.
+- **Don't start with "Image of…"** — screen readers already announce
+  it as an image.
+
+The theme uses `heroImageAlt` for the post hero **and** for the card
+thumbnail on listings, so a well-written alt benefits both contexts.
+
+## Performance tips
+
+- Inline images get `loading="lazy"` automatically when authored as
+  raw HTML, but Markdown's `![]()` syntax does not. Prefer the
+  `<img loading="lazy">` form for below-the-fold imagery.
+- Hero images appear above the fold — set them to `loading="eager"`
+  via the layout if you have a critical hero you want to prioritise.
+- Use Astro's `<Image>` component for anything you control yourself
+  (assets stored locally) to get modern formats and width-set output.
+
+<Callout type="info" title="Tip">
+  Set <code>showFeaturedImage: false</code> on text-heavy posts where the hero adds nothing — the
+  reader gets straight to the words.
+</Callout>
+
+## Closing frame
+
+Photo essays read best without distractions. That's why this post:
+
+- Hides the TOC (`toc: false`).
+- Uses one large hero plus a few inline figures.
+- Stays in MDX so you can drop in side-by-side grids without leaving
+  Markdown.
+
+Happy shooting.

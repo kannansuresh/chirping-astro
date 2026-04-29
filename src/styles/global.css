@@ -251,7 +251,7 @@
      panel rail so the search pill aligns vertically over the panel column.
      Below xl, the right rail is hidden so the slot shrinks to fit. */
   .chirpy-topbar__search {
-    @apply flex shrink-0 items-center justify-end px-1;
+    @apply flex shrink-0 items-center justify-start px-1;
   }
   @media (min-width: 1280px) {
     .chirpy-topbar__search {
@@ -537,7 +537,7 @@
 /* ---------- Header search pill ---------- */
 @layer components {
   .search-pill {
-    @apply border-base-300 bg-base-100 text-base-content/55 hover:text-base-content hover:border-base-content/30 inline-flex h-9 w-full items-center gap-2 rounded-full border pr-1.5 pl-3 text-sm transition;
+    @apply border-base-300 bg-base-100 text-base-content/55 hover:text-base-content hover:border-base-content/30 inline-flex h-9 items-center gap-2 rounded-full border pr-1.5 pl-3 text-sm transition;
   }
   .search-pill__icon {
     @apply shrink-0;
