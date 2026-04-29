@@ -236,7 +236,7 @@
      match `<main>`'s height — giving any sticky child (e.g. the TOC)
      enough vertical room to remain pinned while the article scrolls. */
   .chirpy-panel-rail {
-    @apply hidden shrink-0 text-sm xl:block;
+    @apply hidden shrink-0 pt-6 text-sm xl:block;
     width: 14rem;
   }
   @media (min-width: 1440px) {
