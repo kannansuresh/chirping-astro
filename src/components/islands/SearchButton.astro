@@ -42,12 +42,14 @@ const i18n = {
 
 <button
   type="button"
-  class="btn btn-ghost btn-sm btn-circle"
+  class="search-pill"
   aria-label={t('search.openLabel')}
   title={t('search.openLabel')}
   data-search-open
 >
-  <Icon name="lucide:search" width={18} height={18} />
+  <Icon name="lucide:search" width={16} height={16} class="search-pill__icon" />
+  <span class="search-pill__label">{i18n.placeholder}</span>
+  <kbd class="search-pill__kbd" aria-hidden="true">/</kbd>
 </button>
 
 <dialog data-search-modal class="modal modal-top sm:modal-middle" aria-label={t('search.title')}>
