@@ -1,0 +1,13 @@
+---
+/**
+ * KaTeX stylesheet loader.
+ *
+ * Importing the stylesheet inside this component (rather than globally
+ * in `BaseLayout` or `global.css`) means Astro will only emit the CSS
+ * link on pages that actually render `<MathStyles />`. The component
+ * is rendered conditionally from `PostLayout` / `PageLayout` based on
+ * the `math: true` frontmatter flag, so non-math pages never download
+ * the ~25 kB stylesheet (or its woff2 font assets).
+ */
+import 'katex/dist/katex.min.css';
+---

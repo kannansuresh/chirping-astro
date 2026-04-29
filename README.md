@@ -12,6 +12,10 @@ and **Giscus** comments.
 - **Markdown + MDX** with [Expressive Code](https://expressive-code.com)
   (syntax highlighting, frame titles, copy buttons, line markers, diffs),
   GFM, autolinked headings, callouts
+- **LaTeX math** via [KaTeX](https://katex.org) (`remark-math` +
+  `rehype-katex`), pre-rendered at build time. The stylesheet is loaded
+  **only on pages that opt in** with `math: true` in frontmatter, so
+  non-math pages stay lean
 - **Pagefind** search (modal + dedicated page, lazy-loaded)
 - **Giscus** comments synced with theme + locale, per-post overrideable
 - **i18n**: English + French, **EN at the URL root**, FR under `/fr`
@@ -197,6 +201,51 @@ The themes (`github-light` / `github-dark-dimmed`) are bound to the
 site's own `<html data-theme="chirpy-light | chirpy-dark">` attribute
 via the `themeCssSelector` option in `astro.config.mjs`, so the code
 palette flips instantly when the user toggles the theme.
+
+---
+
+## LaTeX math (KaTeX)
+
+Math is parsed by [`remark-math`](https://github.com/remarkjs/remark-math)
+and rendered to HTML + CSS at build time by
+[`rehype-katex`](https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex).
+**No JavaScript ships to the client** for math.
+
+### Performance: opt-in stylesheet
+
+The KaTeX stylesheet (~29 kB) is **not** loaded globally. Add
+`math: true` to a post or page's frontmatter to enable it for that
+single document:
+
+```yaml
+---
+title: My math-heavy post
+math: true
+---
+```
+
+Internally, `src/components/MathStyles.astro` imports
+`katex/dist/katex.min.css`. The component is rendered only when
+`math: true`, and Astro's per-page CSS bundling guarantees the
+stylesheet (and its woff2 font assets) is emitted only on pages that
+include it. Non-math pages — including the home page, archives,
+listings, search, etc. — never download it.
+
+### Authoring
+
+- **Inline:** wrap with `$ ... $` — `$E = mc^2$`
+- **Display:** wrap with `$$ ... $$` on their own lines:
+
+  ```md
+  $$
+  \int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}
+  $$
+  ```
+
+- **Escape literal dollars** outside math with `\$`, e.g. `\$5.00`.
+- The same syntax works in `.md` and `.mdx`.
+- See `src/content/posts/en/math-equations-showcase.md` for a full
+  showcase (matrices, integrals, Maxwell's equations, etc.).
 
 ---
 

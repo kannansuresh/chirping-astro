@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import MathStyles from '../components/MathStyles.astro';
 import type { Locale } from '../config';
 
 interface Props {
@@ -7,20 +8,24 @@ interface Props {
   description: string;
   locale: Locale;
   crumbs?: Array<{ label: string; href?: string }>;
+  /** Load KaTeX CSS for this page only (no global load). */
+  math?: boolean;
 }
 
-const { title, description, crumbs } = Astro.props;
+const { title, description, crumbs, math = false } = Astro.props;
 ---
+
 <BaseLayout
   title={title}
   description={description}
   narrow={true}
   crumbs={crumbs ?? [{ label: title }]}
 >
-  <article class="rounded-md border border-base-300 bg-base-100 px-5 py-8 sm:px-8 sm:py-10">
+  {math && <MathStyles />}
+  <article class="border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10">
     <header class="mb-6">
-      <h1 class="text-3xl font-extrabold leading-tight tracking-tight">{title}</h1>
-      {description && <p class="mt-2 text-base-content/70">{description}</p>}
+      <h1 class="text-3xl leading-tight font-extrabold tracking-tight">{title}</h1>
+      {description && <p class="text-base-content/70 mt-2">{description}</p>}
     </header>
     <div class="prose-chirpy max-w-none">
       <slot />

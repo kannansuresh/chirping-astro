@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import PostNav from '../components/PostNav.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
+import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, type Locale } from '../config';
 import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
@@ -77,6 +78,7 @@ const crumbs = [
   crumbs={crumbs}
   seo={seo}
 >
+  {post.data.math && <MathStyles />}
   {
     post.data.toc && headings.length > 0 && (
       <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />

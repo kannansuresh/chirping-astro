@@ -8,7 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeExternalLinks from 'rehype-external-links';
+import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 
 import { SITE } from './src/config';
 
@@ -35,8 +37,17 @@ export default defineConfig({
   },
 
   markdown: {
-    remarkPlugins: [remarkGfm],
+    // `remark-math` parses `$inline$` and `$$display$$` blocks into MDAST
+    // math nodes; `rehype-katex` converts them to pre-rendered HTML at
+    // build time so no JavaScript is shipped to the client.
+    //
+    // The accompanying KaTeX stylesheet (`katex/dist/katex.min.css`) is
+    // loaded ONLY on pages that opt in via `math: true` in frontmatter,
+    // through `<MathStyles />` in the post / page layouts. This keeps the
+    // CSS (~25kB gzipped) off pages that don't need it.
+    remarkPlugins: [remarkGfm, remarkMath],
     rehypePlugins: [
+      rehypeKatex,
       rehypeSlug,
       [
         rehypeAutolinkHeadings,

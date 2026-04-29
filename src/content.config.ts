@@ -37,6 +37,12 @@ const baseFrontmatter = z.object({
   toc: z.boolean().default(true),
   /** Pin to top of listings. */
   pinned: z.boolean().default(false),
+  /**
+   * Opt in to LaTeX math rendering (KaTeX). When `true`, the layout
+   * loads `katex.min.css` only on this page so the stylesheet stays
+   * off posts/pages that don't use math.
+   */
+  math: z.boolean().default(false),
   /** Optional locale override; otherwise inferred from path. */
   lang: localeEnum.optional(),
   /**
@@ -77,12 +83,10 @@ const pages = defineCollection({
     pattern: '**/*.{md,mdx}',
     base: './src/content/pages',
   }),
-  schema: baseFrontmatter
-    .partial({ pubDate: true })
-    .extend({
-      /** Pages don't paginate or appear in archives. */
-      showInNav: z.boolean().default(false),
-    }),
+  schema: baseFrontmatter.partial({ pubDate: true }).extend({
+    /** Pages don't paginate or appear in archives. */
+    showInNav: z.boolean().default(false),
+  }),
 });
 
 export const collections = { posts, pages };

@@ -37,12 +37,25 @@ des traductions l'un de l'autre, et le sélecteur de langue les relie.
 | Champ            | Type     | Notes                              |
 | ---------------- | -------- | ---------------------------------- |
 | `title`          | string   | Titre de l'article                 |
-| `description`   | string   | Utilisé par le SEO et les cartes  |
+| `description`    | string   | Utilisé par le SEO et les cartes   |
 | `pubDate`        | date     | Obligatoire                        |
 | `tags`           | string[] | Optionnel, défaut `[]`             |
 | `categories`     | string[] | Optionnel                          |
 | `translationKey` | string   | Lie les traductions                |
 | `comments`       | boolean  | Forcer Giscus on/off               |
 | `toc`            | boolean  | Masquer la TDM pour un récit court |
+| `math`           | boolean  | Activer le rendu LaTeX (KaTeX)     |
 
 Et c'est tout — le reste vous appartient.
+
+## Mathématiques (LaTeX)
+
+Définissez `math: true` dans le frontmatter pour activer le rendu LaTeX
+sur ce billet (ou cette page). Les équations sont pré-rendues à la
+compilation par KaTeX — la feuille de styles n'est chargée que sur les
+pages qui l'activent, donc les autres billets ne paient rien pour cette
+fonctionnalité.
+
+- En ligne : `$E = mc^2$`
+- En bloc : encadrer avec `$$ ... $$` sur leurs propres lignes
+- Échapper un dollar littéral avec `\$`
