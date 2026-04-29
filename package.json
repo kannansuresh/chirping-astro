@@ -29,6 +29,7 @@
     "@iconify-json/lucide": "^1.2.104",
     "@tailwindcss/vite": "^4.1.0",
     "astro": "^6.0.0",
+    "astro-expressive-code": "^0.41.7",
     "astro-icon": "^1.1.5",
     "daisyui": "^5.0.0",
     "pagefind": "^1.4.0",

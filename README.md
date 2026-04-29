@@ -9,11 +9,13 @@ and **Giscus** comments.
 - **Tailwind CSS v4** via the official `@tailwindcss/vite` plugin
 - **daisyUI** with custom Chirpy-flavoured `chirpy-light` / `chirpy-dark`
   themes
-- **Markdown + MDX** with Shiki, GFM, autolinked headings, callouts
+- **Markdown + MDX** with [Expressive Code](https://expressive-code.com)
+  (syntax highlighting, frame titles, copy buttons, line markers, diffs),
+  GFM, autolinked headings, callouts
 - **Pagefind** search (modal + dedicated page, lazy-loaded)
 - **Giscus** comments synced with theme + locale, per-post overrideable
 - **i18n**: English + French, **EN at the URL root**, FR under `/fr`
-- Reading time, sticky TOC with scroll-spy, code copy buttons
+- Reading time, sticky TOC with scroll-spy, built-in code copy buttons
 - RSS per locale, hreflang alternates, locale-aware sitemap
 - Strict TypeScript, ESLint, Prettier, accessibility focus
 
@@ -41,15 +43,15 @@ bun run preview
 
 ### Bun scripts
 
-| Script              | What it does                                                |
-| ------------------- | ----------------------------------------------------------- |
-| `bun run dev`       | Astro dev server                                            |
-| `bun run build`     | `astro build` then `pagefind --site dist`                   |
-| `bun run preview`   | Preview the production build                                |
-| `bun run typecheck` | `astro check` (TS + Astro)                                  |
-| `bun run lint`      | ESLint (zero warnings allowed)                              |
-| `bun run format`    | Prettier write                                              |
-| `bun run pagefind`  | Re-run Pagefind only (after `astro build`)                  |
+| Script              | What it does                               |
+| ------------------- | ------------------------------------------ |
+| `bun run dev`       | Astro dev server                           |
+| `bun run build`     | `astro build` then `pagefind --site dist`  |
+| `bun run preview`   | Preview the production build               |
+| `bun run typecheck` | `astro check` (TS + Astro)                 |
+| `bun run lint`      | ESLint (zero warnings allowed)             |
+| `bun run format`    | Prettier write                             |
+| `bun run pagefind`  | Re-run Pagefind only (after `astro build`) |
 
 ---
 
@@ -92,10 +94,10 @@ Open `src/styles/global.css` and tweak the OKLCH values inside each
 
 ### Routing rules
 
-| Locale | Root        | Posts                | Tags         |
-| ------ | ----------- | -------------------- | ------------ |
-| `en`   | `/`         | `/posts/<slug>`      | `/tags/...`  |
-| `fr`   | `/fr/`      | `/fr/posts/<slug>`   | `/fr/tags/...`|
+| Locale | Root   | Posts              | Tags           |
+| ------ | ------ | ------------------ | -------------- |
+| `en`   | `/`    | `/posts/<slug>`    | `/tags/...`    |
+| `fr`   | `/fr/` | `/fr/posts/<slug>` | `/fr/tags/...` |
 
 The default locale (EN) **never has a prefix**. This is enforced by:
 
@@ -146,8 +148,8 @@ TypeScript ensures all keys are present in every locale:
 
 ```ts
 const t = useTranslations('fr');
-t('nav.home');           // 'Accueil'
-formatDate(d, 'fr');     // '12 avril 2026'
+t('nav.home'); // 'Accueil'
+formatDate(d, 'fr'); // '12 avril 2026'
 ```
 
 ### Adding a locale (e.g. `de`)
@@ -162,12 +164,48 @@ formatDate(d, 'fr');     // '12 avril 2026'
 
 ---
 
+## Code blocks (Expressive Code)
+
+Fenced code blocks in Markdown / MDX are rendered at build time by
+[`astro-expressive-code`](https://expressive-code.com). Highlighting is
+powered by Shiki under the hood, and we get a number of authoring
+features for free:
+
+- **Frame titles** — add `title="path/to/file.ts"` after the language.
+- **Copy button** — rendered automatically in the top-right corner.
+- **Line markers** — highlight (`{1,3-5}`), inserted (`ins={5-8}`),
+  removed (`del={2}`), or marked (`mark={"foo"}`) lines.
+- **Terminal frame** — `frame="terminal"` switches to a terminal-style
+  frame for shell snippets.
+- **Word wrap, collapsible sections, diffs**, and more.
+
+Example:
+
+````md
+```ts title="src/content.config.ts" {3-5}
+import { defineCollection, z } from 'astro:content';
+
+export const collections = {
+  posts: defineCollection({
+    schema: z.object({ title: z.string() }),
+  }),
+};
+```
+````
+
+The themes (`github-light` / `github-dark-dimmed`) are bound to the
+site's own `<html data-theme="chirpy-light | chirpy-dark">` attribute
+via the `themeCssSelector` option in `astro.config.mjs`, so the code
+palette flips instantly when the user toggles the theme.
+
+---
+
 ## Pagefind search
 
 ### How it works
 
 - `bun run build` runs `astro build` and then `pagefind --site dist
-  --output-subdir _pagefind`.
+--output-subdir _pagefind`.
 - Pagefind crawls every static `.html` page and writes the index +
   client bundle to `dist/_pagefind/`.
 - The header search button (`SearchButton.astro`) lazy-loads
@@ -241,14 +279,12 @@ src/
 │   ├── PostNav.astro
 │   ├── Pagination.astro
 │   ├── Callout.astro
-│   ├── Icon.astro
 │   ├── SEO.astro
 │   └── islands/
 │       ├── ThemeToggle.astro
 │       ├── LanguageSwitcher.astro
 │       ├── SearchButton.astro
 │       ├── TableOfContents.astro
-│       ├── CodeCopy.astro
 │       └── Giscus.astro
 ├── content/
 │   ├── posts/{en,fr}/...
@@ -277,17 +313,19 @@ src/
 
 ### Hydration footprint
 
-The site is mostly static HTML. JavaScript only runs in five small
+The site is mostly static HTML. JavaScript only runs in four small
 islands and only when needed:
 
-| Island               | When loads                          |
-| -------------------- | ----------------------------------- |
-| `ThemeToggle`        | On every page (very small)          |
-| `LanguageSwitcher`   | Pure CSS dropdown — no JS           |
-| `SearchButton`       | Pagefind UI loaded on modal open    |
-| `TableOfContents`    | Only on posts that have headings    |
-| `CodeCopy`           | Only on post pages                  |
-| `Giscus`             | Only on posts with comments enabled |
+| Island             | When loads                          |
+| ------------------ | ----------------------------------- |
+| `ThemeToggle`      | On every page (very small)          |
+| `LanguageSwitcher` | Pure CSS dropdown — no JS           |
+| `SearchButton`     | Pagefind UI loaded on modal open    |
+| `TableOfContents`  | Only on posts that have headings    |
+| `Giscus`           | Only on posts with comments enabled |
+
+Fenced code blocks are rendered at build time by `astro-expressive-code`,
+which emits its own tiny client script for the copy-to-clipboard buttons.
 
 ---
 
@@ -308,13 +346,13 @@ and `hreflang` match the deployed URL.
 
 ## Troubleshooting
 
-| Symptom                              | Fix                                                                 |
-| ------------------------------------ | ------------------------------------------------------------------- |
-| Search modal says "Search index not available" | Run `bun run build` once (the index is generated to `dist/_pagefind/`). |
-| Theme flashes wrong colour on load   | Confirm the inline `<script is:inline>` block is present in `BaseLayout`. |
-| Giscus does not render               | Check `PUBLIC_GISCUS_*` env vars; verify the giscus app is installed on the repo. |
-| FR routes 404 in dev                 | The `/fr` folder is just static — restart `bun run dev` after adding new files. |
-| `astro check` complains about `astro:content` | Ensure `bun run dev` or `bun run build` ran at least once so `.astro/types.d.ts` is generated. |
+| Symptom                                        | Fix                                                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Search modal says "Search index not available" | Run `bun run build` once (the index is generated to `dist/_pagefind/`).                        |
+| Theme flashes wrong colour on load             | Confirm the inline `<script is:inline>` block is present in `BaseLayout`.                      |
+| Giscus does not render                         | Check `PUBLIC_GISCUS_*` env vars; verify the giscus app is installed on the repo.              |
+| FR routes 404 in dev                           | The `/fr` folder is just static — restart `bun run dev` after adding new files.                |
+| `astro check` complains about `astro:content`  | Ensure `bun run dev` or `bun run build` ran at least once so `.astro/types.d.ts` is generated. |
 
 ---
 

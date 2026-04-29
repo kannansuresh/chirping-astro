@@ -39,17 +39,17 @@ sortir du produit uniquement quand ils remplissent trois critères :
 
 Un fichier de tokens minimal en TypeScript :
 
-```ts
+```ts title="src/design/tokens.ts" {3-5}
 export const tokens = {
   color: {
-    primary:    'oklch(45% 0.135 264)',
-    surface:    'oklch(100% 0 0)',
-    text:       'oklch(20% 0.012 264)',
+    primary: 'oklch(45% 0.135 264)',
+    surface: 'oklch(100% 0 0)',
+    text: 'oklch(20% 0.012 264)',
     'text-muted': 'oklch(50% 0.012 264)',
   },
   space: { 1: '0.25rem', 2: '0.5rem', 3: '0.75rem', 4: '1rem', 6: '1.5rem' },
-  font:  { sans: '"Source Sans 3", system-ui, sans-serif' },
-  radius:{ sm: '0.25rem', md: '0.5rem', lg: '1rem' },
+  font: { sans: '"Source Sans 3", system-ui, sans-serif' },
+  radius: { sm: '0.25rem', md: '0.5rem', lg: '1rem' },
 } as const;
 ```
 

@@ -30,9 +30,10 @@ The theme ships with the features you would expect from a modern technical blog:
 ## A code sample
 
 Authoring code is a first-class concern. Every fenced block is rendered with
-[Shiki](https://shiki.style) and gets a copy-to-clipboard button at runtime.
+[Expressive Code](https://expressive-code.com), which gives us syntax
+highlighting, frame titles, copy buttons and line markers out of the box.
 
-```ts
+```ts title="src/content.config.ts"
 import { defineCollection, z } from 'astro:content';
 
 export const collections = {

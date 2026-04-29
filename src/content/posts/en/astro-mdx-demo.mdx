@@ -22,12 +22,12 @@ authoring flow.
 The theme ships with a small `Callout` component you can reach for in MDX:
 
 <Callout type="success" title="Shipped!">
-This callout was rendered by an Astro component embedded directly in MDX.
+  This callout was rendered by an Astro component embedded directly in MDX.
 </Callout>
 
 <Callout type="warning" title="Read me">
-The Callout supports `info`, `success`, `warning` and `error` variants and
-inherits the active daisyUI theme colours.
+  The Callout supports `info`, `success`, `warning` and `error` variants and inherits the active
+  daisyUI theme colours.
 </Callout>
 
 ## Inline expressions
@@ -37,7 +37,7 @@ according to the build server.
 
 ## A bit of code
 
-```tsx
+```tsx title="src/utils/preview.ts"
 import type { CollectionEntry } from 'astro:content';
 
 export function preview(entry: CollectionEntry<'posts'>) {
@@ -47,12 +47,12 @@ export function preview(entry: CollectionEntry<'posts'>) {
 
 ## A simple table
 
-| Feature       | Status |
-| ------------- | ------ |
-| TOC           | ✓      |
-| Code highlight| ✓      |
-| Pagefind      | ✓      |
-| Giscus        | ✓      |
+| Feature        | Status |
+| -------------- | ------ |
+| TOC            | ✓      |
+| Code highlight | ✓      |
+| Pagefind       | ✓      |
+| Giscus         | ✓      |
 
 ## Comments are on for this post
 

@@ -78,13 +78,13 @@ Task list (GFM):
 
 ## Tables
 
-| Feature        | Markdown | MDX | Notes                              |
-| -------------- | :------: | :-: | ---------------------------------- |
-| Headings       |    ✓     |  ✓  | H1–H4 with anchor links            |
-| Code blocks    |    ✓     |  ✓  | Shiki dual theme                   |
-| Components     |          |  ✓  | `<Callout>` and friends            |
-| JS expressions |          |  ✓  | `{new Date().toDateString()}`      |
-| Footnotes      |    ✓     |  ✓  | GFM-style[^1]                      |
+| Feature        | Markdown | MDX | Notes                         |
+| -------------- | :------: | :-: | ----------------------------- |
+| Headings       |    ✓     |  ✓  | H1–H4 with anchor links       |
+| Code blocks    |    ✓     |  ✓  | Shiki dual theme              |
+| Components     |          |  ✓  | `<Callout>` and friends       |
+| JS expressions |          |  ✓  | `{new Date().toDateString()}` |
+| Footnotes      |    ✓     |  ✓  | GFM-style[^1]                 |
 
 [^1]: Like this one.
 
@@ -98,7 +98,7 @@ or short snippets (`bun astro dev`). For keyboard shortcuts, prefer the
 
 A TypeScript example:
 
-```ts
+```ts title="src/utils/posts.ts" ins={5-8}
 // utils/posts.ts
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE, type Locale } from '../config';
@@ -109,18 +109,18 @@ export function shouldShowHero(post: CollectionEntry<'posts'>): boolean {
 }
 ```
 
-A bash example:
+A bash example with a frame title:
 
-```bash
+```bash title="Terminal" frame="terminal"
 # Run the dev server, then build for production
 bun install
 bun run dev
 bun run build
 ```
 
-A diff:
+A diff with a label:
 
-```diff
+```diff title="Refactor: hero image source"
 - const heroSrc = typeof img === 'string' ? img : img?.src;
 + const heroSrc = heroImageSrc(post);
 + const showHero = shouldShowHero(post);
@@ -141,28 +141,28 @@ showFeaturedImage: true
 The `<Callout>` MDX component renders one of four semantic variants:
 
 <Callout type="info" title="Info">
-The active daisyUI theme drives every callout colour, so they stay
-readable in both light and dark mode.
+  The active daisyUI theme drives every callout colour, so they stay readable in both light and dark
+  mode.
 </Callout>
 
 <Callout type="success" title="Success">
-You just shipped a clean post. Treat yourself.
+  You just shipped a clean post. Treat yourself.
 </Callout>
 
 <Callout type="warning" title="Warning">
-Avoid manually setting `lang:` in frontmatter unless you really need to —
-the theme infers it from the file path.
+  Avoid manually setting `lang:` in frontmatter unless you really need to — the theme infers it from
+  the file path.
 </Callout>
 
 <Callout type="error" title="Error">
-Forgetting `pubDate` will cause the build to fail with a clear Zod error.
+  Forgetting `pubDate` will cause the build to fail with a clear Zod error.
 </Callout>
 
 In plain Markdown you can also reach for the lower-level callout class:
 
 <div class="callout callout-info">
-  <strong>Note:</strong> set <code>toc: false</code> in frontmatter to
-  hide the table of contents on a per-post basis.
+  <strong>Note:</strong> set <code>toc: false</code> in frontmatter to hide the table of contents on
+  a per-post basis.
 </div>
 
 ## Images
@@ -198,7 +198,7 @@ Term
 
 Another term
 : With a longer definition spread across multiple lines, useful for
-  glossaries and reference posts like this one.
+glossaries and reference posts like this one.
 
 ## Closing thought
 

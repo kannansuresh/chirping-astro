@@ -79,13 +79,13 @@ Liste de tâches (GFM) :
 
 ## Tableaux
 
-| Fonctionnalité   | Markdown | MDX | Remarques                          |
-| ---------------- | :------: | :-: | ---------------------------------- |
-| Titres           |    ✓     |  ✓  | H1–H4 avec liens d'ancrage         |
-| Blocs de code    |    ✓     |  ✓  | Shiki double thème                 |
-| Composants       |          |  ✓  | `<Callout>` et compagnie           |
-| Expressions JS   |          |  ✓  | `{new Date().toDateString()}`      |
-| Notes            |    ✓     |  ✓  | Style GFM[^1]                      |
+| Fonctionnalité | Markdown | MDX | Remarques                     |
+| -------------- | :------: | :-: | ----------------------------- |
+| Titres         |    ✓     |  ✓  | H1–H4 avec liens d'ancrage    |
+| Blocs de code  |    ✓     |  ✓  | Shiki double thème            |
+| Composants     |          |  ✓  | `<Callout>` et compagnie      |
+| Expressions JS |          |  ✓  | `{new Date().toDateString()}` |
+| Notes          |    ✓     |  ✓  | Style GFM[^1]                 |
 
 [^1]: Comme celle-ci.
 
@@ -94,13 +94,14 @@ Liste de tâches (GFM) :
 Utilisez le `code en ligne` pour mettre en avant un identifiant
 (`SITE.showFeaturedImages`) ou un court extrait (`bun astro dev`). Pour
 les raccourcis clavier, préférez la balise `<kbd>` : appuyez sur
+
 <kbd>Cmd</kbd> + <kbd>K</kbd> pour ouvrir la recherche.
 
 ## Blocs de code
 
 Exemple TypeScript :
 
-```ts
+```ts title="src/utils/posts.ts" ins={5-8}
 // utils/posts.ts
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE, type Locale } from '../config';
@@ -111,18 +112,18 @@ export function shouldShowHero(post: CollectionEntry<'posts'>): boolean {
 }
 ```
 
-Exemple bash :
+Exemple bash avec un titre de cadre :
 
-```bash
+```bash title="Terminal" frame="terminal"
 # Lance le serveur de développement, puis le build de production
 bun install
 bun run dev
 bun run build
 ```
 
-Un diff :
+Un diff annoté :
 
-```diff
+```diff title="Refactor : source de l'image héro"
 - const heroSrc = typeof img === 'string' ? img : img?.src;
 + const heroSrc = heroImageSrc(post);
 + const showHero = shouldShowHero(post);
@@ -143,12 +144,12 @@ showFeaturedImage: true
 Le composant MDX `<Callout>` propose quatre variantes sémantiques :
 
 <Callout type="info" title="Info">
-Le thème daisyUI actif pilote la couleur de chaque encadré, qui reste
-lisible en mode clair comme en mode sombre.
+  Le thème daisyUI actif pilote la couleur de chaque encadré, qui reste lisible en mode clair comme
+  en mode sombre.
 </Callout>
 
 <Callout type="success" title="Succès">
-Vous venez de publier un article propre. Récompensez-vous.
+  Vous venez de publier un article propre. Récompensez-vous.
 </Callout>
 
 <Callout type="warning" title="Attention">
@@ -158,14 +159,14 @@ le thème déduit la langue du chemin de fichier.
 </Callout>
 
 <Callout type="error" title="Erreur">
-Oublier `pubDate` provoque une erreur Zod claire au build.
+  Oublier `pubDate` provoque une erreur Zod claire au build.
 </Callout>
 
 En Markdown classique, vous pouvez aussi utiliser la classe `callout` :
 
 <div class="callout callout-info">
-  <strong>Note :</strong> définissez <code>toc: false</code> dans le
-  frontmatter pour masquer la table des matières d'un article.
+  <strong>Note :</strong> définissez <code>toc: false</code> dans le frontmatter pour masquer la
+  table des matières d'un article.
 </div>
 
 ## Images
@@ -202,7 +203,7 @@ Terme
 
 Autre terme
 : Avec une définition plus longue, étalée sur plusieurs lignes — utile
-  pour les glossaires et les articles de référence comme celui-ci.
+pour les glossaires et les articles de référence comme celui-ci.
 
 ## En conclusion
 

@@ -30,9 +30,10 @@ Le thème embarque tout ce que vous attendez d'un blog technique moderne :
 ## Un exemple de code
 
 L'écriture de code est une priorité. Chaque bloc clos est rendu avec
-[Shiki](https://shiki.style) et reçoit un bouton « copier » à l'exécution.
+[Expressive Code](https://expressive-code.com) : coloration syntaxique,
+cadres avec titre, bouton « copier » et marqueurs de lignes inclus.
 
-```ts
+```ts title="src/content.config.ts"
 import { defineCollection, z } from 'astro:content';
 
 export const collections = {

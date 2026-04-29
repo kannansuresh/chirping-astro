@@ -406,51 +406,24 @@
   }
 }
 
-/* ---------- Shiki dual-theme switching ---------------
- * With `defaultColor: false` in astro.config, Shiki emits BOTH light and
- * dark colours on every code-block element as CSS variables (e.g.
- *   <pre style="--shiki-light:#24292e;--shiki-light-bg:#fff;--shiki-dark:#e1e4e8;--shiki-dark-bg:#22272e">
- *   <span style="--shiki-light:#d73a49;--shiki-dark:#f97583">…</span>
- * ).
- * The rules below pick the right palette based on the active theme
- * attribute on <html data-theme="…">. Background/foreground are applied
- * to <pre>; only foreground is applied to inner <span>s so we do not
- * over-paint individual tokens. */
+/* ---------- Expressive Code -----------------------------
+ * Code blocks are rendered by `astro-expressive-code`. It emits its own
+ * scoped styles (`.expressive-code`) and drives the active theme via the
+ * `[data-theme='chirpy-light' | 'chirpy-dark']` attribute on <html>
+ * (configured via `themeCssSelector` in astro.config.mjs).
+ *
+ * The few overrides below just make the code-block frames sit nicely
+ * inside our prose container.
+ */
 @layer components {
-  /* Light (default): pre = bg + fg, spans = fg */
-  .prose-chirpy pre.astro-code {
-    color: var(--shiki-light, inherit) !important;
-    background-color: var(--shiki-light-bg, inherit) !important;
+  .prose-chirpy .expressive-code {
+    @apply my-6;
   }
-  .prose-chirpy pre.astro-code code,
-  .prose-chirpy pre.astro-code span {
-    color: var(--shiki-light, inherit) !important;
-    font-style: var(--shiki-light-font-style, inherit) !important;
-    font-weight: var(--shiki-light-font-weight, inherit) !important;
-    text-decoration: var(--shiki-light-text-decoration, inherit) !important;
+  .prose-chirpy .expressive-code pre {
+    @apply bg-transparent p-0;
   }
-
-  /* Dark theme override */
-  html[data-theme='chirpy-dark'] .prose-chirpy pre.astro-code {
-    color: var(--shiki-dark, inherit) !important;
-    background-color: var(--shiki-dark-bg, inherit) !important;
-  }
-  html[data-theme='chirpy-dark'] .prose-chirpy pre.astro-code code,
-  html[data-theme='chirpy-dark'] .prose-chirpy pre.astro-code span {
-    color: var(--shiki-dark, inherit) !important;
-    font-style: var(--shiki-dark-font-style, inherit) !important;
-    font-weight: var(--shiki-dark-font-weight, inherit) !important;
-    text-decoration: var(--shiki-dark-text-decoration, inherit) !important;
-  }
-}
-
-/* ---------- Code copy button (island target) ---------- */
-@layer components {
-  .code-copy-btn {
-    @apply bg-base-100/80 text-base-content/70 hover:bg-base-100 hover:text-base-content absolute top-2 right-2 inline-flex items-center gap-1 rounded px-2 py-1 text-xs backdrop-blur transition;
-  }
-  .code-copy-btn[data-copied='true'] {
-    @apply text-success;
+  .prose-chirpy :not(pre) > code {
+    @apply text-primary bg-base-200 rounded px-1.5 py-0.5 text-[0.9em] font-medium;
   }
 }
 

@@ -2,7 +2,6 @@
 import BaseLayout from './BaseLayout.astro';
 import PostNav from '../components/PostNav.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
-import CodeCopy from '../components/islands/CodeCopy.astro';
 import Giscus from '../components/islands/Giscus.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, type Locale } from '../config';
@@ -181,8 +180,6 @@ const crumbs = [
       )
     }
   </article>
-
-  <CodeCopy locale={locale} />
 </BaseLayout>
 
 {/* Translation links exposed for the LanguageSwitcher to read at runtime */}

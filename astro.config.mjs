@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
+import expressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -34,18 +35,6 @@ export default defineConfig({
   },
 
   markdown: {
-    syntaxHighlight: 'shiki',
-    shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark-dimmed',
-      },
-      // Emit CSS variables so the active code-block theme follows the
-      // [data-theme] attribute on <html>. Pair with the CSS in global.css
-      // that swaps `--shiki-light` / `--shiki-dark`.
-      defaultColor: false,
-      wrap: true,
-    },
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,
@@ -77,6 +66,30 @@ export default defineConfig({
       // icons actually referenced make it into the build.
       iconDir: 'src/icons',
     }),
+    // Expressive Code provides syntax highlighting (Shiki under the hood)
+    // plus extra features: code-block frames + titles, copy button, line
+    // markers, diffs, word wrap, collapsible sections.
+    // https://expressive-code.com/
+    expressiveCode({
+      themes: ['github-light', 'github-dark-dimmed'],
+      // Bind the active theme to our `<html data-theme>` attribute instead
+      // of the default `prefers-color-scheme` media query so the theme
+      // toggle in the sidebar takes effect immediately.
+      themeCssSelector: (theme) =>
+        `[data-theme='${theme.type === 'dark' ? 'chirpy-dark' : 'chirpy-light'}']`,
+      useDarkModeMediaQuery: false,
+      styleOverrides: {
+        borderRadius: '0.5rem',
+        codeFontFamily:
+          "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        codeFontSize: '0.875rem',
+        frames: {
+          shadowColor: 'transparent',
+        },
+      },
+    }),
+    // MDX must come after Expressive Code so EC can transform fenced
+    // code blocks inside .mdx files too.
     mdx(),
     sitemap({
       i18n: {

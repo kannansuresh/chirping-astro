@@ -22,12 +22,12 @@ quitter le flux de rédaction.
 Le thème embarque un petit composant `Callout` à dégainer en MDX :
 
 <Callout type="success" title="Envoyé !">
-Cet encadré est rendu par un composant Astro intégré directement à MDX.
+  Cet encadré est rendu par un composant Astro intégré directement à MDX.
 </Callout>
 
 <Callout type="warning" title="À lire">
-Le Callout prend en charge les variantes `info`, `success`, `warning` et
-`error` et hérite des couleurs du thème daisyUI actif.
+  Le Callout prend en charge les variantes `info`, `success`, `warning` et `error` et hérite des
+  couleurs du thème daisyUI actif.
 </Callout>
 
 ## Expressions en ligne
@@ -37,7 +37,9 @@ build dit que nous sommes le **{new Date().toDateString()}**.
 
 ## Un peu de code
 
-```tsx
+## Un peu de code
+
+```tsx title="src/utils/preview.ts"
 import type { CollectionEntry } from 'astro:content';
 
 export function preview(entry: CollectionEntry<'posts'>) {
@@ -47,12 +49,12 @@ export function preview(entry: CollectionEntry<'posts'>) {
 
 ## Un tableau simple
 
-| Fonctionnalité     | État |
-| ------------------ | ---- |
-| Table des matières | ✓    |
-| Coloration syntaxique | ✓ |
-| Pagefind           | ✓    |
-| Giscus             | ✓    |
+| Fonctionnalité        | État |
+| --------------------- | ---- |
+| Table des matières    | ✓    |
+| Coloration syntaxique | ✓    |
+| Pagefind              | ✓    |
+| Giscus                | ✓    |
 
 ## Les commentaires sont activés ici
 
