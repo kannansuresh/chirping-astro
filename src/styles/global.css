@@ -643,6 +643,18 @@
   .search-pill__kbd {
     @apply border-base-300 bg-base-200 text-base-content/60 inline-flex h-6 min-w-6 items-center justify-center rounded-md border px-1.5 font-mono text-xs;
   }
+  /* On narrow viewports the topbar gets crowded (hamburger + breadcrumb +
+     site title + search + language switcher), so collapse the search pill
+     to a circular icon-only button to free up horizontal space. */
+  @media (max-width: 639px) {
+    .search-pill {
+      @apply h-9 w-9 justify-center gap-0 px-0;
+    }
+    .search-pill__label,
+    .search-pill__kbd {
+      display: none;
+    }
+  }
 }
 
 /* ---------- Back-to-top floating button ---------- */
