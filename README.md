@@ -194,7 +194,7 @@ rm src/content/posts/fr/*.md src/content/posts/fr/*.mdx
 
 Update the about pages too:
 
-```
+```text
 src/content/pages/en/about.md
 src/content/pages/fr/about.md
 ```
@@ -231,7 +231,7 @@ not work in `dev`** — only after `bun run build`. This is by design.
 
 ## Project layout
 
-```
+```text
 .
 ├── astro.config.mjs           # Astro + integrations
 ├── bunfig.toml                # Bun configuration
@@ -314,7 +314,7 @@ Every customisable knob lives in a small number of files:
 
 ### Folder convention
 
-```
+```text
 src/content/
 ├── pages/
 │   ├── en/about.md

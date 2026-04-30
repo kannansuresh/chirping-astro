@@ -110,15 +110,15 @@ details.
 Beyond daisyUI's standard palette, the theme defines a few layout
 tokens — change them in `global.css` to retune sizing:
 
-| Token                   | Default      | Used for                        |
-| ----------------------- | ------------ | ------------------------------- |
-| `--width-sidebar`       | `18rem`      | Left sidebar width              |
-| `--width-panel`         | `14rem`      | Right "Trending tags" panel    |
-| `--height-topbar`       | `3.25rem`    | Top bar height                  |
-| `--width-prose`         | `50rem`      | Reading column max width        |
-| `--color-sidebar-from`  | OKLCH        | Sidebar gradient start          |
-| `--color-sidebar-to`    | OKLCH        | Sidebar gradient end            |
-| `--color-sidebar-text`  | OKLCH        | Sidebar text colour             |
+| Token                  | Default   | Used for                    |
+| ---------------------- | --------- | --------------------------- |
+| `--width-sidebar`      | `18rem`   | Left sidebar width          |
+| `--width-panel`        | `14rem`   | Right "Trending tags" panel |
+| `--height-topbar`      | `3.25rem` | Top bar height              |
+| `--width-prose`        | `50rem`   | Reading column max width    |
+| `--color-sidebar-from` | OKLCH     | Sidebar gradient start      |
+| `--color-sidebar-to`   | OKLCH     | Sidebar gradient end        |
+| `--color-sidebar-text` | OKLCH     | Sidebar text colour         |
 
 ## Renaming or replacing themes
 
