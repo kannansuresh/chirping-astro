@@ -44,6 +44,29 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Build with Astro
+        # All values below are read from repository Variables
+        # (Settings → Secrets and variables → Actions → Variables).
+        # Any unset variable expands to an empty string, which the
+        # theme treats as "feature disabled" — so every var is optional
+        # and you only set the ones you actually use.
+        env:
+          # --- Site identity ---
+          SITE_URL: ${{ vars.SITE_URL }}
+          # Sub-path for GitHub Pages. Hard-coded fallback to the repo
+          # name keeps the build correct even before the variable is
+          # configured. Override by setting `vars.BASE_PATH` in the UI.
+          BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
+          # --- Author / social handles (all optional) ---
+          PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
+          PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO || github.event.repository.name }}
+          PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          # --- Giscus (all optional) ---
+          PUBLIC_GISCUS_ENABLED: ${{ vars.PUBLIC_GISCUS_ENABLED }}
+          PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
+          PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
+          PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
+          PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
         run: bun run build
 
       - name: Upload artifact

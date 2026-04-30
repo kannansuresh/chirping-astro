@@ -724,65 +724,90 @@ favicons, images, internal links) gets prefixed correctly.
    OG, sitemap, RSS), so the path component must live in `base`, not
    `SITE_URL`.
 
-3. **Workflow** — a minimal Pages deploy:
+3. **Configure repository Variables.** Open your repo on GitHub:
+   _Settings → Secrets and variables → Actions → **Variables** tab →
+   New repository variable_. Add the ones you want — every variable
+   listed here is **optional**:
 
-   ```yaml title=".github/workflows/deploy.yml"
-   name: Deploy to GitHub Pages
-   on:
-     push: { branches: [main] }
-     workflow_dispatch:
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v4
-         - uses: oven-sh/setup-bun@v2
-           with: { bun-version: latest }
-         - run: bun install --frozen-lockfile
-         - run: bun run build
-           env:
-             SITE_URL: https://<user>.github.io
-             BASE_PATH: /<repo>
-             PUBLIC_GITHUB_HANDLE: <user>
-             PUBLIC_GITHUB_REPO: <repo>
-         - uses: actions/upload-pages-artifact@v3
-           with: { path: dist }
-     deploy:
-       needs: build
-       runs-on: ubuntu-latest
-       environment:
-         name: github-pages
-         url: ${{ steps.deployment.outputs.page_url }}
-       steps:
-         - id: deployment
-           uses: actions/deploy-pages@v4
+   | Variable                    | Purpose                                                      | Fallback if unset                                |
+   | --------------------------- | ------------------------------------------------------------ | ------------------------------------------------ |
+   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap                      | uses `SITE.url` in `src/config.ts`               |
+   | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`)          | derived from `${{ github.event.repository.name }}` |
+   | `PUBLIC_GITHUB_HANDLE`      | Footer link, sidebar GitHub icon, `SITE.author.url`          | derived from `${{ github.repository_owner }}`    |
+   | `PUBLIC_GITHUB_REPO`        | Footer "Theme" link target                                   | derived from `${{ github.event.repository.name }}` |
+   | `PUBLIC_TWITTER_HANDLE`     | Sidebar Twitter icon                                         | icon hidden                                      |
+   | `PUBLIC_CONTACT_EMAIL`      | Sidebar Email icon (`mailto:` link)                          | icon hidden                                      |
+   | `PUBLIC_GISCUS_ENABLED`     | Master switch for Giscus comments                            | comments off                                     |
+   | `PUBLIC_GISCUS_REPO`        | Giscus target repo (`<user>/<repo>`)                         | setup notice shown on posts                      |
+   | `PUBLIC_GISCUS_REPO_ID`     | From <https://giscus.app>                                    | setup notice shown                               |
+   | `PUBLIC_GISCUS_CATEGORY`    | Discussion category (e.g. `Announcements`)                   | setup notice shown                               |
+   | `PUBLIC_GISCUS_CATEGORY_ID` | From <https://giscus.app>                                    | setup notice shown                               |
+
+   **Variables vs Secrets**: use the **Variables** tab, not Secrets.
+   Everything that ships to the browser is `PUBLIC_*` — already public
+   by design. Storing them as Secrets would mask them in build logs
+   without adding any real protection. Reserve **Secrets** for tokens
+   (deploy keys, API tokens) that must never appear in logs.
+
+4. **Workflow.** The repo already ships with a complete workflow at
+   [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). The
+   relevant build step looks like this — every value is read from
+   `vars.*` with a sensible fallback, so the workflow works even before
+   you configure anything:
+
+   ```yaml title=".github/workflows/deploy.yml (excerpt)"
+   - name: Build with Astro
+     env:
+       SITE_URL: ${{ vars.SITE_URL }}
+       BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
+       PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
+       PUBLIC_GITHUB_REPO:   ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
+       PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
+       PUBLIC_CONTACT_EMAIL:  ${{ vars.PUBLIC_CONTACT_EMAIL }}
+       PUBLIC_GISCUS_ENABLED:     ${{ vars.PUBLIC_GISCUS_ENABLED }}
+       PUBLIC_GISCUS_REPO:        ${{ vars.PUBLIC_GISCUS_REPO }}
+       PUBLIC_GISCUS_REPO_ID:     ${{ vars.PUBLIC_GISCUS_REPO_ID }}
+       PUBLIC_GISCUS_CATEGORY:    ${{ vars.PUBLIC_GISCUS_CATEGORY }}
+       PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
+     run: bun run build
    ```
 
-4. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
+   Adding a new optional variable later is three lines: create it in
+   the Variables UI, add `KEY: ${{ vars.KEY }}` to the `env:` block,
+   and read it via `import.meta.env.KEY` in `src/config.ts` with the
+   same `?? ''` + truthy-filter pattern already used for socials.
 
-5. **Custom domain?** Leave `BASE_PATH` empty (the site is served at
-   the domain root) and add a `public/CNAME` file containing your
-   domain. Astro will copy it into `dist/` on every build.
+5. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
 
-### GitHub Actions example
+6. **Custom domain?** Set `vars.BASE_PATH` to an empty value (or
+   simply don't override the variable and serve from a **user/org**
+   Pages site like `<user>.github.io`, where there is no sub-path) and
+   add a `public/CNAME` file containing your domain. Astro will copy
+   it into `dist/` on every build.
 
-```yaml title=".github/workflows/deploy.yml"
+### Other static hosts
+
+For Cloudflare Pages / Netlify / Vercel / S3, the workflow is
+simpler — there's no sub-path, so leave `BASE_PATH` empty and just
+expose the same `SITE_URL` and `PUBLIC_*` values through the host's
+build-environment UI. A minimal Cloudflare Pages action looks like:
+
+```yaml title=".github/workflows/cloudflare.yml"
 name: Deploy
 on: { push: { branches: [main] } }
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
         with: { bun-version: latest }
       - run: bun install --frozen-lockfile
       - run: bun run build
-        env: { SITE_URL: 'https://your-domain.com' }
+        env:
+          SITE_URL: https://your-domain.com
+          PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE }}
+          PUBLIC_GITHUB_REPO:   ${{ vars.PUBLIC_GITHUB_REPO }}
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
