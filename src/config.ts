@@ -120,7 +120,7 @@ export const REPO = {
 export const SITE: SiteConfig = {
   // `||` (not `??`) so an explicitly empty `SITE_URL=` in `.env` also
   // falls back to the default. Astro requires `site` to be a valid URL.
-  url: import.meta.env.SITE_URL || 'https://aneejian.com',
+  url: import.meta.env.SITE_URL || 'https://chirping-astro.example.com',
   title: 'Chirping Astro',
   description:
     'A modern, multilingual Astro v6 theme inspired by Chirpy — built with Tailwind v4, daisyUI, MDX, Pagefind, and Giscus.',

@@ -1,6 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import process from 'node:process';
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
@@ -14,6 +17,44 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 
 import { SITE } from './src/config';
+
+const BASE = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
+const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
+
+/**
+ * Tiny inline integration: after `@astrojs/sitemap` runs, rewrite the
+ * absolute XSL `href` it emits (always prefixed with `site`, e.g.
+ * `https://aneejian.com/sitemap/styles.xsl`) to a root-relative path.
+ *
+ * Why: a root-relative href works in BOTH environments
+ *   - production: same origin as the sitemap, browsers apply the XSL
+ *   - `bun serve` / preview: same origin (localhost), no cross-origin
+ *     XSLT block (which renders as a blank page in browsers).
+ *
+ * Crawlers ignore `<?xml-stylesheet ?>` entirely, so SEO is unaffected.
+ */
+function rewriteSitemapXslToRelative() {
+  return {
+    name: 'chirpy:rewrite-sitemap-xsl',
+    hooks: {
+      'astro:build:done': ({ dir }) => {
+        const distDir = fileURLToPath(dir);
+        const files = readdirSync(distDir).filter(
+          (f) => f.startsWith('sitemap') && f.endsWith('.xml'),
+        );
+        for (const file of files) {
+          const path = join(distDir, file);
+          const xml = readFileSync(path, 'utf8');
+          const fixed = xml.replace(
+            /<\?xml-stylesheet\b[^?]*\?>/,
+            `<?xml-stylesheet type="text/xsl" href="${SITEMAP_XSL_HREF}"?>`,
+          );
+          if (fixed !== xml) writeFileSync(path, fixed);
+        }
+      },
+    },
+  };
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -155,8 +196,16 @@ export default defineConfig({
           fr: 'fr',
         },
       },
+      // Browsers (and only browsers) apply this XSL to render a
+      // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.
+      // Search-engine crawlers ignore the processing instruction.
+      // Note: `@astrojs/sitemap` rewrites this into an ABSOLUTE URL using
+      // `site`. The `rewriteSitemapXslToRelative()` integration below
+      // turns it back into a root-relative path so local preview works.
+      xslURL: SITEMAP_XSL_HREF,
       filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
     }),
+    rewriteSitemapXslToRelative(),
   ],
 
   vite: {

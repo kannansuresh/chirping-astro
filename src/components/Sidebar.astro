@@ -109,7 +109,7 @@ const navItems = NAV.map((item) => ({
           rel="noopener"
           class="chirpy-social"
           aria-label={s.label}
-          target={s.href.startsWith('http') ? '_blank' : undefined}
+          target={s.href.startsWith('http') || s.label === 'RSS' ? '_blank' : undefined}
         >
           <Icon name={s.icon} width={16} height={16} />
         </a>
