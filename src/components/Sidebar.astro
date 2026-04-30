@@ -160,6 +160,9 @@ const navItems = NAV.map((item) => ({
       }),
     );
   }
-  setupSidebar();
+  // `astro:page-load` fires on the initial load too (when ClientRouter is
+  // present), so we only bind here. Calling setupSidebar() additionally at
+  // module top-level would double-bind handlers and make the toggle a no-op
+  // on the first page (open + close fire on the same click).
   document.addEventListener('astro:page-load', setupSidebar);
 </script>
