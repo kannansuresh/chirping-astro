@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
 import Pagination from '../../components/Pagination.astro';
 import { SITE } from '../../config';
+import { localizedPath } from '../../i18n/utils';
 import { getPosts } from '../../utils/posts';
 
 const locale = 'fr';
@@ -13,13 +14,10 @@ const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
 const currentPage = 1;
 const pagePosts = posts.slice(0, pageSize);
 
-const hrefForPage = (n: number) => (n === 1 ? '/fr/' : `/fr/page/${n}/`);
+const hrefForPage = (n: number) => localizedPath(n === 1 ? '/' : `/page/${n}/`, locale);
 ---
-<BaseLayout
-  title={SITE.title}
-  description={SITE.description}
-  pathWithoutLocale="/"
->
+
+<BaseLayout title={SITE.title} description={SITE.description} pathWithoutLocale="/">
   <PostList posts={pagePosts} locale={locale} />
   <Pagination
     currentPage={currentPage}

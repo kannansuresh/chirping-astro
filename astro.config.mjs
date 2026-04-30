@@ -17,7 +17,13 @@ import { SITE } from './src/config';
 // https://astro.build/config
 export default defineConfig({
   site: SITE.url,
-  base: '/',
+  // GitHub Pages serves the project at https://<user>.github.io/<repo>/.
+  // Astro's `base` MUST match that subpath at build time so all generated
+  // asset URLs (CSS, JS, images, favicons) resolve correctly. In source
+  // code, always build absolute paths through the `withBase()` /
+  // `localizedPath()` helpers in `src/i18n/utils.ts` so they pick up this
+  // value automatically (via `import.meta.env.BASE_URL`).
+  base: '/chirping-astro',
   trailingSlash: 'ignore',
   build: {
     format: 'directory',
