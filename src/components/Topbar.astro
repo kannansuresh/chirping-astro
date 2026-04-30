@@ -7,6 +7,7 @@ import { SITE, type Locale } from '../config';
 import { useTranslations, localizedPath } from '../i18n/utils';
 import { Icon } from 'astro-icon/components';
 import SearchButton from './islands/SearchButton.astro';
+import LanguageSwitcher from './islands/LanguageSwitcher.astro';
 
 interface Props {
   locale: Locale;
@@ -65,5 +66,6 @@ const home = localizedPath('/', locale);
 
   <div class="chirpy-topbar__search">
     <SearchButton locale={locale} />
+    <LanguageSwitcher locale={locale} />
   </div>
 </header>
