@@ -160,6 +160,7 @@ export const SITE: SiteConfig = {
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,
+  boxedArticles: false,
 };
 ```
 
@@ -301,6 +302,7 @@ Every customisable knob lives in a small number of files:
 | UI strings per locale               | `src/i18n/ui.ts`                          |
 | Date formatting per locale          | `src/i18n/utils.ts` → `formatDate`        |
 | Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`     |
+| Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`    |
 | Frontmatter validation rules        | `src/content.config.ts`                   |
 | Astro / build integrations          | `astro.config.mjs`                        |
 

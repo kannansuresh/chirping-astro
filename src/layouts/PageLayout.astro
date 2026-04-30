@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import MathStyles from '../components/MathStyles.astro';
-import type { Locale } from '../config';
+import { SITE, type Locale } from '../config';
 
 interface Props {
   title: string;
@@ -13,11 +13,15 @@ interface Props {
 }
 
 const { title, description, crumbs, math = false } = Astro.props;
+
+const articleClass = SITE.boxedArticles
+  ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
+  : 'px-1 py-6 sm:px-2 sm:py-8';
 ---
 
 <BaseLayout title={title} description={description} crumbs={crumbs ?? [{ label: title }]}>
   {math && <MathStyles />}
-  <article class="px-1 py-6 sm:px-2 sm:py-8">
+  <article class={articleClass}>
     <header class="mb-6">
       <h1 class="text-3xl leading-tight font-extrabold tracking-tight">{title}</h1>
       {description && <p class="text-base-content/70 mt-2">{description}</p>}

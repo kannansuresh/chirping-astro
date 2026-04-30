@@ -36,6 +36,12 @@ export interface SiteConfig {
    * Each post may override via the `showFeaturedImage` frontmatter flag.
    */
   showFeaturedImages: boolean;
+  /**
+   * Wrap the article body of posts and pages (e.g. About) in a bordered,
+   * card-like container. When `false`, content sits directly on the page
+   * background — the Chirpy default.
+   */
+  boxedArticles: boolean;
 }
 
 export interface NavItem {
@@ -122,6 +128,7 @@ export const SITE: SiteConfig = {
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,
+  boxedArticles: false,
 };
 
 export const NAV: readonly NavItem[] = [

@@ -5,7 +5,7 @@ import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
-import { GISCUS, type Locale } from '../config';
+import { GISCUS, SITE, type Locale } from '../config';
 import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
 import {
@@ -49,6 +49,10 @@ const heroSrc = heroImageSrc(post);
 const showHero = shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 
+const articleClass = SITE.boxedArticles
+  ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
+  : 'px-1 py-6 sm:px-2 sm:py-8';
+
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
@@ -85,7 +89,7 @@ const crumbs = [
     )
   }
 
-  <article class="px-1 py-6 sm:px-2 sm:py-8">
+  <article class={articleClass}>
     <header class="mb-8">
       <h1
         class="text-base-content text-3xl leading-tight font-extrabold tracking-tight sm:text-[2.25rem]"
