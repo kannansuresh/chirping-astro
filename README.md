@@ -724,14 +724,23 @@ favicons, images, internal links) gets prefixed correctly.
    OG, sitemap, RSS), so the path component must live in `base`, not
    `SITE_URL`.
 
-3. **Configure repository Variables.** Open your repo on GitHub:
-   _Settings → Secrets and variables → Actions → **Variables** tab →
-   New repository variable_. Add the ones you want — every variable
-   listed here is **optional**:
+3. **Configure environment Variables.** The shipped workflow binds
+   both the build and deploy jobs to the **`github-pages`** environment,
+   so configuration lives there — keeping it isolated from any other
+   workflows you might add later.
+
+   In your repo on GitHub:
+   1. _Settings → **Environments** → **`github-pages`**_ (this
+      environment is created automatically the first time you deploy
+      to Pages; if you don't see it, run the workflow once first).
+   2. Scroll to the **Environment variables** section → click
+      **Add variable**.
+   3. Add the ones you want — every variable listed below is
+      **optional**. Names are case-sensitive.
 
    | Variable                    | Purpose                                             | Fallback if unset                                  |
    | --------------------------- | --------------------------------------------------- | -------------------------------------------------- |
-   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap             | uses `SITE.url` in `src/config.ts`                 |
+   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap             | `https://<owner>.github.io`                        |
    | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`) | derived from `${{ github.event.repository.name }}` |
    | `PUBLIC_GITHUB_HANDLE`      | Footer link, sidebar GitHub icon, `SITE.author.url` | derived from `${{ github.repository_owner }}`      |
    | `PUBLIC_GITHUB_REPO`        | Footer "Theme" link target                          | derived from `${{ github.event.repository.name }}` |
@@ -743,39 +752,53 @@ favicons, images, internal links) gets prefixed correctly.
    | `PUBLIC_GISCUS_CATEGORY`    | Discussion category (e.g. `Announcements`)          | setup notice shown                                 |
    | `PUBLIC_GISCUS_CATEGORY_ID` | From <https://giscus.app>                           | setup notice shown                                 |
 
-   **Variables vs Secrets**: use the **Variables** tab, not Secrets.
-   Everything that ships to the browser is `PUBLIC_*` — already public
-   by design. Storing them as Secrets would mask them in build logs
-   without adding any real protection. Reserve **Secrets** for tokens
-   (deploy keys, API tokens) that must never appear in logs.
+   > **Environment variables vs repository variables.** GitHub also has
+   > a repo-wide _Settings → Secrets and variables → Actions → Variables_
+   > tab. Both work, but the workflow looks them up by name only, so
+   > **don't define the same variable in both places** — environment
+   > scope wins for jobs that declare `environment: github-pages`. Use
+   > the environment for everything related to your published site.
+   >
+   > **Variables vs Secrets.** Use **Variables**, not Secrets. Every
+   > theme variable here is public by design (anything shipped to the
+   > browser is `PUBLIC_*`). Storing them as Secrets would mask them in
+   > build logs without adding any real protection. Reserve **Secrets**
+   > for tokens (deploy keys, API tokens) that must never leak.
 
 4. **Workflow.** The repo already ships with a complete workflow at
-   [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). The
-   relevant build step looks like this — every value is read from
-   `vars.*` with a sensible fallback, so the workflow works even before
-   you configure anything:
+   [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Both
+   jobs declare `environment: github-pages`, which is what makes the
+   variables you set in step 3 visible at build time. Every value is
+   read from `vars.*` with a sensible fallback, so the workflow works
+   even before you configure anything:
 
    ```yaml title=".github/workflows/deploy.yml (excerpt)"
-   - name: Build with Astro
-     env:
-       SITE_URL: ${{ vars.SITE_URL }}
-       BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
-       PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
-       PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
-       PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
-       PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
-       PUBLIC_GISCUS_ENABLED: ${{ vars.PUBLIC_GISCUS_ENABLED }}
-       PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
-       PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
-       PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
-       PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
-     run: bun run build
+   jobs:
+     build:
+       runs-on: ubuntu-latest
+       environment: github-pages # ← scopes vars.* lookups here
+       steps:
+         - name: Build with Astro
+           env:
+             SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
+             BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
+             PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
+             PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
+             PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
+             PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+             PUBLIC_GISCUS_ENABLED: ${{ vars.PUBLIC_GISCUS_ENABLED }}
+             PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
+             PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
+             PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
+             PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
+           run: bun run build
    ```
 
    Adding a new optional variable later is three lines: create it in
-   the Variables UI, add `KEY: ${{ vars.KEY }}` to the `env:` block,
-   and read it via `import.meta.env.KEY` in `src/config.ts` with the
-   same `?? ''` + truthy-filter pattern already used for socials.
+   the `github-pages` environment, add `KEY: ${{ vars.KEY }}` to the
+   `env:` block, and read it via `import.meta.env.KEY` in
+   `src/config.ts` with the same `?? ''` + truthy-filter pattern
+   already used for socials.
 
 5. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
 

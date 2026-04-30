@@ -28,6 +28,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    # Bind the build to the same `github-pages` environment as the deploy
+    # job. This is what makes `vars.*` and `secrets.*` defined under
+    # _Settings → Environments → github-pages_ resolvable here at build
+    # time. Without it, only repository-level vars/secrets are visible.
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v5
