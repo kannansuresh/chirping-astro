@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import process from 'node:process';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
@@ -17,13 +18,20 @@ import { SITE } from './src/config';
 // https://astro.build/config
 export default defineConfig({
   site: SITE.url,
-  // GitHub Pages serves the project at https://<user>.github.io/<repo>/.
-  // Astro's `base` MUST match that subpath at build time so all generated
-  // asset URLs (CSS, JS, images, favicons) resolve correctly. In source
-  // code, always build absolute paths through the `withBase()` /
-  // `localizedPath()` helpers in `src/i18n/utils.ts` so they pick up this
-  // value automatically (via `import.meta.env.BASE_URL`).
-  base: '/chirping-astro',
+  // GitHub Pages serves the project at https://<user>.github.io/<repo>/,
+  // so production builds need `base` to match that subpath — every
+  // generated asset URL (CSS, JS, images, favicons) is prefixed with it.
+  //
+  // In `bun run dev`, however, we want the site to open at plain
+  // `http://localhost:4321/` for a friction-free local experience. The
+  // `BASE_PATH` env var (read from `.env`) lets each environment opt in:
+  //   - `.env` (committed empty / unset)         → dev runs at `/`
+  //   - CI / Pages workflow sets BASE_PATH=/chirping-astro for the build
+  //
+  // In source code, always build absolute paths through `withBase()` /
+  // `localizedPath()` in `src/i18n/utils.ts` so they pick up this value
+  // automatically (via `import.meta.env.BASE_URL`).
+  base: process.env.BASE_PATH ?? '/',
   trailingSlash: 'ignore',
   build: {
     format: 'directory',

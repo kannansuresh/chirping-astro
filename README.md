@@ -695,15 +695,18 @@ GitHub Pages serves project sites under a sub-path:
 sub-path **at build time** so every generated asset URL (CSS, JS,
 favicons, images, internal links) gets prefixed correctly.
 
-1. **Set `base` in `astro.config.mjs`** to your repository name:
+1. **Set `BASE_PATH` to your repository name** at build time. The
+   theme's `astro.config.mjs` reads it from the environment, so you
+   don't have to edit any source file:
 
-   ```js
-   export default defineConfig({
-     site: SITE.url, // https://<user>.github.io
-     base: '/chirping-astro', // ← your repo name, with a leading slash
-     // …
-   });
+   ```env title=".env (or CI secret)"
+   BASE_PATH=/chirping-astro
    ```
+
+   Local dev (`bun run dev`) leaves `BASE_PATH` empty, so the site
+   opens at `http://localhost:4321/` with no prefix. Production builds
+   on GitHub Actions read `BASE_PATH` from the workflow `env:` block
+   (see step 3) and emit asset URLs prefixed with `/chirping-astro/`.
 
    This is wired into the existing helpers (`withBase`, `localizedPath`)
    so every internal `<a>`, `<img>`, favicon, RSS link, Pagefind script,
@@ -743,6 +746,7 @@ favicons, images, internal links) gets prefixed correctly.
          - run: bun run build
            env:
              SITE_URL: https://<user>.github.io
+             BASE_PATH: /<repo>
              PUBLIC_GITHUB_HANDLE: <user>
              PUBLIC_GITHUB_REPO: <repo>
          - uses: actions/upload-pages-artifact@v3
@@ -760,9 +764,9 @@ favicons, images, internal links) gets prefixed correctly.
 
 4. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
 
-5. **Custom domain?** Drop the `base` setting (set it to `'/'`) and
-   add a `public/CNAME` file containing your domain. Astro will copy
-   it into `dist/` on every build.
+5. **Custom domain?** Leave `BASE_PATH` empty (the site is served at
+   the domain root) and add a `public/CNAME` file containing your
+   domain. Astro will copy it into `dist/` on every build.
 
 ### GitHub Actions example
 
