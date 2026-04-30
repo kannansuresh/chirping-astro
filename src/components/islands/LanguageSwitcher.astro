@@ -37,19 +37,20 @@ const fallbackBase = stripLocale(Astro.url.pathname);
      switcher is just a static label \u2014 hide it entirely to avoid a
      dead-end menu. */
   otherLocales.length > 0 && (
-    <div class="dropdown dropdown-top">
-      <button
-        type="button"
+    <div class="dropdown dropdown-end">
+      <div
+        tabindex="0"
+        role="button"
         class="chirpy-social"
         aria-haspopup="menu"
         aria-label={t('lang.switcher')}
         title={t('lang.switcher')}
-        tabindex="0"
       >
         <Icon name="lucide:globe" width={16} height={16} />
-      </button>
+      </div>
       <ul
-        class="menu dropdown-content rounded-box border-base-300 bg-base-100 z-50 mb-2 w-44 border p-2 shadow-lg"
+        tabindex="0"
+        class="menu dropdown-content rounded-box border-base-300 bg-base-100 z-50 mt-2 w-44 border p-2 shadow-lg"
         role="menu"
         data-lang-switcher
       >
