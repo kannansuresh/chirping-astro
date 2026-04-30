@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import Panel from '../components/Panel.astro';
 import SEO from '../components/SEO.astro';
 import BackToTop from '../components/islands/BackToTop.astro';
+import { ClientRouter } from 'astro:transitions';
 import { SITE, type Locale } from '../config';
 import { detectLocale, htmlLang, useTranslations, stripLocale, withBase } from '../i18n/utils';
 import { buildSeo, type SeoMeta } from '../utils/seo';
@@ -94,15 +95,21 @@ const meta: SeoMeta =
       href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&family=Lato:wght@300;400&family=JetBrains+Mono:wght@400;600&display=swap"
     />
     <SEO meta={meta} />
+    <ClientRouter />
     {/* Apply persisted theme as early as possible to avoid FOUC. */}
     <script is:inline>
       (function () {
-        try {
-          var stored = localStorage.getItem('theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var theme = stored ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
-          document.documentElement.setAttribute('data-theme', theme);
-        } catch (_) {}
+        function applyTheme() {
+          try {
+            var stored = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var theme = stored ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+            document.documentElement.setAttribute('data-theme', theme);
+          } catch (_) {}
+        }
+        applyTheme();
+        // Re-apply after view transitions swap in a fresh <html data-theme>.
+        document.addEventListener('astro:after-swap', applyTheme);
       })();
     </script>
   </head>
