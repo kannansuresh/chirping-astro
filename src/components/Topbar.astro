@@ -16,9 +16,14 @@ interface Props {
    * Pass [] to show only "Home".
    */
   crumbs?: Array<{ label: string; href?: string }>;
+  /**
+   * Locales for which a translation actually exists. Forwarded to the
+   * language switcher so it only links to working pages.
+   */
+  availableLocales?: readonly Locale[];
 }
 
-const { locale, crumbs = [] } = Astro.props;
+const { locale, crumbs = [], availableLocales } = Astro.props;
 const t = useTranslations(locale);
 const home = localizedPath('/', locale);
 ---
@@ -66,6 +71,6 @@ const home = localizedPath('/', locale);
 
   <div class="chirpy-topbar__search">
     <SearchButton locale={locale} />
-    {SITE.multilingual && <LanguageSwitcher locale={locale} />}
+    {SITE.multilingual && <LanguageSwitcher locale={locale} availableLocales={availableLocales} />}
   </div>
 </header>

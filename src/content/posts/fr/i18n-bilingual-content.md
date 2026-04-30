@@ -32,6 +32,30 @@ dossiers de contenu (`src/content/posts/<lang>/`,
 `src/content/pages/<lang>/`), son miroir `src/pages/<lang>/`, et
 retirez-la de `SITE.locales`.
 
+## Ne traduire que certains articles
+
+Vous pouvez laisser `multilingual: true` et ne traduire **que les
+articles de votre choix**. Le thème inspecte chaque page d'article
+au build et détecte les locales qui possèdent réellement une
+traduction :
+
+- Le sélecteur de langue ne propose que les locales dont le pendant
+  existe. Si aucune autre locale n'a de traduction de l'article
+  courant, le sélecteur est **entièrement masqué** pour cette
+  page — les visiteurs ne tombent jamais sur une 404.
+- `<link rel="alternate" hreflang="...">` (et le `x-default`
+  correspondant) n'est émis que pour les locales qui possèdent bien
+  l'article, afin que les moteurs de recherche ne voient pas
+  d'alternates cassées.
+- Les pages de listing, de tags, de catégories, les archives, la
+  recherche et la page « À propos » existent dans toutes les
+  locales configurées ; le sélecteur reste donc visible sur ces
+  routes et se contente de changer le préfixe d'URL.
+
+Appariez les articles traduits en leur donnant la même
+`translationKey` dans le frontmatter — voir [Apparier les traductions avec `translationKey`](#apparier-les-traductions-avec-translationkey)
+plus bas.
+
 ## Règles de routage
 
 | Locale | Racine | Articles           | Tags           |

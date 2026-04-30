@@ -25,6 +25,11 @@ interface BuildSeoArgs {
   publishedTime?: Date;
   modifiedTime?: Date;
   tags?: string[];
+  /**
+   * Restrict hreflang alternates to a subset of locales. Used on post
+   * pages where a translation may be missing.
+   */
+  availableLocales?: readonly Locale[];
 }
 
 /** Build the SEO data block consumed by `<SEO />`. */
@@ -39,6 +44,6 @@ export function buildSeo(args: BuildSeoArgs): SeoMeta {
     modifiedTime: args.modifiedTime?.toISOString(),
     tags: args.tags,
     locale: args.locale,
-    hreflangs: alternates(args.pathWithoutLocale),
+    hreflangs: alternates(args.pathWithoutLocale, args.availableLocales),
   };
 }

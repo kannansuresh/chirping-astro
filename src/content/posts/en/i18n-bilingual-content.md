@@ -30,6 +30,27 @@ as well, drop its content folders (`src/content/posts/<lang>/`,
 `src/content/pages/<lang>/`), its `src/pages/<lang>/` mirror, and
 remove it from `SITE.locales`.
 
+## Translating only some posts
+
+You can leave `multilingual: true` and translate **only the posts
+you want**. The theme inspects every post page at build time and
+figures out which locales actually have a sibling:
+
+- The language switcher only offers locales whose sibling exists.
+  If no other locale has a translation of the post you're on, the
+  switcher is **hidden entirely** for that page — readers never
+  click into a 404.
+- `<link rel="alternate" hreflang="...">` (and the matching
+  `x-default`) is emitted only for the locales that actually have
+  the post, so search engines don't see broken alternates.
+- Listings, tag and category pages, archives, search, and the About
+  page exist in every configured locale, so the switcher stays
+  visible on those routes and just flips the URL prefix.
+
+Pair translated posts by giving them the same `translationKey` in
+their frontmatter — see [Pairing translations with `translationKey`](#pairing-translations-with-translationkey)
+below.
+
 ## Routing rules
 
 | Locale | Root   | Posts              | Tags           |

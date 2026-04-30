@@ -41,6 +41,8 @@ const translationLinks: Partial<Record<Locale, string>> = {};
 for (const [lang, p] of Object.entries(translations)) {
   if (p) translationLinks[lang as Locale] = postPath(p);
 }
+// Locales that actually have a published version of this post.
+const availableLocales = (Object.keys(translationLinks) as Locale[]).sort();
 
 const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
 const pathWithoutLocale = stripLocale(Astro.url.pathname);
@@ -64,6 +66,7 @@ const seo = buildSeo({
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
+  availableLocales,
 });
 
 const crumbs = [
@@ -81,6 +84,7 @@ const crumbs = [
   tags={post.data.tags}
   crumbs={crumbs}
   seo={seo}
+  availableLocales={availableLocales}
 >
   {post.data.math && <MathStyles />}
   {

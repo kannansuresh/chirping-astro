@@ -131,22 +131,30 @@ export function isoDate(date: Date | string): string {
  * <link rel="alternate" hreflang="..."> SEO tags.
  *
  * `pathWithoutLocale` should be the canonical path WITHOUT locale prefix
- * (e.g. '/posts/welcome' for both EN and FR).
+ * (e.g. '/posts/welcome' for both EN and FR). Pass `availableLocales` to
+ * limit the output to a subset (e.g. when a post has no translation
+ * sibling in another locale).
  */
-export function alternates(pathWithoutLocale: string): Array<{
+export function alternates(
+  pathWithoutLocale: string,
+  availableLocales?: readonly Locale[],
+): Array<{
   locale: Locale | 'x-default';
   href: string;
 }> {
-  const list: Array<{ locale: Locale | 'x-default'; href: string }> = SITE.locales.map(
-    (locale) => ({
-      locale,
-      href: new URL(localizedPath(pathWithoutLocale, locale), SITE.url).toString(),
-    }),
-  );
-  list.push({
-    locale: 'x-default',
-    href: new URL(localizedPath(pathWithoutLocale, DEFAULT_LOCALE), SITE.url).toString(),
-  });
+  const locales = (availableLocales ?? SITE.locales) as readonly Locale[];
+  const list: Array<{ locale: Locale | 'x-default'; href: string }> = locales.map((locale) => ({
+    locale,
+    href: new URL(localizedPath(pathWithoutLocale, locale), SITE.url).toString(),
+  }));
+  // x-default points at the default locale only when it's actually
+  // available for this path; otherwise drop it.
+  if (locales.includes(DEFAULT_LOCALE)) {
+    list.push({
+      locale: 'x-default',
+      href: new URL(localizedPath(pathWithoutLocale, DEFAULT_LOCALE), SITE.url).toString(),
+    });
+  }
   return list;
 }
 

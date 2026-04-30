@@ -30,6 +30,12 @@ interface Props {
   crumbs?: Array<{ label: string; href?: string }>;
   /** Pre-built SEO meta override. */
   seo?: SeoMeta;
+  /**
+   * Locales for which a translation of the current page actually
+   * exists. Used to limit the language switcher to working links and
+   * to scope hreflang alternates. Defaults to all `SITE.locales`.
+   */
+  availableLocales?: readonly Locale[];
 }
 
 const {
@@ -44,6 +50,7 @@ const {
   narrow = false,
   crumbs = [],
   seo,
+  availableLocales,
 } = Astro.props;
 
 const locale: Locale = detectLocale(Astro.url.pathname);
@@ -64,6 +71,7 @@ const meta: SeoMeta =
     publishedTime,
     modifiedTime,
     tags,
+    availableLocales,
   });
 ---
 
@@ -126,7 +134,7 @@ const meta: SeoMeta =
 
     <div class="chirpy-main-wrapper">
       <div class="chirpy-shell">
-        <Topbar locale={locale} crumbs={crumbs} />
+        <Topbar locale={locale} crumbs={crumbs} availableLocales={availableLocales} />
 
         <div class="flex flex-1 gap-10">
           <div class="flex min-w-0 flex-1 flex-col">

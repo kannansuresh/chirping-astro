@@ -524,6 +524,27 @@ and pages folders (e.g. `src/content/posts/fr/`,
 `src/content/pages/fr/`, `src/pages/fr/`) and drop it from
 `SITE.locales`.
 
+### Partial translations (per-post)
+
+You can keep `multilingual: true` and translate only **some** posts.
+The theme detects, per page, which locales actually have a sibling
+and adapts both the UI and SEO:
+
+- The language switcher's options are filtered down to locales that
+  have a sibling for the current post; if no other locale would
+  resolve, the switcher is **hidden entirely** on that page so
+  visitors never hit a dead-end 404.
+- `<link rel="alternate" hreflang="...">` is emitted only for the
+  locales that have a sibling. `x-default` is included only when the
+  default locale itself is available for that path.
+- Listings, tag/category pages, archives, search, and the About page
+  always exist in every configured locale, so the switcher stays
+  visible there and just toggles the URL prefix.
+
+Pair translated posts by setting the same `translationKey` in their
+frontmatter — see the _Bilingual content_ post for the full
+walkthrough.
+
 ### Routing rules
 
 | Locale | Root   | Posts              | Tags           |
