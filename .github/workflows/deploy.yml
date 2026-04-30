@@ -51,7 +51,10 @@ jobs:
         # and you only set the ones you actually use.
         env:
           # --- Site identity ---
-          SITE_URL: ${{ vars.SITE_URL }}
+          # Falls back to the canonical github.io origin for the current
+          # owner so a brand-new fork builds successfully with zero
+          # configuration. Override by setting `vars.SITE_URL` in the UI.
+          SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
           # Sub-path for GitHub Pages. Hard-coded fallback to the repo
           # name keeps the build correct even before the variable is
           # configured. Override by setting `vars.BASE_PATH` in the UI.

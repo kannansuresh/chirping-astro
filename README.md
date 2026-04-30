@@ -729,19 +729,19 @@ favicons, images, internal links) gets prefixed correctly.
    New repository variable_. Add the ones you want — every variable
    listed here is **optional**:
 
-   | Variable                    | Purpose                                                      | Fallback if unset                                |
-   | --------------------------- | ------------------------------------------------------------ | ------------------------------------------------ |
-   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap                      | uses `SITE.url` in `src/config.ts`               |
-   | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`)          | derived from `${{ github.event.repository.name }}` |
-   | `PUBLIC_GITHUB_HANDLE`      | Footer link, sidebar GitHub icon, `SITE.author.url`          | derived from `${{ github.repository_owner }}`    |
-   | `PUBLIC_GITHUB_REPO`        | Footer "Theme" link target                                   | derived from `${{ github.event.repository.name }}` |
-   | `PUBLIC_TWITTER_HANDLE`     | Sidebar Twitter icon                                         | icon hidden                                      |
-   | `PUBLIC_CONTACT_EMAIL`      | Sidebar Email icon (`mailto:` link)                          | icon hidden                                      |
-   | `PUBLIC_GISCUS_ENABLED`     | Master switch for Giscus comments                            | comments off                                     |
-   | `PUBLIC_GISCUS_REPO`        | Giscus target repo (`<user>/<repo>`)                         | setup notice shown on posts                      |
-   | `PUBLIC_GISCUS_REPO_ID`     | From <https://giscus.app>                                    | setup notice shown                               |
-   | `PUBLIC_GISCUS_CATEGORY`    | Discussion category (e.g. `Announcements`)                   | setup notice shown                               |
-   | `PUBLIC_GISCUS_CATEGORY_ID` | From <https://giscus.app>                                    | setup notice shown                               |
+   | Variable                    | Purpose                                             | Fallback if unset                                  |
+   | --------------------------- | --------------------------------------------------- | -------------------------------------------------- |
+   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap             | uses `SITE.url` in `src/config.ts`                 |
+   | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`) | derived from `${{ github.event.repository.name }}` |
+   | `PUBLIC_GITHUB_HANDLE`      | Footer link, sidebar GitHub icon, `SITE.author.url` | derived from `${{ github.repository_owner }}`      |
+   | `PUBLIC_GITHUB_REPO`        | Footer "Theme" link target                          | derived from `${{ github.event.repository.name }}` |
+   | `PUBLIC_TWITTER_HANDLE`     | Sidebar Twitter icon                                | icon hidden                                        |
+   | `PUBLIC_CONTACT_EMAIL`      | Sidebar Email icon (`mailto:` link)                 | icon hidden                                        |
+   | `PUBLIC_GISCUS_ENABLED`     | Master switch for Giscus comments                   | comments off                                       |
+   | `PUBLIC_GISCUS_REPO`        | Giscus target repo (`<user>/<repo>`)                | setup notice shown on posts                        |
+   | `PUBLIC_GISCUS_REPO_ID`     | From <https://giscus.app>                           | setup notice shown                                 |
+   | `PUBLIC_GISCUS_CATEGORY`    | Discussion category (e.g. `Announcements`)          | setup notice shown                                 |
+   | `PUBLIC_GISCUS_CATEGORY_ID` | From <https://giscus.app>                           | setup notice shown                                 |
 
    **Variables vs Secrets**: use the **Variables** tab, not Secrets.
    Everything that ships to the browser is `PUBLIC_*` — already public
@@ -761,13 +761,13 @@ favicons, images, internal links) gets prefixed correctly.
        SITE_URL: ${{ vars.SITE_URL }}
        BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
        PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
-       PUBLIC_GITHUB_REPO:   ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
+       PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
        PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
-       PUBLIC_CONTACT_EMAIL:  ${{ vars.PUBLIC_CONTACT_EMAIL }}
-       PUBLIC_GISCUS_ENABLED:     ${{ vars.PUBLIC_GISCUS_ENABLED }}
-       PUBLIC_GISCUS_REPO:        ${{ vars.PUBLIC_GISCUS_REPO }}
-       PUBLIC_GISCUS_REPO_ID:     ${{ vars.PUBLIC_GISCUS_REPO_ID }}
-       PUBLIC_GISCUS_CATEGORY:    ${{ vars.PUBLIC_GISCUS_CATEGORY }}
+       PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+       PUBLIC_GISCUS_ENABLED: ${{ vars.PUBLIC_GISCUS_ENABLED }}
+       PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
+       PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
+       PUBLIC_GISCUS_CATEGORY: ${{ vars.PUBLIC_GISCUS_CATEGORY }}
        PUBLIC_GISCUS_CATEGORY_ID: ${{ vars.PUBLIC_GISCUS_CATEGORY_ID }}
      run: bun run build
    ```
@@ -807,7 +807,7 @@ jobs:
         env:
           SITE_URL: https://your-domain.com
           PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE }}
-          PUBLIC_GITHUB_REPO:   ${{ vars.PUBLIC_GITHUB_REPO }}
+          PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO }}
       - uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
