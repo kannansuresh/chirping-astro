@@ -15,12 +15,7 @@ interface Props {
 const { title, description, crumbs, math = false } = Astro.props;
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  narrow={true}
-  crumbs={crumbs ?? [{ label: title }]}
->
+<BaseLayout title={title} description={description} crumbs={crumbs ?? [{ label: title }]}>
   {math && <MathStyles />}
   <article class="border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10">
     <header class="mb-6">

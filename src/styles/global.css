@@ -117,12 +117,13 @@
   --color-sidebar-text: oklch(40% 0.01 264);
   --color-sidebar-muted: oklch(50% 0.012 264);
 
-  /* Sidebar/panel widths */
-  --width-sidebar: 18rem; /* 288px - matches Chirpy */
-  --width-panel: 14rem; /* 224px */
+  /* Sidebar/panel widths — matches Chirpy ($sidebar-width 260px, $sidebar-width-large 300px) */
+  --width-sidebar: 16.25rem; /* 260px */
+  --width-sidebar-lg: 18.75rem; /* 300px (>=1650px) */
+  --width-panel: 13.75rem; /* 220px */
 
-  /* Top bar height */
-  --height-topbar: 3.25rem; /* 52px */
+  /* Top bar height — Chirpy $topbar-height: 3rem */
+  --height-topbar: 3rem; /* 48px */
 
   /* Reading column max width on post pages */
   --width-prose: 50rem;
@@ -190,7 +191,8 @@
 @layer components {
   /* Left sidebar — always pinned to the extreme left of the viewport. */
   .chirpy-sidebar {
-    @apply border-base-300 fixed inset-y-0 left-0 z-40 flex w-72 flex-col items-center border-r px-4 py-6;
+    @apply border-base-300 fixed inset-y-0 left-0 z-40 flex flex-col items-center border-r px-4 py-6;
+    width: var(--width-sidebar);
     background: linear-gradient(180deg, var(--color-sidebar-from) 0%, var(--color-sidebar-to) 100%);
     color: var(--color-sidebar-text);
     transition: transform 0.3s ease;
@@ -203,26 +205,38 @@
       transform: translateX(0);
     }
   }
+  @media (min-width: 1650px) {
+    .chirpy-sidebar {
+      width: var(--width-sidebar-lg);
+    }
+  }
 
   .chirpy-main-wrapper {
     @apply flex min-h-screen w-full flex-col px-4 sm:px-6;
   }
   @media (min-width: 1024px) {
     .chirpy-main-wrapper {
-      margin-left: 18rem;
-      width: calc(100% - 18rem);
-      max-width: calc(100% - 18rem);
+      margin-left: var(--width-sidebar);
+      width: calc(100% - var(--width-sidebar));
+      max-width: calc(100% - var(--width-sidebar));
       padding-left: 2rem;
       padding-right: 2rem;
+    }
+  }
+  @media (min-width: 1650px) {
+    .chirpy-main-wrapper {
+      margin-left: var(--width-sidebar-lg);
+      width: calc(100% - var(--width-sidebar-lg));
+      max-width: calc(100% - var(--width-sidebar-lg));
     }
   }
 
   /* Inner shell that horizontally centers the main content (topbar +
      post cards + panel + footer) inside the area to the right of the
-     sidebar. Caps comfortably wide on big monitors. */
+     sidebar. Caps at Chirpy's $main-content-max-width: 1250px. */
   .chirpy-shell {
     @apply mx-auto flex w-full flex-1 flex-col;
-    max-width: 1180px;
+    max-width: 1250px;
   }
 
   /* Top bar */
@@ -237,11 +251,16 @@
      enough vertical room to remain pinned while the article scrolls. */
   .chirpy-panel-rail {
     @apply hidden shrink-0 pt-6 text-sm xl:block;
-    width: 14rem;
+    width: var(--width-panel);
   }
   @media (min-width: 1440px) {
     .chirpy-panel-rail {
-      width: 16rem;
+      width: 15rem; /* 240px */
+    }
+  }
+  @media (min-width: 1650px) {
+    .chirpy-panel-rail {
+      width: 16.25rem; /* 260px */
     }
   }
   .chirpy-panel-rail > * + * {
@@ -255,13 +274,18 @@
   }
   @media (min-width: 1280px) {
     .chirpy-topbar__search {
-      width: calc(14rem + 2rem); /* rail width + gap-8 */
+      width: calc(var(--width-panel) + 2rem); /* rail width + gap-8 */
       padding-left: 2rem; /* mirror gap-8 between main and rail */
     }
   }
   @media (min-width: 1440px) {
     .chirpy-topbar__search {
-      width: calc(16rem + 2rem);
+      width: calc(15rem + 2rem);
+    }
+  }
+  @media (min-width: 1650px) {
+    .chirpy-topbar__search {
+      width: calc(16.25rem + 2rem);
     }
   }
   /* Search row at the very top of the right panel rail. */
