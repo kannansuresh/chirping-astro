@@ -114,7 +114,7 @@ export const SITE: SiteConfig = {
     name: 'Chirping Astro',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: '/images/avatar.svg',
-    bio: 'A staff engineer who writes about the web, type systems, and the joy of shipping.',
+    bio: 'A text-focused Astro V6 theme.',
   },
   defaultOgImage: '/images/og-default.svg',
   defaultLocale: 'en',
