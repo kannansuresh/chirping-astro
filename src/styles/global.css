@@ -164,6 +164,44 @@
     @apply bg-primary/25 text-base-content;
   }
 
+  /* ---------- Astro View Transitions (subtle fade + lift) ---------- */
+  /* Astro tags the whole page with view-transition-name: root by default.
+     We override the default slide animation with a soft fade combined
+     with a tiny upward translation so navigations feel smooth but clearly
+     animated. */
+  @keyframes chirpy-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes chirpy-fade-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  ::view-transition-old(root) {
+    animation: chirpy-fade-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: chirpy-fade-in 360ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+
   /* Anchored headings (rehype-autolink-headings, behavior:"wrap") */
   .heading-anchor {
     @apply text-inherit no-underline;
@@ -535,11 +573,15 @@
       background-color 0.2s ease;
   }
   .chirpy-nav-link:hover {
-    color: var(--color-base-content);
+    color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 4%, transparent);
   }
   .chirpy-nav-link[aria-current='page'] {
     color: var(--color-primary);
     background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+  }
+  .chirpy-nav-link[aria-current='page']:hover {
+    background: color-mix(in oklab, var(--color-primary) 12%, transparent);
   }
   .chirpy-nav-link i,
   .chirpy-nav-link svg {
