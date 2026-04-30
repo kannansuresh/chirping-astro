@@ -37,6 +37,32 @@ export default defineConfig({
     format: 'directory',
   },
 
+  // Image optimization (https://docs.astro.build/en/guides/images/).
+  //
+  // - Local images imported from `src/` (or `src/assets/`) are optimized
+  //   automatically by `astro:assets`.
+  // - Images in `public/` are copied as-is and CANNOT be transformed.
+  // - Remote URLs must match a `remotePatterns` entry below before they
+  //   can be passed to `<Image>` / `<Picture>` for optimization.
+  //
+  // The default Sharp service generates modern formats (WebP/AVIF) and
+  // responsive `srcset`s. With `responsiveStyles: true` and a default
+  // `layout`, every `<Image layout="...">` automatically gets the right
+  // `width`/`height`/`object-fit` styles applied.
+  image: {
+    layout: 'constrained',
+    responsiveStyles: true,
+    remotePatterns: [
+      // Unsplash (used by demo posts).
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      // Common CDNs many users plug in. Extend or trim as needed.
+      { protocol: 'https', hostname: '**.githubusercontent.com' },
+      { protocol: 'https', hostname: 'cdn.jsdelivr.net' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: 'imagedelivery.net' },
+    ],
+  },
+
   // i18n config: EN is default and serves at root (no prefix), FR served at /fr.
   // We rely on filesystem routing (src/pages and src/pages/fr) for the actual
   // routes, but still expose locales here so integrations like sitemap can

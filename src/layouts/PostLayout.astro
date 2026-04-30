@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PostNav from '../components/PostNav.astro';
+import SmartImage from '../components/SmartImage.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
@@ -14,6 +15,7 @@ import {
   categoryPath,
   getTranslations,
   postPath,
+  heroImage,
   heroImageSrc,
   shouldShowHero,
 } from '../utils/posts';
@@ -48,6 +50,7 @@ const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
 const pathWithoutLocale = stripLocale(Astro.url.pathname);
 
 const heroSrc = heroImageSrc(post);
+const heroAsset = heroImage(post);
 const showHero = shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 
@@ -141,15 +144,17 @@ const crumbs = [
     </header>
 
     {
-      showHero && heroSrc && (
+      showHero && heroAsset && (
         <figure class="post-hero mb-8">
           <div class="post-hero__frame">
-            <img
-              src={heroSrc}
+            <SmartImage
+              src={heroAsset}
               alt={heroAlt}
               class="post-hero__img"
               loading="eager"
-              decoding="async"
+              widths={[480, 768, 1024, 1280, 1600]}
+              sizes="(max-width: 768px) 100vw, 1024px"
+              quality={82}
             />
           </div>
           {heroAlt && (

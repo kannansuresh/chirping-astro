@@ -1,0 +1,127 @@
+---
+/**
+ * SmartImage
+ * ----------
+ * One-stop wrapper around `<Image>` from `astro:assets` that:
+ *
+ *  - **Remote URLs (http/https)** → optimized by Astro's image service
+ *    (Sharp by default). Generates a modern-format `srcset`, queries
+ *    intrinsic dimensions at build time via `inferSize`, and emits
+ *    responsive sizing styles (Astro 6 responsive images).
+ *
+ *  - **Public-folder paths (`/something.jpg`)** → emitted as a plain
+ *    `<img>`. Astro cannot transform anything in `public/`, so wrapping
+ *    these with `<Image>` would only add noise without optimization.
+ *
+ *  - **Already-imported `ImageMetadata` (e.g. `import hero from '...'`)**
+ *    → optimized by `<Image>` directly. Supported here so MDX authors
+ *    can pass an imported asset without changing the call site.
+ *
+ * Hosts allowed for remote optimization are configured via
+ * `image.remotePatterns` in `astro.config.mjs`.
+ */
+
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { HTMLAttributes } from 'astro/types';
+
+type Layout = 'constrained' | 'fixed' | 'full-width' | 'none';
+
+interface Props extends Omit<HTMLAttributes<'img'>, 'src' | 'srcset' | 'width' | 'height'> {
+  src: string | ImageMetadata;
+  alt: string;
+  /** Pixel widths to generate for `srcset`. */
+  widths?: number[];
+  /** Browser sizing hint (`sizes` attribute). */
+  sizes?: string;
+  /** Astro responsive layout mode. */
+  layout?: Layout;
+  /** Output format(s). Defaults to webp. */
+  format?: 'webp' | 'avif' | 'png' | 'jpeg' | 'jpg';
+  /** Render priority. */
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
+  /** Quality 1–100. */
+  quality?: number;
+  /** Optional explicit dimensions (skip remote `inferSize`). */
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  widths,
+  sizes,
+  layout,
+  format = 'webp',
+  loading = 'lazy',
+  decoding = 'async',
+  quality = 80,
+  width,
+  height,
+  class: className,
+  ...rest
+} = Astro.props;
+
+// Public-folder string paths can't be transformed — fall back to <img>.
+// Anything starting with `/` (and not `//`) is treated as a /public path.
+const isStringSrc = typeof src === 'string';
+const isRemote =
+  isStringSrc && (/^https?:\/\//i.test(src as string) || (src as string).startsWith('//'));
+const isOptimizable = !isStringSrc || isRemote;
+
+// Sensible defaults so callers don't have to think about it.
+const defaultWidths = widths ?? [400, 640, 800, 1200, 1600];
+const defaultSizes = sizes ?? '(max-width: 768px) 100vw, 1024px';
+---
+
+{
+  isOptimizable ? (
+    /* Imported asset → known dimensions. Remote URL → infer at build time. */
+    isStringSrc ? (
+      <Image
+        src={src as string}
+        alt={alt}
+        inferSize
+        widths={defaultWidths}
+        sizes={defaultSizes}
+        layout={layout}
+        format={format}
+        quality={quality}
+        loading={loading}
+        decoding={decoding}
+        class={className}
+        {...(width ? { width } : {})}
+        {...(height ? { height } : {})}
+        {...rest}
+      />
+    ) : (
+      <Image
+        src={src as ImageMetadata}
+        alt={alt}
+        widths={defaultWidths}
+        sizes={defaultSizes}
+        layout={layout}
+        format={format}
+        quality={quality}
+        loading={loading}
+        decoding={decoding}
+        class={className}
+        {...rest}
+      />
+    )
+  ) : (
+    /* Public-folder image: pass-through. */
+    <img
+      src={src as string}
+      alt={alt}
+      loading={loading}
+      decoding={decoding}
+      class={className}
+      {...(width ? { width } : {})}
+      {...(height ? { height } : {})}
+      {...rest}
+    />
+  )
+}

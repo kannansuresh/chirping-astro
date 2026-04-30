@@ -5,7 +5,7 @@ pubDate: 2026-04-20
 tags: [images, medias, hero, photographie, design]
 categories: [Rédaction]
 translationKey: featured-images-and-media
-heroImage: /images/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: 'Une longue exposition de vagues sur une côte rocheuse au crépuscule'
 showFeaturedImage: true
 toc: false
@@ -17,8 +17,9 @@ Cet article est un petit **essai photo** qui illustre les
 fonctionnalités d'image du thème de bout en bout. Notez ce que cette
 page fait que les autres ne font pas :
 
-- Le hero est une **image locale** issue de
-  `public/images/coastline.jpg`, pas une URL CDN distante.
+- Le hero est un **asset local** situé dans
+  `src/assets/coastline.jpg`, passé par le pipeline d'image d'Astro
+  (`srcset` responsive, WebP).
 - `toc: false` — aucune table des matières à droite. Les essais photo
   se lisent mieux sans.
 - `showFeaturedImage: true` est défini explicitement, même si c'est
@@ -26,26 +27,28 @@ page fait que les autres ne font pas :
 
 ## Où mettre les images
 
-Vous avez trois options de stockage :
+Vous avez trois options de stockage. Les images hero et les vignettes
+de carte passent par un petit composant `SmartImage` qui choisit
+automatiquement la bonne stratégie :
 
-### 1. Chemin public (le plus simple)
+### 1. Asset importé (`src/assets/`) — recommandé
 
-Déposez le fichier dans `public/images/` (ou n'importe où sous
-`public/`) et référencez-le par chemin absolu :
+Déposez le fichier dans `src/assets/` et référencez-le depuis le
+frontmatter par un chemin **relatif au fichier markdown** :
 
 ```yaml
-heroImage: /images/coastline.jpg
+# src/content/posts/fr/balade-cotiere.md → src/assets/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: Vagues sur une côte rocheuse en longue exposition
 ```
 
-Pour : zéro cérémonial, facile à remplacer. Contre : pas
-d'optimisation automatique (Astro ne traite rien dans `public/`).
+Le schéma de la collection utilise le helper `image()` d'Astro : le
+fichier est validé, ses dimensions sont déduites au build, et
+l'image traverse l'optimiseur (formats modernes + `srcset`
+responsive). C'est l'option à privilégier par défaut.
 
-### 2. Asset importé (en MDX)
-
-Pour bénéficier du pipeline d'image d'Astro — redimensionnement
-automatique, formats modernes, dimensions injectées — importez
-l'asset dans un fichier MDX et utilisez `<Image>` :
+En MDX vous pouvez aussi importer des assets explicitement et les
+passer à `<Image>` pour un usage en ligne :
 
 ```mdx title="src/content/posts/fr/exemple.mdx"
 import { Image } from 'astro:assets';
@@ -54,23 +57,37 @@ import coastline from '../../../assets/coastline.jpg';
 <Image src={coastline} alt="Une côte au crépuscule" widths={[400, 800, 1600]} />
 ```
 
-Notez que `heroImage` dans le frontmatter est une chaîne et ne
-supporte pas les assets importés — pour le **hero**, utilisez chemins
-publics ou URL externes. Pour les images en ligne, MDX + `<Image>`
-est meilleur quand vous voulez une sortie optimisée.
+### 2. Chemin public
 
-### 3. URL externe
+Déposez le fichier dans `public/` et référencez-le par chemin absolu :
 
-Les URL distantes fonctionnent. Utile pour Unsplash, votre CDN, ou un
-ancien hôte :
+```yaml
+heroImage: /images/coastline.jpg
+heroImageAlt: Vagues sur une côte rocheuse en longue exposition
+```
+
+Pour : zéro cérémonial. Contre : **pas d'optimisation automatique**
+— Astro ne traite délibérément rien dans `public/`. Le navigateur
+reçoit le fichier tel quel. À utiliser pour des assets dont l'URL
+doit rester stable (favicons, OG par défaut, manifeste web).
+
+### 3. URL externe (optimisée automatiquement)
+
+Les URL distantes sont des citoyennes de première classe. Le hero
+et les composants de carte les passent au service d'image d'Astro
+qui télécharge la source au build, la convertit en WebP, et émet un
+`srcset` responsive :
 
 ```yaml
 heroImage: https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1600&q=80&auto=format&fit=crop
 heroImageAlt: Lumière douce du jour sur un bureau en bois
 ```
 
-Pour : pas de gonflement du commit. Contre : dépendance externe ;
-l'image disparaît si l'hôte disparaît.
+L'hôte doit être autorisé dans `image.remotePatterns` de
+[`astro.config.mjs`](astro.config.mjs). Les valeurs par défaut
+couvrent Unsplash, GitHub user content, jsDelivr, Cloudinary et
+Cloudflare Images ; ajoutez votre propre CDN si vous en utilisez
+un. Tout hôte hors liste fait échouer le build avec un message clair.
 
 ## Règles d'image hero
 
@@ -144,15 +161,18 @@ carte, donc un alt bien écrit sert les deux contextes.
 
 ## Astuces de performance
 
-- Les images en ligne reçoivent `loading="lazy"` automatiquement
-  quand écrites en HTML brut, mais la syntaxe Markdown `![]()` non.
-  Préférez `<img loading="lazy">` pour les images en bas de page.
-- Les hero apparaissent au-dessus de la ligne de flottaison —
-  réglez-les sur `loading="eager"` via le layout si vous avez un
-  hero critique à prioriser.
-- Utilisez le composant `<Image>` d'Astro pour ce que vous contrôlez
-  vous-même (assets locaux) afin d'obtenir formats modernes et
-  sortie multi-largeurs.
+- Les images hero et de carte passent par `SmartImage` et reçoivent
+  automatiquement un `srcset` responsive en WebP — aucun travail
+  supplémentaire requis.
+- Les images en ligne en `<img>` brut ne reçoivent `loading="lazy"`
+  que si vous le précisez ; la syntaxe Markdown `![]()` non plus.
+  Préférez `<img loading="lazy">` (ou `<Image>` d'Astro) pour les
+  images en bas de page.
+- Pour les images en ligne que vous contrôlez, utilisez `<Image>` de
+  `astro:assets` avec un fichier importé depuis `src/assets/...` afin
+  d'obtenir la même sortie multi-formats et responsive que le hero.
+- Pour les hero locaux, préférez `src/assets/` à `public/` quand
+  c'est possible — seul le premier passe par l'optimiseur.
 
 <Callout type="info" title="Astuce">
   Mettez <code>showFeaturedImage: false</code> sur les articles très textuels où le hero n'apporte

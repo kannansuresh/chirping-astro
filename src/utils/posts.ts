@@ -10,6 +10,7 @@
  */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 
 import { SITE, type Locale } from '../config';
 import { withBase } from '../i18n/utils';
@@ -197,13 +198,28 @@ export function heroImageSrc(post: Post): string | undefined {
   if (!img) return undefined;
   let src: string | undefined;
   if (typeof img === 'string') src = img;
-  // Accept Astro image-import objects defensively (legacy posts)
+  // Imported asset (ImageMetadata): unwrap to its public URL.
   else if (typeof img === 'object' && 'src' in (img as Record<string, unknown>)) {
     src = (img as { src: string }).src;
   }
   if (!src) return undefined;
   // Prefix the configured base for absolute paths into /public.
-  return src.startsWith('/') ? withBase(src) : src;
+  return src.startsWith('/') && !src.startsWith('//') ? withBase(src) : src;
+}
+
+/**
+ * The raw hero image, suitable for passing straight to `<SmartImage>`.
+ * Preserves the `ImageMetadata` shape (so the image pipeline can use
+ * intrinsic dimensions) for assets imported via the `image()` schema,
+ * and prefixes `withBase()` only on plain `/public/...` strings.
+ */
+export function heroImage(post: Post): ImageMetadata | string | undefined {
+  const img = post.data.heroImage;
+  if (!img) return undefined;
+  if (typeof img === 'string') {
+    return img.startsWith('/') && !img.startsWith('//') ? withBase(img) : img;
+  }
+  return img as ImageMetadata;
 }
 
 /** Slugify a tag/category for use in URLs. */

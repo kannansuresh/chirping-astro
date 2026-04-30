@@ -64,14 +64,22 @@ sitemap and the RSS feed.
 ### `heroImage` and `heroImageAlt`
 
 ```yaml
-heroImage: /images/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: 'A long exposure of waves crashing on a rocky coastline'
 ```
 
-Either a public path (anything under `public/` is served at root) or an
-absolute URL (CDN, Unsplash, etc.). The image is used both as the card
-thumbnail on listings and as the hero on the post page. The
-`heroImageAlt` becomes the `alt` attribute — please always set it.
+Three shapes are accepted:
+
+- A path **relative to the markdown file** pointing into
+  `src/assets/` — resolved through Astro's `image()` helper, fully
+  optimized (WebP + responsive `srcset`). Recommended.
+- A `/public/...` absolute path — served as-is, no optimization.
+- An external `https://...` URL — optimized at build if the host is
+  allow-listed in `image.remotePatterns` (see [`astro.config.mjs`](astro.config.mjs)).
+
+The image is used both as the card thumbnail on listings and as the
+hero on the post page. `heroImageAlt` becomes the `alt` attribute —
+please always set it.
 
 The companion post [Featured images & media](/posts/featured-images-and-media)
 goes deeper into image authoring.
@@ -180,7 +188,7 @@ updatedDate: 2026-05-03
 tags: [example, reference]
 categories: [Reference]
 draft: false
-heroImage: /images/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: A long exposure of a rocky coastline
 showFeaturedImage: true
 canonicalURL: https://example.com/example/

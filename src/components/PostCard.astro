@@ -1,7 +1,8 @@
 ---
 import type { Locale } from '../config';
 import { formatDate, isoDate } from '../i18n/utils';
-import { type Post, postPath, heroImageSrc, shouldShowHero } from '../utils/posts';
+import { type Post, postPath, heroImage, shouldShowHero } from '../utils/posts';
+import SmartImage from './SmartImage.astro';
 import { Icon } from 'astro-icon/components';
 
 interface Props {
@@ -11,8 +12,8 @@ interface Props {
 
 const { post, locale } = Astro.props;
 const href = postPath(post);
-const heroSrc = heroImageSrc(post);
-const hasImage = Boolean(heroSrc) && shouldShowHero(post);
+const heroAsset = heroImage(post);
+const hasImage = Boolean(heroAsset) && shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 ---
 
@@ -21,12 +22,14 @@ const heroAlt = post.data.heroImageAlt ?? '';
     {
       hasImage && (
         <div class="chirpy-card-image-wrap">
-          <img
-            src={heroSrc}
+          <SmartImage
+            src={heroAsset!}
             alt={heroAlt}
             class="chirpy-card-image"
             loading="lazy"
-            decoding="async"
+            widths={[320, 480, 640, 800]}
+            sizes="(max-width: 640px) 100vw, 320px"
+            quality={75}
           />
         </div>
       )

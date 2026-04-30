@@ -64,15 +64,24 @@ Défaut `false`. Quand vrai, l'article est inclus en mode dev mais
 ### `heroImage` et `heroImageAlt`
 
 ```yaml
-heroImage: /images/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: 'Une longue exposition de vagues sur une côte rocheuse'
 ```
 
-Soit un chemin public (tout ce qui est sous `public/` est servi à la
-racine), soit une URL absolue (CDN, Unsplash, etc.). L'image est
-utilisée comme vignette de carte sur les listings et comme bannière
-sur la page d'article. Le `heroImageAlt` devient l'attribut `alt` —
-remplissez-le toujours.
+Trois formes sont acceptées :
+
+- Un chemin **relatif au fichier markdown** vers `src/assets/` —
+  résolu via le helper `image()` d'Astro, entièrement optimisé
+  (WebP + `srcset` responsive). Recommandé.
+- Un chemin absolu sous `/public/...` — servi tel quel, sans
+  optimisation.
+- Une URL externe `https://...` — optimisée au build si l'hôte est
+  autorisé dans `image.remotePatterns` (voir
+  [`astro.config.mjs`](astro.config.mjs)).
+
+L'image est utilisée comme vignette de carte sur les listings et
+comme bannière sur la page d'article. `heroImageAlt` devient
+l'attribut `alt` — remplissez-le toujours.
 
 L'article compagnon
 [Images à la une & médias](/fr/posts/featured-images-and-media) entre
@@ -183,7 +192,7 @@ updatedDate: 2026-05-03
 tags: [exemple, reference]
 categories: [Référence]
 draft: false
-heroImage: /images/coastline.jpg
+heroImage: ../../../assets/coastline.jpg
 heroImageAlt: Une longue exposition d'une côte rocheuse
 showFeaturedImage: true
 canonicalURL: https://exemple.com/exemple/
