@@ -39,6 +39,6 @@ const { meta } = Astro.props;
 ))}
 
 {/* hreflang alternates for SEO */}
-{meta.hreflangs.map(({ locale, href }) => (
+{SITE.multilingual && meta.hreflangs.map(({ locale, href }) => (
   <link rel="alternate" hreflang={locale} href={href} />
 ))}

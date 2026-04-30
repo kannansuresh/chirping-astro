@@ -66,6 +66,6 @@ const home = localizedPath('/', locale);
 
   <div class="chirpy-topbar__search">
     <SearchButton locale={locale} />
-    <LanguageSwitcher locale={locale} />
+    {SITE.multilingual && <LanguageSwitcher locale={locale} />}
   </div>
 </header>

@@ -42,6 +42,14 @@ export interface SiteConfig {
    * background — the Chirpy default.
    */
   boxedArticles: boolean;
+  /**
+   * Show the language switcher in the top bar and link to translated
+   * pages. Set to `false` for single-language sites — the switcher is
+   * hidden and `<link rel="alternate" hreflang>` is omitted.
+   * Routes under non-default locale prefixes still build; remove their
+   * source pages and content folders if you don't want them at all.
+   */
+  multilingual: boolean;
 }
 
 export interface NavItem {
@@ -129,6 +137,7 @@ export const SITE: SiteConfig = {
   isoDates: false,
   showFeaturedImages: true,
   boxedArticles: false,
+  multilingual: true,
 };
 
 export const NAV: readonly NavItem[] = [
