@@ -22,7 +22,9 @@ than animations and ad slots.
   daisyUI v5 tokens, with a circular reveal transition between modes.
 - **Bilingual content (EN + FR)** — English served at the root, French
   under `/fr/`. Posts are paired by `translationKey`, and a language
-  switcher in the sidebar jumps between translations.
+  switcher in the topbar jumps between translations. Set
+  `multilingual: false` in `src/config.ts` to ship a single-language
+  site.
 - **Markdown + MDX** — Astro Content Collections with typed frontmatter,
   Shiki syntax highlighting, GFM, footnotes, an automatic table of
   contents, and a bundled `<Callout>` component.

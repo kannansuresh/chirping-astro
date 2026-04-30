@@ -24,7 +24,9 @@ calme comptent plus que les animations et les espaces publicitaires.
   les tokens daisyUI v5, avec une transition circulaire entre les modes.
 - **Contenu bilingue (EN + FR)** — l'anglais à la racine, le français
   sous `/fr/`. Les articles sont appariés par `translationKey`, et un
-  sélecteur de langue dans la barre latérale bascule entre les versions.
+  sélecteur de langue dans la barre supérieure bascule entre les
+  versions. Définissez `multilingual: false` dans `src/config.ts`
+  pour publier un site monolingue.
 - **Markdown + MDX** — Content Collections d'Astro avec frontmatter
   typé, coloration syntaxique Shiki, GFM, notes de bas de page, table
   des matières automatique, et un composant `<Callout>` prêt à l'emploi.

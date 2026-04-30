@@ -12,14 +12,25 @@ toc: true
 
 Ce site est bilingue. L'**anglais** est servi à la racine de l'URL, et
 le **français** vit sous `/fr`. Le sélecteur de langue dans la barre
-latérale est contextuel : sur une page d'article, il vous emmène sur
-l'article traduit équivalent ; sur une page de listing, il échange
-le préfixe de locale en préservant le reste du chemin.
+de navigation supérieure est contextuel : sur une page d'article, il
+vous emmène sur l'article traduit équivalent ; sur une page de
+listing, il échange le préfixe de locale en préservant le reste du
+chemin.
 
 Vous lisez cet article en français. Cliquez sur le sélecteur de langue
-dans la barre latérale pour le lire en anglais — ce trajet
-fonctionne parce que les deux fichiers partagent la même
-`translationKey`.
+en haut de la page pour le lire en anglais — ce trajet fonctionne
+parce que les deux fichiers partagent la même `translationKey`.
+
+## Désactiver l'i18n
+
+Si vous ne publiez qu'en une seule langue, définissez
+`multilingual: false` dans [`src/config.ts`](src/config.ts). Le
+sélecteur de langue disparaît de la barre supérieure et les balises
+`<link rel="alternate" hreflang>` ne sont plus émises. Pour retirer
+également les routes de l'autre locale du build, supprimez ses
+dossiers de contenu (`src/content/posts/<lang>/`,
+`src/content/pages/<lang>/`), son miroir `src/pages/<lang>/`, et
+retirez-la de `SITE.locales`.
 
 ## Règles de routage
 

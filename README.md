@@ -161,6 +161,7 @@ export const SITE: SiteConfig = {
   isoDates: false,
   showFeaturedImages: true,
   boxedArticles: false,
+  multilingual: true,
 };
 ```
 
@@ -303,6 +304,7 @@ Every customisable knob lives in a small number of files:
 | Date formatting per locale          | `src/i18n/utils.ts` → `formatDate`        |
 | Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`     |
 | Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`    |
+| Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`     |
 | Frontmatter validation rules        | `src/content.config.ts`                   |
 | Astro / build integrations          | `astro.config.mjs`                        |
 
@@ -504,6 +506,23 @@ See the demo **/posts/latex-math-with-katex** for a full showcase
 ---
 
 ## i18n
+
+### Single-language sites
+
+If you only publish in one language, set:
+
+```ts
+// src/config.ts
+multilingual: false,
+```
+
+This hides the language switcher in the topbar and skips emitting
+`<link rel="alternate" hreflang>` tags. The default locale's routes
+(EN at the root) keep working unchanged. To remove the other
+locale's routes from the build entirely, also delete its content
+and pages folders (e.g. `src/content/posts/fr/`,
+`src/content/pages/fr/`, `src/pages/fr/`) and drop it from
+`SITE.locales`.
 
 ### Routing rules
 

@@ -11,14 +11,24 @@ toc: true
 ---
 
 This site is bilingual. **English** is served from the URL root, and
-**French** lives under `/fr`. The language switcher in the sidebar is
+**French** lives under `/fr`. The language switcher in the topbar is
 context-aware: on a post page, it lands you on the equivalent
 translated article; on a listing page, it swaps the locale prefix and
 preserves the rest of the path.
 
 You are reading this post in English. Click the language switcher in
-the sidebar to read it in French — that round-trip works because both
+the topbar to read it in French — that round-trip works because both
 files share the same `translationKey`.
+
+## Turning i18n off
+
+If you only publish in one language, set `multilingual: false` in
+[`src/config.ts`](src/config.ts). The language switcher disappears
+from the topbar and `<link rel="alternate" hreflang>` tags are no
+longer emitted. To strip the other locale's routes from the build
+as well, drop its content folders (`src/content/posts/<lang>/`,
+`src/content/pages/<lang>/`), its `src/pages/<lang>/` mirror, and
+remove it from `SITE.locales`.
 
 ## Routing rules
 
