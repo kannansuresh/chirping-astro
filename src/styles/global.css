@@ -465,6 +465,57 @@
   }
   .prose-chirpy img {
     @apply border-base-300 mx-auto my-6 rounded-md border;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Hero image — contained within content width, with Chirpy's subtle
+     shimmer placeholder background and a soft shadow. */
+  .post-hero {
+    @apply mx-auto;
+    max-width: 100%;
+  }
+  .post-hero__frame {
+    @apply border-base-300 relative overflow-hidden rounded-md border;
+    background:
+      linear-gradient(
+        110deg,
+        color-mix(in oklab, var(--color-base-300) 55%, transparent) 8%,
+        color-mix(in oklab, var(--color-base-300) 25%, transparent) 18%,
+        color-mix(in oklab, var(--color-base-300) 55%, transparent) 33%
+      ),
+      var(--color-base-200);
+    background-size: 200% 100%;
+    box-shadow:
+      0 1px 2px color-mix(in oklab, var(--color-base-content) 6%, transparent),
+      0 4px 12px color-mix(in oklab, var(--color-base-content) 5%, transparent);
+    animation: chirpy-shimmer 1.6s linear infinite;
+  }
+  .post-hero__img {
+    @apply block w-full;
+    height: auto;
+    object-fit: cover;
+    /* Once the image paints, the shimmer is hidden behind it. */
+  }
+  .post-hero__img[src] {
+    background: transparent;
+  }
+  /* When the image has loaded, freeze the shimmer to avoid wasting paints. */
+  .post-hero__frame:has(img.post-hero__img[loading='eager']) {
+    animation-iteration-count: 1;
+  }
+  @keyframes chirpy-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .post-hero__frame {
+      animation: none;
+    }
   }
   .prose-chirpy table {
     @apply my-6 w-full border-collapse text-left text-sm;

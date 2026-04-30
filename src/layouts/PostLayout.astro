@@ -134,18 +134,18 @@ const crumbs = [
 
     {
       showHero && heroSrc && (
-        <figure class="post-hero -mx-5 mb-8 sm:-mx-8">
-          <img
-            src={heroSrc}
-            alt={heroAlt}
-            class="border-base-300 w-full border-y"
-            loading="eager"
-            decoding="async"
-          />
+        <figure class="post-hero mb-8">
+          <div class="post-hero__frame">
+            <img
+              src={heroSrc}
+              alt={heroAlt}
+              class="post-hero__img"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
           {heroAlt && (
-            <figcaption class="text-base-content/55 px-5 pt-2 text-center text-xs sm:px-8">
-              {heroAlt}
-            </figcaption>
+            <figcaption class="text-base-content/55 mt-2 text-center text-xs">{heroAlt}</figcaption>
           )}
         </figure>
       )
