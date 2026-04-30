@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, formatDate, isoDate } from '../i18n/utils';
+import { useTranslations, formatDate } from '../i18n/utils';
 import { getPosts, groupByYearMonth, postPath } from '../utils/posts';
 
 const locale = 'en';
@@ -21,51 +21,25 @@ const groups = groupByYearMonth(posts, locale);
     groups.length === 0 ? (
       <p class="text-base-content/70">{t('archives.empty')}</p>
     ) : (
-      <div class="space-y-8">
-        {groups.map((g) => {
+      <div id="archives">
+        {groups.map((g, gi) => {
           const yearPosts = g.months.flatMap((m) => m.posts);
           return (
-            <section class="relative">
-              {/* Vertical timeline line — centered over the dot column */}
-              <div
-                aria-hidden="true"
-                class="bg-base-content/20 pointer-events-none absolute top-4 bottom-4 left-26 w-px"
-              />
-              <ol class="[&>li:nth-child(even)>*]:bg-base-200/40 grid grid-cols-[5rem_1.5rem_minmax(0,1fr)] items-center gap-x-3">
-                {/* Year header row with hollow dot */}
-                <li class="contents">
-                  <div />
-                  <div class="flex justify-center">
-                    <span class="border-base-content/50 bg-base-100 relative z-10 block size-3.5 rounded-full border-2" />
-                  </div>
-                  <h2 class="py-2 text-2xl font-semibold tracking-tight">{g.year}</h2>
-                </li>
-                {/* Post rows */}
+            <section class:list={['year-block', { first: gi === 0 }]}>
+              <time class="year">{g.year}</time>
+              <ul>
                 {yearPosts.map((p) => (
-                  <li class="group contents">
-                    <time
-                      datetime={isoDate(p.data.pubDate)}
-                      class="text-base-content/60 group-hover:bg-base-200/70! flex items-baseline justify-end gap-1.5 py-2 pr-2"
-                    >
-                      <span class="text-base-content/80 text-lg font-medium tabular-nums">
-                        {formatDate(p.data.pubDate, locale, { day: '2-digit' })}
-                      </span>
-                      <span class="text-xs tracking-wide uppercase">
-                        {formatDate(p.data.pubDate, locale, { month: 'short' })}
-                      </span>
-                    </time>
-                    <div class="group-hover:bg-base-200/70! flex justify-center py-2">
-                      <span class="bg-base-content/50 relative z-10 block size-2.5 rounded-full" />
-                    </div>
-                    <a
-                      href={postPath(p)}
-                      class="link link-hover text-primary group-hover:bg-base-200/70! truncate py-2 pl-2"
-                    >
-                      {p.data.title}
-                    </a>
+                  <li>
+                    <span class="day">
+                      {formatDate(p.data.pubDate, locale, { day: '2-digit' })}
+                    </span>
+                    <span class="month">
+                      {formatDate(p.data.pubDate, locale, { month: 'short' })}
+                    </span>
+                    <a href={postPath(p)}>{p.data.title}</a>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </section>
           );
         })}
@@ -73,3 +47,153 @@ const groups = groupByYearMonth(posts, locale);
     )
   }
 </BaseLayout>
+
+<style>
+  /* Chirpy-style archives timeline.
+     Coordinate system (px from #archives left edge):
+       line:       left 77, width 4   -> center 79
+       year dot:   left 73, size 12   -> center 79
+       post dot:   left 75, size  8   -> center 79
+     Each row reserves ~6.5rem of left padding so the date sits in fixed
+     columns and the title starts a comfortable gap past the dot. */
+
+  #archives {
+    --tl-color: color-mix(in oklch, var(--color-base-content) 18%, transparent);
+    --tl-node: color-mix(in oklch, var(--color-base-content) 40%, transparent);
+    --tl-year-dot-bg: var(--color-base-100);
+    --tl-zebra: color-mix(in oklch, var(--color-base-content) 6%, transparent);
+    --tl-row-h: 2rem;
+    letter-spacing: 0.03rem;
+  }
+
+  #archives .year-block {
+    position: relative;
+  }
+
+  /* ---------- Year heading ---------- */
+  #archives .year {
+    display: block;
+    position: relative;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 1.5rem;
+    padding-left: 6.5rem;
+    color: var(--color-base-content);
+  }
+  #archives .year::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--tl-color);
+    left: 77px;
+    bottom: 1rem;
+    height: 4rem;
+  }
+  #archives .year-block.first .year::before {
+    height: 1.5rem;
+    top: 1.5rem;
+    bottom: auto;
+  }
+  #archives .year::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    left: 73px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 3px solid var(--tl-node);
+    background-color: var(--tl-year-dot-bg);
+    box-sizing: border-box;
+    z-index: 1;
+  }
+
+  /* ---------- Post list ---------- */
+  #archives ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  #archives ul li {
+    position: relative;
+    padding-left: 6.5rem;
+    height: var(--tl-row-h);
+    line-height: var(--tl-row-h);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #archives ul li:nth-child(odd) {
+    background-image: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--tl-zebra) 8%,
+      var(--tl-zebra) 92%,
+      transparent 100%
+    );
+  }
+
+  #archives ul li::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--tl-color);
+    top: 0;
+    left: 77px;
+    height: calc(var(--tl-row-h) + 1px);
+  }
+  #archives section:last-child ul li:last-child::before {
+    height: calc(var(--tl-row-h) / 2);
+  }
+
+  /* Day + month labels: absolutely placed in the reserved left padding. */
+  #archives .day,
+  #archives .month {
+    position: absolute;
+    top: 0;
+    line-height: var(--tl-row-h);
+  }
+  #archives .day {
+    left: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-base-content);
+  }
+  #archives .month {
+    left: 2.5rem;
+    font-size: 85%;
+    color: color-mix(in oklch, var(--color-base-content) 60%, transparent);
+    text-transform: capitalize;
+  }
+
+  /* Title flows at the padding edge (6.5rem = 104px), giving ~21px between
+     the post dot (ends at x=83) and the title text. */
+  #archives a {
+    color: var(--color-primary);
+  }
+  #archives a:hover {
+    text-decoration: underline;
+  }
+  /* Filled circle on the timeline at the post row. */
+  #archives ul li > a::before {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 75px;
+    background-color: var(--tl-node);
+    z-index: 1;
+  }
+
+  @media (max-width: 575.98px) {
+    #archives {
+      letter-spacing: 0;
+    }
+  }
+</style>
