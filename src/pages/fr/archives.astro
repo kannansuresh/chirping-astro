@@ -26,12 +26,12 @@ const groups = groupByYearMonth(posts, locale);
           const yearPosts = g.months.flatMap((m) => m.posts);
           return (
             <section class="relative">
-              {/* Vertical timeline line */}
+              {/* Vertical timeline line — centered over the dot column */}
               <div
                 aria-hidden="true"
-                class="bg-base-content/20 pointer-events-none absolute top-4 bottom-4 left-21 w-px"
+                class="bg-base-content/20 pointer-events-none absolute top-4 bottom-4 left-26 w-px"
               />
-              <ol class="grid grid-cols-[5rem_1.5rem_minmax(0,1fr)] items-center gap-x-3">
+              <ol class="[&>li:nth-child(even)>*]:bg-base-200/40 grid grid-cols-[5rem_1.5rem_minmax(0,1fr)] items-center gap-x-3">
                 {/* Year header row with hollow dot */}
                 <li class="contents">
                   <div />
@@ -45,7 +45,7 @@ const groups = groupByYearMonth(posts, locale);
                   <li class="group contents">
                     <time
                       datetime={isoDate(p.data.pubDate)}
-                      class="text-base-content/60 group-hover:bg-base-200/40 flex items-baseline justify-end gap-1.5 py-2 pr-2"
+                      class="text-base-content/60 group-hover:bg-base-200/70! flex items-baseline justify-end gap-1.5 py-2 pr-2"
                     >
                       <span class="text-base-content/80 text-lg font-medium tabular-nums">
                         {formatDate(p.data.pubDate, locale, { day: '2-digit' })}
@@ -54,12 +54,12 @@ const groups = groupByYearMonth(posts, locale);
                         {formatDate(p.data.pubDate, locale, { month: 'short' })}
                       </span>
                     </time>
-                    <div class="group-hover:bg-base-200/40 flex justify-center py-2">
+                    <div class="group-hover:bg-base-200/70! flex justify-center py-2">
                       <span class="bg-base-content/50 relative z-10 block size-2.5 rounded-full" />
                     </div>
                     <a
                       href={postPath(p)}
-                      class="link link-hover text-primary group-hover:bg-base-200/40 truncate py-2 pl-2"
+                      class="link link-hover text-primary group-hover:bg-base-200/70! truncate py-2 pl-2"
                     >
                       {p.data.title}
                     </a>
