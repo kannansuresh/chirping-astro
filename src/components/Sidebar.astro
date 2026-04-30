@@ -10,7 +10,6 @@ import { useTranslations, localizedPath, withBase } from '../i18n/utils';
 import type { UIKey } from '../i18n/ui';
 import { Icon } from 'astro-icon/components';
 import ThemeToggle from './islands/ThemeToggle.astro';
-import LanguageSwitcher from './islands/LanguageSwitcher.astro';
 
 interface Props {
   locale: Locale;
@@ -98,13 +97,11 @@ const navItems = NAV.map((item) => ({
     </ul>
   </nav>
 
-  {/* Bottom row: theme toggle + language + socials */}
+  {/* Bottom row: theme toggle + socials */}
   <div
-    class="border-base-300 mt-4 flex w-full flex-wrap items-center justify-center gap-1 border-t pt-4"
+    class="border-base-300 mt-4 flex w-full flex-wrap items-center justify-center gap-2 border-t pt-4"
   >
     <ThemeToggle locale={locale} />
-    <LanguageSwitcher locale={locale} />
-    <span class="bg-base-300 mx-1 h-6 w-px" aria-hidden="true"></span>
     {
       SOCIALS.map((s) => (
         <a
