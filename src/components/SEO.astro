@@ -8,6 +8,7 @@ interface Props {
 
 const { meta } = Astro.props;
 ---
+
 <title>{meta.title}</title>
 <meta name="description" content={meta.description} />
 <link rel="canonical" href={meta.canonical} />
@@ -28,17 +29,20 @@ const { meta } = Astro.props;
 <meta name="twitter:image" content={meta.ogImage} />
 
 {/* Article-specific */}
-{meta.type === 'article' && meta.publishedTime && (
-  <meta property="article:published_time" content={meta.publishedTime} />
-)}
-{meta.type === 'article' && meta.modifiedTime && (
-  <meta property="article:modified_time" content={meta.modifiedTime} />
-)}
-{meta.type === 'article' && meta.tags?.map((tag) => (
-  <meta property="article:tag" content={tag} />
-))}
+{
+  meta.type === 'article' && meta.publishedTime && (
+    <meta property="article:published_time" content={meta.publishedTime} />
+  )
+}
+{
+  meta.type === 'article' && meta.modifiedTime && (
+    <meta property="article:modified_time" content={meta.modifiedTime} />
+  )
+}
+{meta.type === 'article' && meta.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
 {/* hreflang alternates for SEO */}
-{SITE.multilingual && meta.hreflangs.map(({ locale, href }) => (
-  <link rel="alternate" hreflang={locale} href={href} />
-))}
+{
+  SITE.multilingual &&
+    meta.hreflangs.map(({ locale, href }) => <link rel="alternate" hreflang={locale} href={href} />)
+}
