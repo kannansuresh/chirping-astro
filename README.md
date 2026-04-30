@@ -113,6 +113,14 @@ Open `.env` and fill in:
 # Public site URL (no trailing slash). Used for canonical, OG, hreflang, sitemap.
 SITE_URL=https://chirping-astro.example.com
 
+# Author / social handles. Leave any of them blank to drop the matching
+# icon from the sidebar. The footer's "Theme" link uses GITHUB_HANDLE +
+# GITHUB_REPO, so users never have to edit URLs by hand.
+PUBLIC_GITHUB_HANDLE=
+PUBLIC_GITHUB_REPO=chirping-astro
+PUBLIC_TWITTER_HANDLE=
+PUBLIC_CONTACT_EMAIL=
+
 # Master switch. Set "true" once you have Giscus configured below.
 PUBLIC_GISCUS_ENABLED=false
 
@@ -127,6 +135,10 @@ You can leave `PUBLIC_GISCUS_*` as placeholders for now — the theme
 will detect this and show a helpful setup notice on post pages
 instead of a broken iframe.
 
+The handle vars feed `SITE.author.url`, the `SOCIALS` array, and the
+footer's repo link automatically. They are also the recommended way to
+configure identity — do **not** edit URLs in `src/config.ts` directly.
+
 ### 4. Configure your site identity
 
 Open `src/config.ts` and edit:
@@ -138,7 +150,7 @@ export const SITE: SiteConfig = {
   description: 'Your site tagline here.',
   author: {
     name: 'Your Name',
-    url: 'https://github.com/your-handle',
+    // `url` is built automatically from PUBLIC_GITHUB_HANDLE — leave it.
     avatar: '/images/avatar.svg',
     bio: 'A one-line bio shown in the sidebar.',
   },
@@ -151,9 +163,12 @@ export const SITE: SiteConfig = {
 };
 ```
 
-Then update the `SOCIALS` array further down with your real GitHub /
-Twitter / email / RSS links. The order in `SOCIALS` is the order
-shown in the sidebar.
+The `SOCIALS` array further down is **derived from your env handles**:
+the GitHub / Twitter / Email entries appear only when the matching
+`PUBLIC_*_HANDLE` (or email) is set in `.env`. To add a network the
+theme doesn't ship with (Mastodon, LinkedIn, Bluesky…), append a
+literal `SocialLink` entry to that array. Order in the array is the
+order shown in the sidebar.
 
 The `NAV` array controls the top-level navigation links — add or
 remove entries as needed. Each entry's `key` must match an i18n
@@ -275,19 +290,19 @@ not work in `dev`** — only after `bun run build`. This is by design.
 
 Every customisable knob lives in a small number of files:
 
-| Knob                                   | File                                          |
-| -------------------------------------- | --------------------------------------------- |
-| Site title, URL, author, locales       | `src/config.ts` → `SITE`                      |
-| Sidebar navigation links               | `src/config.ts` → `NAV`                       |
-| Sidebar social icons                   | `src/config.ts` → `SOCIALS`                   |
-| Giscus comments                        | `src/config.ts` → `GISCUS` + `.env`           |
-| Theme colours (light + dark)           | `src/styles/global.css` (OKLCH tokens)        |
-| Layout sizing (sidebar width, etc.)    | `src/styles/global.css` (custom CSS vars)     |
-| UI strings per locale                  | `src/i18n/ui.ts`                              |
-| Date formatting per locale             | `src/i18n/utils.ts` → `formatDate`            |
-| Posts-per-page on listings             | `src/config.ts` → `SITE.postsPerPage`         |
-| Frontmatter validation rules           | `src/content.config.ts`                       |
-| Astro / build integrations             | `astro.config.mjs`                            |
+| Knob                                | File                                      |
+| ----------------------------------- | ----------------------------------------- |
+| Site title, URL, author, locales    | `src/config.ts` → `SITE`                  |
+| Sidebar navigation links            | `src/config.ts` → `NAV`                   |
+| Sidebar social icons                | `src/config.ts` → `SOCIALS`               |
+| Giscus comments                     | `src/config.ts` → `GISCUS` + `.env`       |
+| Theme colours (light + dark)        | `src/styles/global.css` (OKLCH tokens)    |
+| Layout sizing (sidebar width, etc.) | `src/styles/global.css` (custom CSS vars) |
+| UI strings per locale               | `src/i18n/ui.ts`                          |
+| Date formatting per locale          | `src/i18n/utils.ts` → `formatDate`        |
+| Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`     |
+| Frontmatter validation rules        | `src/content.config.ts`                   |
+| Astro / build integrations          | `astro.config.mjs`                        |
 
 ---
 
@@ -415,15 +430,15 @@ canonical daisyUI v5 variables.
 
 ### Custom layout tokens
 
-| Token                  | Default     | Purpose                       |
-| ---------------------- | ----------- | ----------------------------- |
-| `--width-sidebar`      | `18rem`     | Left sidebar width            |
-| `--width-panel`        | `14rem`     | Right "Trending tags" panel  |
-| `--height-topbar`      | `3.25rem`   | Top bar height                |
-| `--width-prose`        | `50rem`     | Reading column max width      |
-| `--color-sidebar-from` | OKLCH       | Sidebar gradient start        |
-| `--color-sidebar-to`   | OKLCH       | Sidebar gradient end          |
-| `--color-sidebar-text` | OKLCH       | Sidebar foreground            |
+| Token                  | Default   | Purpose                     |
+| ---------------------- | --------- | --------------------------- |
+| `--width-sidebar`      | `18rem`   | Left sidebar width          |
+| `--width-panel`        | `14rem`   | Right "Trending tags" panel |
+| `--height-topbar`      | `3.25rem` | Top bar height              |
+| `--width-prose`        | `50rem`   | Reading column max width    |
+| `--color-sidebar-from` | OKLCH     | Sidebar gradient start      |
+| `--color-sidebar-to`   | OKLCH     | Sidebar gradient end        |
+| `--color-sidebar-text` | OKLCH     | Sidebar foreground          |
 
 ---
 
@@ -570,7 +585,7 @@ The component uses Pagefind's headless API, not the bundled
 
 1. Install <https://github.com/apps/giscus> on your repository.
 2. The repo must be **public** with **Discussions enabled** in
-   *Settings → General → Features*.
+   _Settings → General → Features_.
 3. Open <https://giscus.app> and pick:
    - The repository.
    - **`pathname`** mapping — so EN and FR posts each get their own
@@ -628,14 +643,14 @@ Readers never see a broken iframe.
 The site is mostly static HTML. Client JavaScript runs in five small
 islands and only when needed:
 
-| Island             | When loads                                  |
-| ------------------ | ------------------------------------------- |
-| `ThemeToggle`      | On every page (very small)                  |
-| `LanguageSwitcher` | Pure CSS dropdown — no JS                  |
-| `SearchButton`     | Pagefind script loaded on modal open only   |
+| Island             | When loads                                   |
+| ------------------ | -------------------------------------------- |
+| `ThemeToggle`      | On every page (very small)                   |
+| `LanguageSwitcher` | Pure CSS dropdown — no JS                    |
+| `SearchButton`     | Pagefind script loaded on modal open only    |
 | `TableOfContents`  | Only on posts that have headings (and `toc`) |
-| `BackToTop`        | All pages, tiny                             |
-| `Giscus`           | Only on posts with comments enabled         |
+| `BackToTop`        | All pages, tiny                              |
+| `Giscus`           | Only on posts with comments enabled          |
 
 Fenced code blocks emit Expressive Code's tiny client script for
 copy-to-clipboard buttons.
@@ -665,11 +680,89 @@ The build output (`dist/`) is fully static and works on:
   redirects.
 - **Vercel**: framework preset "Astro", install `bun install`, build
   `bun run build`.
-- **GitHub Pages**: serve `dist/` via `actions/deploy-pages`.
+- **GitHub Pages**: serve `dist/` via `actions/deploy-pages`. See the
+  [GitHub Pages deployment](#github-pages-deployment) section below —
+  it requires setting `base` in `astro.config.mjs` to your repo name.
 - **S3 + CloudFront / static hosts**: upload `dist/` as-is.
 
 Set `SITE_URL` in your hosting provider's environment so canonical
 URLs and `hreflang` match the deployed URL.
+
+### GitHub Pages deployment
+
+GitHub Pages serves project sites under a sub-path:
+`https://<user>.github.io/<repo>/`. Astro must know about that
+sub-path **at build time** so every generated asset URL (CSS, JS,
+favicons, images, internal links) gets prefixed correctly.
+
+1. **Set `base` in `astro.config.mjs`** to your repository name:
+
+   ```js
+   export default defineConfig({
+     site: SITE.url, // https://<user>.github.io
+     base: '/chirping-astro', // ← your repo name, with a leading slash
+     // …
+   });
+   ```
+
+   This is wired into the existing helpers (`withBase`, `localizedPath`)
+   so every internal `<a>`, `<img>`, favicon, RSS link, Pagefind script,
+   and pagination URL automatically picks up the prefix. **Never write
+   `<a href="/foo">` by hand** — always go through `localizedPath()`
+   from `src/i18n/utils.ts`.
+
+2. **Set `SITE_URL`** to the github.io origin (no path):
+
+   ```env
+   SITE_URL=https://<user>.github.io
+   ```
+
+   Astro joins `site` + `base` when emitting absolute URLs (canonical,
+   OG, sitemap, RSS), so the path component must live in `base`, not
+   `SITE_URL`.
+
+3. **Workflow** — a minimal Pages deploy:
+
+   ```yaml title=".github/workflows/deploy.yml"
+   name: Deploy to GitHub Pages
+   on:
+     push: { branches: [main] }
+     workflow_dispatch:
+   permissions:
+     contents: read
+     pages: write
+     id-token: write
+   jobs:
+     build:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: oven-sh/setup-bun@v2
+           with: { bun-version: latest }
+         - run: bun install --frozen-lockfile
+         - run: bun run build
+           env:
+             SITE_URL: https://<user>.github.io
+             PUBLIC_GITHUB_HANDLE: <user>
+             PUBLIC_GITHUB_REPO: <repo>
+         - uses: actions/upload-pages-artifact@v3
+           with: { path: dist }
+     deploy:
+       needs: build
+       runs-on: ubuntu-latest
+       environment:
+         name: github-pages
+         url: ${{ steps.deployment.outputs.page_url }}
+       steps:
+         - id: deployment
+           uses: actions/deploy-pages@v4
+   ```
+
+4. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
+
+5. **Custom domain?** Drop the `base` setting (set it to `'/'`) and
+   add a `public/CNAME` file containing your domain. Astro will copy
+   it into `dist/` on every build.
 
 ### GitHub Actions example
 
@@ -753,18 +846,18 @@ Drop a new file at `public/images/avatar.svg` (or change the path in
 
 ## Troubleshooting
 
-| Symptom                                          | Fix                                                                                  |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| Search modal says "Search index not available"   | Run `bun run build` once. The index lives at `dist/_pagefind/`. Search **does not** work in `bun run dev`. |
-| Theme flashes wrong colour on first paint        | Confirm the inline `<script is:inline>` block is present in `BaseLayout`.            |
-| Giscus does not render                           | Check `PUBLIC_GISCUS_*` env vars; verify the giscus app is installed; verify Discussions are enabled in repo settings. |
-| Giscus iframe theme stuck on light/dark          | The site theme attribute must be `chirpy-light` or `chirpy-dark`. If you renamed the themes, also update `Giscus.astro`. |
-| FR routes 404 in dev                             | Restart `bun run dev` after adding new files under `src/pages/fr/...`.               |
-| `astro check` complains about `astro:content`    | Ensure `bun run dev` or `bun run build` ran at least once so `.astro/types.d.ts` is generated. |
-| Math formula appears as raw `$x^2$`              | Add `math: true` to the post's frontmatter and rebuild.                              |
-| `Cannot find module '../../../components/Callout.astro'` from MDX | Confirm the relative path. From `src/content/posts/<locale>/file.mdx`, the path is exactly three `../`. |
-| Build fails with `pubDate: Required`             | A post is missing `pubDate` in frontmatter. The error message names the file.        |
-| Sitemap missing hreflang alternates              | Ensure both translations share the same `translationKey` (or matching slug).         |
+| Symptom                                                           | Fix                                                                                                                      |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Search modal says "Search index not available"                    | Run `bun run build` once. The index lives at `dist/_pagefind/`. Search **does not** work in `bun run dev`.               |
+| Theme flashes wrong colour on first paint                         | Confirm the inline `<script is:inline>` block is present in `BaseLayout`.                                                |
+| Giscus does not render                                            | Check `PUBLIC_GISCUS_*` env vars; verify the giscus app is installed; verify Discussions are enabled in repo settings.   |
+| Giscus iframe theme stuck on light/dark                           | The site theme attribute must be `chirpy-light` or `chirpy-dark`. If you renamed the themes, also update `Giscus.astro`. |
+| FR routes 404 in dev                                              | Restart `bun run dev` after adding new files under `src/pages/fr/...`.                                                   |
+| `astro check` complains about `astro:content`                     | Ensure `bun run dev` or `bun run build` ran at least once so `.astro/types.d.ts` is generated.                           |
+| Math formula appears as raw `$x^2$`                               | Add `math: true` to the post's frontmatter and rebuild.                                                                  |
+| `Cannot find module '../../../components/Callout.astro'` from MDX | Confirm the relative path. From `src/content/posts/<locale>/file.mdx`, the path is exactly three `../`.                  |
+| Build fails with `pubDate: Required`                              | A post is missing `pubDate` in frontmatter. The error message names the file.                                            |
+| Sitemap missing hreflang alternates                               | Ensure both translations share the same `translationKey` (or matching slug).                                             |
 
 ---
 

@@ -78,6 +78,31 @@ export interface GiscusConfig {
   loading: 'lazy' | 'eager';
 }
 
+/**
+ * Author + social handles. Filled in from env vars (see `.env.example`)
+ * so identifiers never need to be hard-coded into source.
+ *
+ * Leave any handle as an empty string to drop it from the sidebar
+ * automatically — the entry won't render and no broken `your-handle`
+ * URL is exposed.
+ */
+const GITHUB_HANDLE = import.meta.env.PUBLIC_GITHUB_HANDLE ?? '';
+const GITHUB_REPO = import.meta.env.PUBLIC_GITHUB_REPO ?? 'chirping-astro';
+const TWITTER_HANDLE = import.meta.env.PUBLIC_TWITTER_HANDLE ?? '';
+const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? '';
+
+/**
+ * Public GitHub coordinates of the deployed source. Used by the footer's
+ * "Theme" link and anywhere a canonical repo URL is needed. When
+ * `PUBLIC_GITHUB_HANDLE` is unset, `url` falls back to a safe default so
+ * the footer never points at a 404.
+ */
+export const REPO = {
+  handle: GITHUB_HANDLE,
+  name: GITHUB_REPO,
+  url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}/${GITHUB_REPO}` : 'https://github.com',
+} as const;
+
 export const SITE: SiteConfig = {
   url: import.meta.env.SITE_URL ?? 'https://aneejian.com',
   title: 'Chirping Astro',
@@ -85,7 +110,7 @@ export const SITE: SiteConfig = {
     'A modern, multilingual Astro v6 theme inspired by Chirpy — built with Tailwind v4, daisyUI, MDX, Pagefind, and Giscus.',
   author: {
     name: 'Chirping Astro',
-    url: 'https://github.com/your-handle',
+    url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: '/images/avatar.svg',
     bio: 'A staff engineer who writes about the web, type systems, and the joy of shipping.',
   },
@@ -105,12 +130,33 @@ export const NAV: readonly NavItem[] = [
   { key: 'about', href: '/about', icon: 'lucide:info' },
 ] as const;
 
+/**
+ * SOCIALS is built from the env-driven handles above so users only edit
+ * one place (`.env` or the constants at the top of this file). Empty
+ * handles are filtered out automatically — the icon simply won't appear
+ * in the sidebar. RSS is always present.
+ *
+ * Need a social network the theme doesn't ship with? Just append a
+ * literal entry below — the type is `SocialLink`.
+ */
 export const SOCIALS: readonly SocialLink[] = [
-  { label: 'GitHub', href: 'https://github.com/your-handle', icon: 'lucide:github' },
-  { label: 'Twitter', href: 'https://twitter.com/your-handle', icon: 'lucide:twitter' },
-  { label: 'Email', href: 'mailto:hello@example.com', icon: 'lucide:mail' },
+  GITHUB_HANDLE && {
+    label: 'GitHub',
+    href: `https://github.com/${GITHUB_HANDLE}`,
+    icon: 'lucide:github',
+  },
+  TWITTER_HANDLE && {
+    label: 'Twitter',
+    href: `https://twitter.com/${TWITTER_HANDLE}`,
+    icon: 'lucide:twitter',
+  },
+  CONTACT_EMAIL && {
+    label: 'Email',
+    href: `mailto:${CONTACT_EMAIL}`,
+    icon: 'lucide:mail',
+  },
   { label: 'RSS', href: '/rss.xml', icon: 'lucide:rss' },
-] as const;
+].filter(Boolean) as SocialLink[];
 
 /**
  * Giscus comments. Set `enabled: false` to globally disable. Individual

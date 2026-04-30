@@ -1,5 +1,5 @@
 ---
-import { SITE, type Locale } from '../config';
+import { SITE, REPO, type Locale } from '../config';
 import { useTranslations } from '../i18n/utils';
 
 interface Props {
@@ -10,21 +10,21 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
 ---
+
 <footer
   aria-label="Site Info"
-  class="mt-10 flex flex-col gap-1 border-t border-base-300 py-6 text-sm text-base-content/60 lg:flex-row lg:items-center lg:justify-between"
+  class="border-base-300 text-base-content/60 mt-10 flex flex-col gap-1 border-t py-6 text-sm lg:flex-row lg:items-center lg:justify-between"
 >
   <p>
     © <time>{year}</time>{' '}
-    <a href={SITE.author.url ?? '#'} rel="noopener" class="hover:text-primary">{SITE.author.name}</a>.{' '}
+    <a href={SITE.author.url ?? '#'} rel="noopener" class="hover:text-primary">{SITE.author.name}</a
+    >.{' '}
     {t('footer.copyright')}
   </p>
   <p>
     {t('footer.poweredBy')}{' '}
     <a href="https://astro.build" rel="noopener" class="hover:text-primary">Astro</a>{' '}
     · {t('footer.theme')}{' '}
-    <a href="https://github.com/your-handle/chirping-astro" rel="noopener" class="hover:text-primary">
-      Chirping Astro
-    </a>
+    <a href={REPO.url} rel="noopener" class="hover:text-primary"> Chirping Astro </a>
   </p>
 </footer>

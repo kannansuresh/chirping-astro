@@ -86,7 +86,9 @@ normal, pas comme un magma de configuration. Pour l'étendre :
 - Les traductions sont dans [src/i18n/ui.ts](src/i18n/ui.ts).
 
 L'installation du thème depuis un clone vierge est documentée en
-détail dans le [README.md](https://github.com/your-handle/chirping-astro/blob/main/README.md)
-du projet.
+détail dans le **`README.md`** à la racine du dépôt — ouvrez-le dans
+votre éditeur, ou cliquez sur le lien **Chirping Astro** du pied de
+page pour rejoindre le dépôt GitHub configuré (renseignez
+`PUBLIC_GITHUB_HANDLE` et `PUBLIC_GITHUB_REPO` dans `.env`).
 
 Bonne écriture. ✨
