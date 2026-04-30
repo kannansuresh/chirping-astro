@@ -8,6 +8,7 @@ const t = useTranslations(locale);
 const posts = await getPosts(locale);
 const groups = groupByYearMonth(posts, locale);
 ---
+
 <BaseLayout
   title={t('archives.title')}
   pathWithoutLocale="/archives/"
@@ -16,39 +17,59 @@ const groups = groupByYearMonth(posts, locale);
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('archives.title')}</h1>
   </header>
-  {groups.length === 0 ? (
-    <p class="text-base-content/70">{t('archives.empty')}</p>
-  ) : (
-    <div class="space-y-10">
-      {groups.map((g) => (
-        <section>
-          <h2 class="mb-4 border-b border-base-300 pb-1 text-2xl font-semibold">
-            {g.year}
-          </h2>
-          {g.months.map((m) => (
-            <section class="mb-6">
-              <h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-base-content/60">
-                {m.label}
-              </h3>
-              <ul class="space-y-2">
-                {m.posts.map((p) => (
-                  <li class="flex items-baseline justify-between gap-4">
-                    <a href={postPath(p)} class="link link-hover flex-1">
-                      {p.data.title}
-                    </a>
+  {
+    groups.length === 0 ? (
+      <p class="text-base-content/70">{t('archives.empty')}</p>
+    ) : (
+      <div class="space-y-8">
+        {groups.map((g) => {
+          const yearPosts = g.months.flatMap((m) => m.posts);
+          return (
+            <section class="relative">
+              {/* Vertical timeline line */}
+              <div
+                aria-hidden="true"
+                class="bg-base-content/20 pointer-events-none absolute top-4 bottom-4 left-21 w-px"
+              />
+              <ol class="grid grid-cols-[5rem_1.5rem_minmax(0,1fr)] items-center gap-x-3">
+                {/* Year header row with hollow dot */}
+                <li class="contents">
+                  <div />
+                  <div class="flex justify-center">
+                    <span class="border-base-content/50 bg-base-100 relative z-10 block size-3.5 rounded-full border-2" />
+                  </div>
+                  <h2 class="py-2 text-2xl font-semibold tracking-tight">{g.year}</h2>
+                </li>
+                {/* Post rows */}
+                {yearPosts.map((p) => (
+                  <li class="group contents">
                     <time
                       datetime={isoDate(p.data.pubDate)}
-                      class="shrink-0 text-xs text-base-content/60"
+                      class="text-base-content/60 group-hover:bg-base-200/40 flex items-baseline justify-end gap-1.5 py-2 pr-2"
                     >
-                      {formatDate(p.data.pubDate, locale, { month: 'short', day: 'numeric' })}
+                      <span class="text-base-content/80 text-lg font-medium tabular-nums">
+                        {formatDate(p.data.pubDate, locale, { day: '2-digit' })}
+                      </span>
+                      <span class="text-xs tracking-wide uppercase">
+                        {formatDate(p.data.pubDate, locale, { month: 'short' })}
+                      </span>
                     </time>
+                    <div class="group-hover:bg-base-200/40 flex justify-center py-2">
+                      <span class="bg-base-content/50 relative z-10 block size-2.5 rounded-full" />
+                    </div>
+                    <a
+                      href={postPath(p)}
+                      class="link link-hover text-primary group-hover:bg-base-200/40 truncate py-2 pl-2"
+                    >
+                      {p.data.title}
+                    </a>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </section>
-          ))}
-        </section>
-      ))}
-    </div>
-  )}
+          );
+        })}
+      </div>
+    )
+  }
 </BaseLayout>
