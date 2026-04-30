@@ -73,19 +73,20 @@ const groups = groupByYearMonth(posts, locale);
     padding-left: 6.5rem;
     color: var(--color-base-content);
   }
+  /* Line segment for the year row only. The previous year's last post
+     extends its own segment to its row's bottom edge, which is exactly
+     this segment's top edge — they butt together with no overlap. */
   #archives .year::before {
     content: '';
     position: absolute;
     width: 4px;
     background-color: var(--tl-color);
     left: 77px;
+    top: 0;
     bottom: 0;
-    height: 5rem;
   }
   #archives .year-block.first .year::before {
     top: 1.5rem;
-    bottom: 0;
-    height: auto;
   }
   #archives .year::after {
     content: '';
@@ -138,6 +139,13 @@ const groups = groupByYearMonth(posts, locale);
     left: 77px;
     height: calc(var(--tl-row-h) + 1px);
   }
+  /* Last post of every year: end the line at the row's bottom edge so it
+     doesn't overlap the next year's own line segment (which would double
+     the semi-transparent fill and look darker). */
+  #archives ul li:last-child::before {
+    height: var(--tl-row-h);
+  }
+  /* Last post of the last year: trim further so the line ends at the dot. */
   #archives section:last-child ul li:last-child::before {
     height: calc(var(--tl-row-h) / 2);
   }
