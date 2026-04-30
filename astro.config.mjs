@@ -89,6 +89,11 @@ export default defineConfig({
       themeCssSelector: (theme) =>
         `[data-theme='${theme.type === 'dark' ? 'chirpy-dark' : 'chirpy-light'}']`,
       useDarkModeMediaQuery: false,
+      shiki: {
+        langAlias: {
+          env: 'dotenv',
+        },
+      },
       styleOverrides: {
         borderRadius: '0.5rem',
         codeFontFamily:
