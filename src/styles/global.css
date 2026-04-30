@@ -257,8 +257,14 @@
       margin-left: var(--width-sidebar);
       width: calc(100% - var(--width-sidebar));
       max-width: calc(100% - var(--width-sidebar));
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .chirpy-main-wrapper {
+      padding-left: 3.5rem;
+      padding-right: 3.5rem;
     }
   }
   @media (min-width: 1650px) {
@@ -312,18 +318,18 @@
   }
   @media (min-width: 1280px) {
     .chirpy-topbar__search {
-      width: calc(var(--width-panel) + 2rem); /* rail width + gap-8 */
-      padding-left: 2rem; /* mirror gap-8 between main and rail */
+      width: calc(var(--width-panel) + 2.5rem); /* rail width + gap-10 */
+      padding-left: 2.5rem; /* mirror gap-10 between main and rail */
     }
   }
   @media (min-width: 1440px) {
     .chirpy-topbar__search {
-      width: calc(15rem + 2rem);
+      width: calc(15rem + 2.5rem);
     }
   }
   @media (min-width: 1650px) {
     .chirpy-topbar__search {
-      width: calc(16.25rem + 2rem);
+      width: calc(16.25rem + 2.5rem);
     }
   }
   /* Search row at the very top of the right panel rail. */

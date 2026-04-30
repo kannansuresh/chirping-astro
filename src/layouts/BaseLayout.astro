@@ -128,12 +128,12 @@ const meta: SeoMeta =
       <div class="chirpy-shell">
         <Topbar locale={locale} crumbs={crumbs} />
 
-        <div class="flex flex-1 gap-8">
+        <div class="flex flex-1 gap-10">
           <div class="flex min-w-0 flex-1 flex-col">
             <main
               id="main"
               aria-label="Main Content"
-              class:list={['min-w-0 flex-1 py-6', narrow ? 'mx-auto w-full max-w-3xl' : '']}
+              class:list={['min-w-0 flex-1 py-6 lg:pr-2', narrow ? 'mx-auto w-full max-w-3xl' : '']}
             >
               <slot />
             </main>
