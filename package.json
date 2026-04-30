@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
+    "@iconify-json/simple-icons": "^1.2.80",
     "@types/bun": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",

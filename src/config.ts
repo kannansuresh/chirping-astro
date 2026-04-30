@@ -161,12 +161,12 @@ export const SOCIALS: readonly SocialLink[] = [
   GITHUB_HANDLE && {
     label: 'GitHub',
     href: `https://github.com/${GITHUB_HANDLE}`,
-    icon: 'lucide:github',
+    icon: 'simple-icons:github',
   },
   TWITTER_HANDLE && {
     label: 'Twitter',
-    href: `https://twitter.com/${TWITTER_HANDLE}`,
-    icon: 'lucide:twitter',
+    href: `https://x.com/${TWITTER_HANDLE}`,
+    icon: 'simple-icons:x',
   },
   CONTACT_EMAIL && {
     label: 'Email',
