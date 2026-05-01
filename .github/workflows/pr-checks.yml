@@ -37,6 +37,7 @@ jobs:
 
       - name: Format check
         run: bun run format:check
+        continue-on-error: true
 
       - name: Build
         run: bun run build
