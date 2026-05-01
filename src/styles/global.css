@@ -494,6 +494,24 @@
     height: auto;
   }
 
+  /* Figures — mirror the hero image treatment so the caption feels
+     visually attached to the image rather than floating below. */
+  .prose-chirpy figure {
+    @apply my-6;
+  }
+  .prose-chirpy figure > img,
+  .prose-chirpy figure > picture > img {
+    @apply mx-auto rounded-md border-0;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  .prose-chirpy figcaption {
+    @apply text-base-content/55 mt-2 text-center text-xs italic;
+  }
+
   /* Hero image — contained within content width, using the sidebar's
      subtle gradient as a placeholder background. */
   .post-hero {
