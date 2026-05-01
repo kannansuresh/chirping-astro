@@ -63,7 +63,7 @@ const articleClass = SITE.boxedArticles
 const ogSlug = postSlug(post);
 const ogPrefix = locale === SITE.defaultLocale ? '' : `${locale}/`;
 const generatedOgPath = `/og/${ogPrefix}${ogSlug}.png`;
-const ogImage = heroSrc ?? generatedOgPath;
+const ogImage = heroSrc ?? (SITE.autoOgImage ? generatedOgPath : undefined);
 
 const seo = buildSeo({
   title: post.data.title,

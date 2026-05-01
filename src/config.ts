@@ -56,6 +56,13 @@ export interface SiteConfig {
    * source pages and content folders if you don't want them at all.
    */
   multilingual: boolean;
+  /**
+   * Automatically generate Open Graph images for posts that don't have
+   * a `heroImage`. Uses Satori + Resvg to produce a themed 1200×630 PNG
+   * at build time. Set to `false` to disable and fall back to
+   * `defaultOgImage` for all posts without a hero.
+   */
+  autoOgImage: boolean;
 }
 
 export interface NavItem {
@@ -145,6 +152,7 @@ export const SITE: SiteConfig = {
   boxedArticles: false,
   dynamicPostCardHeight: false,
   multilingual: true,
+  autoOgImage: true,
 };
 
 export const NAV: readonly NavItem[] = [

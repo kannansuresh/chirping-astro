@@ -63,6 +63,8 @@ authoring experience — without writing your own theme from scratch.
   language switcher
 - Reading time, sticky TOC with scroll-spy, no-FOUC theme toggle
   with View Transitions API animation
+- **Automatic OG images** generated at build time with Satori + Resvg
+  for posts without a hero image (toggleable via `SITE.autoOgImage`)
 - RSS per locale, hreflang alternates, locale-aware sitemap
 - Strict TypeScript, ESLint (zero warnings), Prettier, accessibility
   focus (skip-to-content, ARIA roles, `prefers-reduced-motion`)
@@ -163,6 +165,7 @@ export const SITE: SiteConfig = {
   boxedArticles: false,
   dynamicPostCardHeight: false,
   multilingual: true,
+  autoOgImage: true,
 };
 ```
 
@@ -307,6 +310,7 @@ Every customisable knob lives in a small number of files:
 | Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`         |
 | Listing card height behavior        | `src/config.ts` → `SITE.dynamicPostCardHeight` |
 | Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`          |
+| Auto-generated OG images            | `src/config.ts` → `SITE.autoOgImage`            |
 | Frontmatter validation rules        | `src/content.config.ts`                        |
 | Astro / build integrations          | `astro.config.mjs`                             |
 
@@ -672,6 +676,13 @@ Readers never see a broken iframe.
 - **`<SEO>` component** in `src/components/SEO.astro` injects
   `<title>`, `<meta description>`, OpenGraph, Twitter card, canonical,
   and `hreflang` alternate links.
+- **Automatic OG images** — When `SITE.autoOgImage` is `true`
+  (default), the theme generates a styled 1200×630 PNG for every post
+  that lacks a `heroImage`. The image uses the post’s title,
+  description, category, date, and tags — rendered with Satori +
+  Resvg at build time. Posts that have a `heroImage` use that instead.
+  Set `autoOgImage: false` to disable and fall back to
+  `SITE.defaultOgImage` for all posts without a hero.
 - **RSS** is generated per locale by
   `src/pages/rss.xml.ts` (EN) and `src/pages/fr/rss.xml.ts` (FR).
   Drafts are excluded.
@@ -928,6 +939,13 @@ See [i18n → Adding a third locale](#i18n).
 
 Set `PUBLIC_GISCUS_ENABLED=false` in `.env`, or
 `GISCUS.enabled = false` in `src/config.ts`.
+
+### Disable automatic OG image generation
+
+Set `SITE.autoOgImage = false` in `src/config.ts`. Posts without a
+`heroImage` will fall back to `SITE.defaultOgImage` (the static SVG
+in `public/images/`). See the demo post
+**/posts/automatic-og-images** for full customisation details.
 
 ### Change the keyboard shortcut for search
 

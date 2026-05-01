@@ -16,6 +16,9 @@ import { SITE, type Locale } from '../../config';
 import { formatDate } from '../../i18n/utils';
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // When autoOgImage is disabled, generate no OG images.
+  if (!SITE.autoOgImage) return [];
+
   const paths: Array<{ params: { slug: string }; props: { post: Post; locale: Locale } }> = [];
 
   for (const locale of SITE.locales) {
