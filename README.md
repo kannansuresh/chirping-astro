@@ -35,7 +35,9 @@ authoring experience — without writing your own theme from scratch.
 16. [Deployment](#deployment)
 17. [Customisation cookbook](#customisation-cookbook)
 18. [Troubleshooting](#troubleshooting)
-19. [License](#license)
+19. [Community](#community)
+20. [Maintainer ops](#maintainer-ops)
+21. [License](#license)
 
 ---
 
@@ -310,7 +312,7 @@ Every customisable knob lives in a small number of files:
 | Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`         |
 | Listing card height behavior        | `src/config.ts` → `SITE.dynamicPostCardHeight` |
 | Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`          |
-| Auto-generated OG images            | `src/config.ts` → `SITE.autoOgImage`            |
+| Auto-generated OG images            | `src/config.ts` → `SITE.autoOgImage`           |
 | Frontmatter validation rules        | `src/content.config.ts`                        |
 | Astro / build integrations          | `astro.config.mjs`                             |
 
@@ -993,6 +995,62 @@ Per-post frontmatter takes precedence over the site-level default.
 | `Cannot find module '../../../components/Callout.astro'` from MDX | Confirm the relative path. From `src/content/posts/<locale>/file.mdx`, the path is exactly three `../`.                  |
 | Build fails with `pubDate: Required`                              | A post is missing `pubDate` in frontmatter. The error message names the file.                                            |
 | Sitemap missing hreflang alternates                               | Ensure both translations share the same `translationKey` (or matching slug).                                             |
+
+---
+
+## Community
+
+This theme is maintained as a community-driven open source project.
+
+- Contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- Security policy: [SECURITY.md](./SECURITY.md)
+- Support guide: [SUPPORT.md](./SUPPORT.md)
+- Funding: [.github/FUNDING.yml](./.github/FUNDING.yml)
+
+If you are unsure where to start, open a feature request or bug report and we can help you scope a first contribution.
+
+---
+
+## Maintainer ops
+
+### Sync standard labels
+
+This repository keeps issue labels in [.github/labels.yml](./.github/labels.yml).
+
+To apply label changes manually in GitHub UI:
+
+1. Open your repository on GitHub.
+2. Go to **Actions**.
+3. Select the **Sync Labels** workflow.
+4. Click **Run workflow**.
+5. Choose the `main` branch and confirm.
+
+The workflow file is [.github/workflows/labels.yml](./.github/workflows/labels.yml).
+
+### Manage contribution templates
+
+- Issue forms: [.github/ISSUE_TEMPLATE/](./.github/ISSUE_TEMPLATE/)
+- Pull request template: [.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md)
+- Ownership rules: [.github/CODEOWNERS](./.github/CODEOWNERS)
+
+### Community and policy files
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [SECURITY.md](./SECURITY.md)
+- [SUPPORT.md](./SUPPORT.md)
+
+### Discussions and Giscus
+
+GitHub Discussions is already enabled for this repository and is used by Giscus.
+
+When changing repo ownership or moving forks, verify these values in `.env` and repository variables:
+
+- `PUBLIC_GISCUS_REPO`
+- `PUBLIC_GISCUS_REPO_ID`
+- `PUBLIC_GISCUS_CATEGORY`
+- `PUBLIC_GISCUS_CATEGORY_ID`
 
 ---
 
