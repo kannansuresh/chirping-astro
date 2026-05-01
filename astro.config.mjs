@@ -18,7 +18,8 @@ import remarkMath from 'remark-math';
 
 import { SITE } from './src/config';
 
-const BASE = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
+const rawBase = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
+const BASE = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
 const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
 
 /**
