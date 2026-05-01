@@ -29,7 +29,12 @@ const i18n = {
     <p class="text-base-content/70 mt-1">{t('search.placeholder')}</p>
   </header>
 
-  <div class="bg-base-100 border-base-300 overflow-hidden rounded-xl border shadow-sm">
+  <div
+    id="search-wrapper"
+    class="bg-base-100 border-base-300 overflow-hidden rounded-xl border shadow-sm"
+    data-i18n={JSON.stringify(i18n)}
+    data-pagefind-script={pagefindScript}
+  >
     <div class="border-base-300 flex items-center gap-3 border-b px-4 py-3 sm:px-5 sm:py-3.5">
       <Icon
         name="lucide:search"
@@ -71,19 +76,18 @@ const i18n = {
   </div>
 </BaseLayout>
 
-<script is:inline define:vars={{ pagefindScript, i18n }}>
-  const PAGEFIND_SCRIPT = pagefindScript;
-  const I18N = i18n;
-
-  let pagefindModule = null;
-  let loadPromise = null;
+<script>
+  let pagefindModule: any = null;
+  let loadPromise: Promise<any> | null = null;
   let searchToken = 0;
-  let debounceTimer = null;
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+  let PAGEFIND_SCRIPT: string | undefined;
+  let I18N: Record<string, string> = {};
 
   function loadPagefind() {
     if (pagefindModule) return Promise.resolve(pagefindModule);
     if (loadPromise) return loadPromise;
-    loadPromise = import(/* @vite-ignore */ PAGEFIND_SCRIPT)
+    loadPromise = import(/* @vite-ignore */ PAGEFIND_SCRIPT as string)
       .then(async (mod) => {
         if (typeof mod.init === 'function') await mod.init();
         pagefindModule = mod;
@@ -96,7 +100,7 @@ const i18n = {
     return loadPromise;
   }
 
-  function escapeHtml(s) {
+  function escapeHtml(s: string) {
     return String(s)
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
@@ -104,12 +108,12 @@ const i18n = {
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#39;');
   }
-  function sanitizeExcerpt(html) {
+  function sanitizeExcerpt(html: string) {
     return escapeHtml(html ?? '')
       .replaceAll('&lt;mark&gt;', '<mark>')
       .replaceAll('&lt;/mark&gt;', '</mark>');
   }
-  function formatCrumb(url) {
+  function formatCrumb(url: string) {
     try {
       const u = new URL(url, window.location.origin);
       const parts = u.pathname.replace(/\/+$/g, '').split('/').filter(Boolean);
@@ -120,13 +124,17 @@ const i18n = {
   }
 
   function init() {
-    const input = document.querySelector('[data-search-page-input]');
-    const clearBtn = document.querySelector('[data-search-page-clear]');
-    const results = document.querySelector('[data-search-page-results]');
-    if (!input || !clearBtn || !results) return;
+    const wrapper = document.getElementById('search-wrapper');
+    const input = document.querySelector<HTMLInputElement>('[data-search-page-input]');
+    const clearBtn = document.querySelector<HTMLButtonElement>('[data-search-page-clear]');
+    const results = document.querySelector<HTMLElement>('[data-search-page-results]');
+    if (!wrapper || !input || !clearBtn || !results) return;
+
+    PAGEFIND_SCRIPT = wrapper.dataset.pagefindScript;
+    I18N = JSON.parse(wrapper.dataset.i18n || '{}');
 
     function setIdle() {
-      results.innerHTML = `<div class="px-5 py-12 text-center">
+      results!.innerHTML = `<div class="px-5 py-12 text-center">
         <div class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         </div>
@@ -134,15 +142,15 @@ const i18n = {
       </div>`;
     }
     function setSearching() {
-      results.innerHTML = `<div class="px-5 py-12 text-center">
+      results!.innerHTML = `<div class="px-5 py-12 text-center">
         <p class="text-base-content/70 inline-flex items-center gap-2 text-sm">
           <span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
           ${escapeHtml(I18N.searching)}
         </p>
       </div>`;
     }
-    function setNoResults(term) {
-      results.innerHTML = `<div class="px-5 py-12 text-center">
+    function setNoResults(term: string) {
+      results!.innerHTML = `<div class="px-5 py-12 text-center">
         <div class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/></svg>
         </div>
@@ -152,11 +160,11 @@ const i18n = {
         </p>
       </div>`;
     }
-    function setResults(data) {
+    function setResults(data: any[]) {
       const count = data.length;
       const label = count === 1 ? I18N.resultsCountOne : I18N.resultsCount;
       const items = data
-        .map((r) => {
+        .map((r: any) => {
           const title = escapeHtml(r.meta?.title || r.url);
           const crumb = escapeHtml(formatCrumb(r.url));
           const excerpt = sanitizeExcerpt(r.excerpt || '');
@@ -172,13 +180,13 @@ const i18n = {
           </li>`;
         })
         .join('');
-      results.innerHTML = `<div>
+      results!.innerHTML = `<div>
         <div class="text-base-content/70 border-base-300 border-b px-4 py-2 text-[0.7rem] tracking-wide uppercase sm:px-5">${count} ${escapeHtml(label)}</div>
         <ul class="divide-base-300 divide-y">${items}</ul>
       </div>`;
     }
 
-    async function runSearch(term) {
+    async function runSearch(term: string) {
       const myToken = ++searchToken;
       try {
         const pf = await loadPagefind();
@@ -191,23 +199,23 @@ const i18n = {
           return;
         }
         const top = search.results.slice(0, 25);
-        const data = await Promise.all(top.map((r) => r.data()));
+        const data = await Promise.all(top.map((r: any) => r.data()));
         if (myToken !== searchToken) return;
         setResults(data);
       } catch (err) {
         console.error(err);
-        results.innerHTML = `<p class="text-error px-5 py-6 text-sm">Search index not available.</p>`;
+        results!.innerHTML = `<p class="text-error px-5 py-6 text-sm">Search index not available.</p>`;
       }
     }
 
     input.addEventListener('input', () => {
-      const term = input.value.trim();
+      const term = input!.value.trim();
       if (term) {
-        clearBtn.classList.remove('hidden');
-        clearBtn.classList.add('inline-flex');
+        clearBtn!.classList.remove('hidden');
+        clearBtn!.classList.add('inline-flex');
       } else {
-        clearBtn.classList.add('hidden');
-        clearBtn.classList.remove('inline-flex');
+        clearBtn!.classList.add('hidden');
+        clearBtn!.classList.remove('inline-flex');
       }
       clearTimeout(debounceTimer);
       if (!term) {
@@ -219,12 +227,12 @@ const i18n = {
     });
 
     clearBtn.addEventListener('click', () => {
-      input.value = '';
-      clearBtn.classList.add('hidden');
-      clearBtn.classList.remove('inline-flex');
+      input!.value = '';
+      clearBtn!.classList.add('hidden');
+      clearBtn!.classList.remove('inline-flex');
       searchToken++;
       setIdle();
-      input.focus();
+      input!.focus();
     });
 
     // Pre-warm Pagefind so the first keystroke is instant.
@@ -233,7 +241,7 @@ const i18n = {
     // Pre-fill from `?q=...`.
     const q = new URL(window.location.href).searchParams.get('q');
     if (q) {
-      input.value = q;
+      input!.value = q;
       input.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
