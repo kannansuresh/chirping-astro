@@ -44,11 +44,7 @@ const giscusConfigured =
 
 type CommentState = 'live' | 'setup' | 'disabled';
 const state: CommentState =
-  !giscusGloballyEnabled || !giscusPostEnabled
-    ? 'disabled'
-    : giscusConfigured
-      ? 'live'
-      : 'setup';
+  !giscusGloballyEnabled || !giscusPostEnabled ? 'disabled' : giscusConfigured ? 'live' : 'setup';
 
 /**
  * Render a string that may contain `backticks` as inline <code> elements.
@@ -56,10 +52,7 @@ const state: CommentState =
  */
 function renderInlineCode(input: string): string {
   return input.replace(/`([^`]+)`/g, (_, code: string) => {
-    const escaped = code
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;');
+    const escaped = code.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
     return `<code class="rounded border border-base-300 bg-base-100 px-1.5 py-0.5 text-[0.8em] font-mono text-base-content">${escaped}</code>`;
   });
 }
@@ -71,117 +64,118 @@ const setupSteps = [
   t('post.commentsSetupStep4'),
 ];
 ---
-<section class="mt-12 border-t border-base-300 pt-8" aria-labelledby="comments-heading">
+
+<section class="border-base-300 mt-12 border-t pt-8" aria-labelledby="comments-heading">
   <h2 id="comments-heading" class="mb-4 text-xl font-semibold">{t('post.comments')}</h2>
 
-  {state === 'live' && (
-    <div
-      data-giscus-mount
-      data-repo={GISCUS.repo}
-      data-repo-id={GISCUS.repoId}
-      data-category={GISCUS.category}
-      data-category-id={GISCUS.categoryId}
-      data-mapping={GISCUS.mapping}
-      data-strict={GISCUS.strict}
-      data-reactions-enabled={GISCUS.reactionsEnabled}
-      data-emit-metadata={GISCUS.emitMetadata}
-      data-input-position={GISCUS.inputPosition}
-      data-loading={GISCUS.loading}
-      data-locale={locale === 'fr' ? 'fr' : 'en'}
-    ></div>
-  )}
-
-  {state === 'setup' && (
-    <div
-      role="note"
-      class="giscus-setup border-base-300 bg-base-200/60 flex gap-4 rounded-lg border p-5 text-sm sm:p-6"
-    >
+  {
+    state === 'live' && (
       <div
-        class="bg-info/15 text-info flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-        aria-hidden="true"
-      >
-        <Icon name="lucide:settings" width={18} height={18} />
-      </div>
-      <div class="min-w-0 flex-1">
-        <p class="text-base-content text-base font-semibold">
-          {t('post.commentsSetupTitle')}
-        </p>
-        <p class="text-base-content/70 mt-1">{t('post.commentsSetupBody')}</p>
-        <ol
-          class="text-base-content/80 mt-4 list-decimal space-y-1.5 pl-5 marker:font-semibold marker:text-base-content/50"
-        >
-          {setupSteps.map((step) => (
-            <li set:html={renderInlineCode(step)} />
-          ))}
-        </ol>
-        <p class="mt-4">
-          <a
-            href="https://giscus.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-sm font-medium underline-offset-4 hover:underline"
-          >
-            {t('post.commentsSetupDocs')}
-            <Icon name="lucide:arrow-up-right" width={14} height={14} />
-          </a>
-        </p>
-      </div>
-    </div>
-  )}
+        data-giscus-mount
+        data-repo={GISCUS.repo}
+        data-repo-id={GISCUS.repoId}
+        data-category={GISCUS.category}
+        data-category-id={GISCUS.categoryId}
+        data-mapping={GISCUS.mapping}
+        data-strict={GISCUS.strict}
+        data-reactions-enabled={GISCUS.reactionsEnabled}
+        data-emit-metadata={GISCUS.emitMetadata}
+        data-input-position={GISCUS.inputPosition}
+        data-loading={GISCUS.loading}
+        data-locale={locale === 'fr' ? 'fr' : 'en'}
+      />
+    )
+  }
 
-  {state === 'disabled' && (
-    <p class="text-base-content/70 text-sm italic">{t('post.commentsDisabled')}</p>
-  )}
+  {
+    state === 'setup' && (
+      <div
+        role="note"
+        class="giscus-setup border-base-300 bg-base-200/60 flex gap-4 rounded-lg border p-5 text-sm sm:p-6"
+      >
+        <div
+          class="bg-info/15 text-info flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+          aria-hidden="true"
+        >
+          <Icon name="lucide:settings" width={18} height={18} />
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-base-content text-base font-semibold">{t('post.commentsSetupTitle')}</p>
+          <p class="text-base-content/70 mt-1">{t('post.commentsSetupBody')}</p>
+          <ol class="text-base-content/80 marker:text-base-content/50 mt-4 list-decimal space-y-1.5 pl-5 marker:font-semibold">
+            {setupSteps.map((step) => (
+              <li set:html={renderInlineCode(step)} />
+            ))}
+          </ol>
+          <p class="mt-4">
+            <a
+              href="https://giscus.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary hover:text-primary/80 inline-flex items-center gap-1 text-sm font-medium underline-offset-4 hover:underline"
+            >
+              {t('post.commentsSetupDocs')}
+              <Icon name="lucide:arrow-up-right" width={14} height={14} />
+            </a>
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    state === 'disabled' && (
+      <p class="text-base-content/70 text-sm italic">{t('post.commentsDisabled')}</p>
+    )
+  }
 </section>
 
-{state === 'live' && (
-  <script>
-    function giscusTheme() {
-      const t = document.documentElement.getAttribute('data-theme');
-      return t === 'chirpy-dark' ? 'dark' : 'light';
-    }
+<script>
+  function giscusTheme() {
+    const t = document.documentElement.getAttribute('data-theme');
+    return t === 'chirpy-dark' ? 'dark' : 'light';
+  }
 
-    function mountGiscus() {
-      const mount = document.querySelector<HTMLElement>('[data-giscus-mount]');
-      if (!mount || mount.dataset.mounted === 'true') return;
-      mount.dataset.mounted = 'true';
+  function mountGiscus() {
+    const mount = document.querySelector<HTMLElement>('[data-giscus-mount]');
+    if (!mount || mount.dataset.mounted === 'true') return;
+    mount.dataset.mounted = 'true';
 
-      const script = document.createElement('script');
-      script.src = 'https://giscus.app/client.js';
-      script.async = true;
-      script.crossOrigin = 'anonymous';
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
 
-      const set = (key: string, value: string | undefined) => {
-        if (value !== undefined) script.setAttribute(key, value);
-      };
+    const set = (key: string, value: string | undefined) => {
+      if (value !== undefined) script.setAttribute(key, value);
+    };
 
-      set('data-repo', mount.dataset.repo);
-      set('data-repo-id', mount.dataset.repoId);
-      set('data-category', mount.dataset.category);
-      set('data-category-id', mount.dataset.categoryId);
-      set('data-mapping', mount.dataset.mapping);
-      set('data-strict', mount.dataset.strict);
-      set('data-reactions-enabled', mount.dataset.reactionsEnabled);
-      set('data-emit-metadata', mount.dataset.emitMetadata);
-      set('data-input-position', mount.dataset.inputPosition);
-      set('data-loading', mount.dataset.loading);
-      set('data-lang', mount.dataset.locale);
-      set('data-theme', giscusTheme());
+    set('data-repo', mount.dataset.repo);
+    set('data-repo-id', mount.dataset.repoId);
+    set('data-category', mount.dataset.category);
+    set('data-category-id', mount.dataset.categoryId);
+    set('data-mapping', mount.dataset.mapping);
+    set('data-strict', mount.dataset.strict);
+    set('data-reactions-enabled', mount.dataset.reactionsEnabled);
+    set('data-emit-metadata', mount.dataset.emitMetadata);
+    set('data-input-position', mount.dataset.inputPosition);
+    set('data-loading', mount.dataset.loading);
+    set('data-lang', mount.dataset.locale);
+    set('data-theme', giscusTheme());
 
-      mount.appendChild(script);
-    }
+    mount.appendChild(script);
+  }
 
-    function syncTheme() {
-      const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
-      if (!iframe?.contentWindow) return;
-      iframe.contentWindow.postMessage(
-        { giscus: { setConfig: { theme: giscusTheme() } } },
-        'https://giscus.app',
-      );
-    }
+  function syncTheme() {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: giscusTheme() } } },
+      'https://giscus.app',
+    );
+  }
 
-    mountGiscus();
-    document.addEventListener('theme-change', syncTheme);
-    document.addEventListener('astro:page-load', mountGiscus);
-  </script>
-)}
+  mountGiscus();
+  document.addEventListener('theme-change', syncTheme);
+  document.addEventListener('astro:page-load', mountGiscus);
+</script>

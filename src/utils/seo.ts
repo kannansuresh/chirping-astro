@@ -1,3 +1,4 @@
+/* global URL */
 import { SITE, type Locale } from '../config';
 import { alternates, withBase } from '../i18n/utils';
 

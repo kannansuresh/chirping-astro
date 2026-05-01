@@ -126,7 +126,9 @@ const meta: SeoMeta =
             var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             var theme = stored ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
             document.documentElement.setAttribute('data-theme', theme);
-          } catch (_) {}
+          } catch {
+            /* ignore */
+          }
         }
         applyTheme();
         // Re-apply after view transitions swap in a fresh <html data-theme>.

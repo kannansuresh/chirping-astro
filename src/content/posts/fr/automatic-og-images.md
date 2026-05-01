@@ -78,11 +78,13 @@ export const SITE: SiteConfig = {
 ```
 
 Quand **activé** (par défaut) :
+
 - Un PNG est généré pour chaque article au moment du build.
 - Les articles sans `heroImage` utilisent l'image OG générée.
 - Les articles avec `heroImage` continuent d'utiliser leur hero.
 
 Quand **désactivé** :
+
 - Aucune image OG n'est générée (la route `/og/` ne produit aucune page).
 - Les articles sans `heroImage` utilisent `SITE.defaultOgImage`
   (typiquement `/images/og-default.svg`).
@@ -93,7 +95,7 @@ Le template d'image OG se trouve dans `src/utils/og-image.ts`. Il
 exporte une seule fonction :
 
 ```ts
-generateOgImage(data: OgImageData): Promise<Buffer>
+export async function generateOgImage(data: OgImageData): Promise<Buffer>;
 ```
 
 L'interface `OgImageData` :
@@ -113,14 +115,14 @@ interface OgImageData {
 Le template utilise des couleurs hex codées en dur correspondant au
 thème Chirpy :
 
-| Élément             | Couleur actuelle       | Où modifier            |
-| ------------------- | ---------------------- | ---------------------- |
-| Fond dégradé        | `#1e3a5f` → `#4a6cf7`  | Propriété `background` |
-| Fond de carte       | `#ffffff`              | `backgroundColor`      |
-| Badge catégorie     | `#2a408e`              | Plusieurs objets style |
-| Texte titre         | `#1f2937`              | `color` du titre       |
-| Texte description   | `#6b7280`              | `color` description    |
-| Point accent marque | `#2a408e`              | Style du point         |
+| Élément             | Couleur actuelle      | Où modifier            |
+| ------------------- | --------------------- | ---------------------- |
+| Fond dégradé        | `#1e3a5f` → `#4a6cf7` | Propriété `background` |
+| Fond de carte       | `#ffffff`             | `backgroundColor`      |
+| Badge catégorie     | `#2a408e`             | Plusieurs objets style |
+| Texte titre         | `#1f2937`             | `color` du titre       |
+| Texte description   | `#6b7280`             | `color` description    |
+| Point accent marque | `#2a408e`             | Style du point         |
 
 ### Changer la police
 
@@ -165,9 +167,9 @@ heroImage: ../../../assets/images/mon-og-custom.png
 
 ## Dépannage
 
-| Symptôme | Solution |
-| -------- | -------- |
-| L'image OG n'apparaît pas sur les réseaux sociaux | Vérifiez que l'URL de l'image est accessible. Utilisez [opengraph.xyz](https://opengraph.xyz). |
-| Le build échoue avec une erreur Satori sur `display: flex` | Assurez-vous que chaque `div` avec plusieurs enfants a `display: 'flex'`. |
-| Les polices ont l'air erronées | Confirmez que les fichiers `.woff` existent au chemin indiqué dans `og-image.ts`. |
-| Désactiver pour la performance | Mettez `autoOgImage: false` dans `src/config.ts`. |
+| Symptôme                                                   | Solution                                                                                       |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| L'image OG n'apparaît pas sur les réseaux sociaux          | Vérifiez que l'URL de l'image est accessible. Utilisez [opengraph.xyz](https://opengraph.xyz). |
+| Le build échoue avec une erreur Satori sur `display: flex` | Assurez-vous que chaque `div` avec plusieurs enfants a `display: 'flex'`.                      |
+| Les polices ont l'air erronées                             | Confirmez que les fichiers `.woff` existent au chemin indiqué dans `og-image.ts`.              |
+| Désactiver pour la performance                             | Mettez `autoOgImage: false` dans `src/config.ts`.                                              |

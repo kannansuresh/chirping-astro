@@ -78,11 +78,13 @@ export const SITE: SiteConfig = {
 ```
 
 When **enabled** (default):
+
 - A PNG is generated for every post at build time.
 - Posts without `heroImage` use the generated OG image.
 - Posts with `heroImage` continue to use their hero.
 
 When **disabled**:
+
 - No OG images are generated (the `/og/` route produces zero pages).
 - Posts without `heroImage` fall back to `SITE.defaultOgImage`
   (typically `/images/og-default.svg`).
@@ -93,7 +95,7 @@ The OG image template lives in `src/utils/og-image.ts`. It exports a
 single function:
 
 ```ts
-generateOgImage(data: OgImageData): Promise<Buffer>
+export async function generateOgImage(data: OgImageData): Promise<Buffer>;
 ```
 
 The `OgImageData` interface:
@@ -112,14 +114,14 @@ interface OgImageData {
 
 The template uses hardcoded hex colours that match the Chirpy theme:
 
-| Element              | Current colour | Where to change         |
-| -------------------- | -------------- | ----------------------- |
-| Gradient background  | `#1e3a5f` → `#4a6cf7` | `background` property   |
-| Card background      | `#ffffff`      | `backgroundColor`       |
-| Category badge       | `#2a408e`      | Multiple style objects   |
-| Title text           | `#1f2937`      | Title `color`           |
-| Description text     | `#6b7280`      | Description `color`     |
-| Brand accent dot     | `#2a408e`      | Brand dot style         |
+| Element             | Current colour        | Where to change        |
+| ------------------- | --------------------- | ---------------------- |
+| Gradient background | `#1e3a5f` → `#4a6cf7` | `background` property  |
+| Card background     | `#ffffff`             | `backgroundColor`      |
+| Category badge      | `#2a408e`             | Multiple style objects |
+| Title text          | `#1f2937`             | Title `color`          |
+| Description text    | `#6b7280`             | Description `color`    |
+| Brand accent dot    | `#2a408e`             | Brand dot style        |
 
 If you change your site's `--color-primary` in CSS, consider updating
 these hardcoded values to match.
@@ -133,10 +135,7 @@ The template uses **Inter** (400 + 700) loaded from
 2. Update the file paths in `src/utils/og-image.ts`:
 
 ```ts
-const fontsDir = join(
-  process.cwd(),
-  'node_modules/@fontsource/your-font/files',
-);
+const fontsDir = join(process.cwd(), 'node_modules/@fontsource/your-font/files');
 const fontRegular = readFileSync(join(fontsDir, 'your-font-latin-400-normal.woff'));
 const fontBold = readFileSync(join(fontsDir, 'your-font-latin-700-normal.woff'));
 ```
@@ -231,9 +230,9 @@ bespoke visual.
 
 ## Troubleshooting
 
-| Symptom | Fix |
-| ------- | --- |
-| OG image not showing on social platforms | Verify the image URL is accessible. Use [opengraph.xyz](https://opengraph.xyz) or Twitter's Card Validator. |
-| Build fails with Satori error about `display: flex` | Ensure every `div` element with multiple children has `display: 'flex'` in its style. |
-| Fonts look wrong or show squares | Confirm the `.woff` font files exist at the path in `og-image.ts`. Run `bun install` if needed. |
-| Want to disable for performance | Set `autoOgImage: false` in `src/config.ts`. |
+| Symptom                                             | Fix                                                                                                         |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| OG image not showing on social platforms            | Verify the image URL is accessible. Use [opengraph.xyz](https://opengraph.xyz) or Twitter's Card Validator. |
+| Build fails with Satori error about `display: flex` | Ensure every `div` element with multiple children has `display: 'flex'` in its style.                       |
+| Fonts look wrong or show squares                    | Confirm the `.woff` font files exist at the path in `og-image.ts`. Run `bun install` if needed.             |
+| Want to disable for performance                     | Set `autoOgImage: false` in `src/config.ts`.                                                                |

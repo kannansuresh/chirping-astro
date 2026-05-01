@@ -141,8 +141,24 @@ const i18n = {
 </dialog>
 
 <script>
-  let pagefindModule: any = null;
-  let loadPromise: Promise<any> | null = null;
+  interface PagefindSearchData {
+    url: string;
+    excerpt?: string;
+    meta?: { title?: string };
+  }
+
+  interface PagefindResult {
+    data: () => Promise<PagefindSearchData>;
+  }
+
+  interface PagefindModule {
+    init?: () => Promise<void>;
+    // eslint-disable-next-line no-unused-vars
+    search: (term: string) => Promise<{ results: PagefindResult[] } | null>;
+  }
+
+  let pagefindModule: PagefindModule | null = null;
+  let loadPromise: Promise<PagefindModule> | null = null;
   /** Most recent search token — used to ignore stale async resolutions. */
   let searchToken = 0;
   let highlightIdx = -1;
@@ -241,12 +257,12 @@ const i18n = {
     }
   }
 
-  function renderResults(container: HTMLElement, results: any[]) {
+  function renderResults(container: HTMLElement, results: PagefindSearchData[]) {
     const count = results.length;
     const label = count === 1 ? I18N.resultsCountOne : I18N.resultsCount;
 
     const items = results
-      .map((r: any, i: number) => {
+      .map((r, i) => {
         const title = escapeHtml(r.meta?.title || r.url);
         const crumb = escapeHtml(formatCrumb(r.url));
         const excerpt = sanitizeExcerpt(r.excerpt || '');
@@ -335,7 +351,7 @@ const i18n = {
           return;
         }
         const top = search.results.slice(0, 12);
-        const data = await Promise.all(top.map((r: any) => r.data()));
+        const data = await Promise.all(top.map((r: PagefindResult) => r.data()));
         if (myToken !== searchToken) return;
         renderResults(results!, data);
       } catch (err) {

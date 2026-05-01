@@ -145,7 +145,7 @@ without further work.
 
 If you want a hard cut instead of the circular reveal:
 
-```ts title="src/components/islands/ThemeToggle.astro"
+```diff title="src/components/islands/ThemeToggle.astro"
 // Remove the document.startViewTransition wrapper:
 - if (document.startViewTransition) {
 -   document.startViewTransition(applyTheme);

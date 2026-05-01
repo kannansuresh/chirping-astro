@@ -145,7 +145,7 @@ sans autre travail.
 
 Si vous préférez une coupure nette :
 
-```ts title="src/components/islands/ThemeToggle.astro"
+```diff title="src/components/islands/ThemeToggle.astro"
 // Retirez le wrapper document.startViewTransition :
 - if (document.startViewTransition) {
 -   document.startViewTransition(applyTheme);

@@ -1,3 +1,4 @@
+/* global URL */
 /**
  * i18n utilities.
  *
@@ -98,6 +99,7 @@ export function stripLocale(pathname: string): string {
  *   const t = useTranslations('fr');
  *   t('nav.home') // 'Accueil'
  */
+// eslint-disable-next-line no-unused-vars
 export function useTranslations(locale: Locale): (key: UIKey) => string {
   return function t(key: UIKey): string {
     const dict = messages[locale] ?? messages[DEFAULT_LOCALE];
