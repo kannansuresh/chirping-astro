@@ -1,6 +1,8 @@
 name: PR Checks
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -33,11 +35,9 @@ jobs:
 
       - name: Lint
         run: bun run lint
-        continue-on-error: true
 
       - name: Format check
         run: bun run format:check
-        continue-on-error: true
 
       - name: Build
         run: bun run build
