@@ -38,7 +38,7 @@ function rewriteSitemapXslToRelative() {
   return {
     name: 'chirpy:rewrite-sitemap-xsl',
     hooks: {
-      'astro:build:done': ({ dir }) => {
+      'astro:build:done': (/** @type {{ dir: URL }} */ { dir }) => {
         const distDir = fileURLToPath(dir);
         const files = readdirSync(distDir).filter(
           (f) => f.startsWith('sitemap') && f.endsWith('.xml'),

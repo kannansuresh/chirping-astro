@@ -9,6 +9,7 @@
  * Route: /og/[...slug].png
  * Example: /og/welcome.png → OG image for the "welcome" post (EN)
  */
+/* global Response */
 import type { GetStaticPaths } from 'astro';
 import { generateOgImage } from '../../utils/og-image';
 import { getPosts, postSlug, type Post } from '../../utils/posts';
@@ -55,7 +56,7 @@ export async function GET({ props }: { props: Props }) {
     tags: post.data.tags,
   });
 
-  return new Response(png, {
+  return new Response(new Uint8Array(png), {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=31536000, immutable',
