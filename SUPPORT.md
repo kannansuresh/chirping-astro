@@ -17,6 +17,7 @@ bun run build
 
 ## Where to ask
 
+- Usage and setup questions: use GitHub Discussions.
 - Bug reports: open a GitHub issue using the Bug Report template.
 - Feature ideas: open a GitHub issue using the Feature Request template.
 - Security concerns: follow SECURITY.md.
