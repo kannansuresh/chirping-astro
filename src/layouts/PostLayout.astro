@@ -15,6 +15,7 @@ import {
   categoryPath,
   getTranslations,
   postPath,
+  postSlug,
   heroImage,
   heroImageSrc,
   shouldShowHero,
@@ -58,13 +59,19 @@ const articleClass = SITE.boxedArticles
   ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
   : 'px-1 py-6 sm:px-2 sm:py-8';
 
+// Use hero image for OG if available, otherwise use the generated OG image.
+const ogSlug = postSlug(post);
+const ogPrefix = locale === SITE.defaultLocale ? '' : `${locale}/`;
+const generatedOgPath = `/og/${ogPrefix}${ogSlug}.png`;
+const ogImage = heroSrc ?? generatedOgPath;
+
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
   pathWithoutLocale,
   fullPath: Astro.url.pathname,
   locale,
-  ogImage: heroSrc,
+  ogImage,
   type: 'article',
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
