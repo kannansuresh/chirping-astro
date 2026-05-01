@@ -62,7 +62,7 @@ const i18n = {
         name="lucide:search"
         width={18}
         height={18}
-        class="text-base-content/55 shrink-0"
+        class="text-base-content/70 shrink-0"
         aria-hidden="true"
       />
       <input
@@ -78,14 +78,14 @@ const i18n = {
       <button
         type="button"
         data-search-clear
-        class="text-base-content/55 hover:bg-base-200 hover:text-base-content hidden h-7 items-center rounded-md px-2 text-xs font-medium transition"
+        class="text-base-content/70 hover:bg-base-200 hover:text-base-content hidden h-7 items-center rounded-md px-2 text-xs font-medium transition"
         aria-label={i18n.clearLabel}
       >
         {i18n.clearLabel}
       </button>
       <form method="dialog" class="shrink-0">
         <button
-          class="text-base-content/55 hover:bg-base-200 hover:text-base-content inline-flex h-7 w-7 items-center justify-center rounded-md transition"
+          class="text-base-content/70 hover:bg-base-200 hover:text-base-content inline-flex h-7 w-7 items-center justify-center rounded-md transition"
           aria-label={i18n.closeLabel}
           title={i18n.closeLabel}
         >
@@ -103,13 +103,13 @@ const i18n = {
         >
           <Icon name="lucide:search" width={18} height={18} />
         </div>
-        <p class="text-base-content/60 mt-3 text-sm">{i18n.typeToStart}</p>
+        <p class="text-base-content/70 mt-3 text-sm">{i18n.typeToStart}</p>
       </div>
     </div>
 
     {/* === Footer with keyboard hints === */}
     <div
-      class="border-base-300 bg-base-200/60 text-base-content/55 flex items-center justify-between gap-3 border-t px-4 py-2 text-[0.7rem] sm:px-5"
+      class="border-base-300 bg-base-200/60 text-base-content/70 flex items-center justify-between gap-3 border-t px-4 py-2 text-[0.7rem] sm:px-5"
     >
       <div class="flex items-center gap-3">
         <span class="inline-flex items-center gap-1.5">
@@ -192,7 +192,7 @@ const i18n = {
         <div class="bg-base-200 text-base-content/45 mx-auto flex h-10 w-10 items-center justify-center rounded-full" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         </div>
-        <p class="text-base-content/60 mt-3 text-sm">${escapeHtml(I18N.typeToStart)}</p>
+        <p class="text-base-content/70 mt-3 text-sm">${escapeHtml(I18N.typeToStart)}</p>
       </div>`,
     );
   }
@@ -201,7 +201,7 @@ const i18n = {
     renderState(
       container,
       `<div class="px-5 py-12 text-center">
-        <p class="text-base-content/60 inline-flex items-center gap-2 text-sm">
+        <p class="text-base-content/70 inline-flex items-center gap-2 text-sm">
           <span class="loading loading-spinner loading-xs" aria-hidden="true"></span>
           ${escapeHtml(I18N.searching)}
         </p>
@@ -265,7 +265,7 @@ const i18n = {
     renderState(
       container,
       `<div>
-        <div class="text-base-content/55 border-base-300 border-b px-4 py-2 text-[0.7rem] tracking-wide uppercase sm:px-5">
+        <div class="text-base-content/70 border-base-300 border-b px-4 py-2 text-[0.7rem] tracking-wide uppercase sm:px-5">
           ${count} ${escapeHtml(label)}
         </div>
         <ul class="divide-base-300 divide-y" role="listbox">${items}</ul>

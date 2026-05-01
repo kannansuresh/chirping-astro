@@ -29,7 +29,7 @@ const categories = await getCategoriesWithCount(locale);
                 <Icon name="lucide:folder" width={20} height={20} class="text-primary" />
                 <div class="flex-1">
                   <p class="font-semibold">{cat.name}</p>
-                  <p class="text-base-content/60 text-xs">
+                  <p class="text-base-content/70 text-xs">
                     {cat.count} {cat.count === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
                   </p>
                 </div>

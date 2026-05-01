@@ -105,7 +105,7 @@ const crumbs = [
       </h1>
       <p class="text-base-content/65 mt-3 text-lg">{post.data.description}</p>
 
-      <div class="text-base-content/60 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <div class="text-base-content/70 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <span class="inline-flex items-center gap-1">
           <Icon name="lucide:calendar-days" width={14} height={14} />
           <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
@@ -158,7 +158,7 @@ const crumbs = [
             />
           </div>
           {heroAlt && (
-            <figcaption class="text-base-content/55 mt-2 text-center text-xs">{heroAlt}</figcaption>
+            <figcaption class="text-base-content/70 mt-2 text-center text-xs">{heroAlt}</figcaption>
           )}
         </figure>
       )
@@ -171,7 +171,7 @@ const crumbs = [
     {
       post.data.tags.length > 0 && (
         <footer class="border-base-300 mt-10 flex flex-wrap items-center gap-2 border-t pt-6">
-          <span class="text-base-content/60 text-sm font-semibold tracking-wide uppercase">
+          <span class="text-base-content/70 text-sm font-semibold tracking-wide uppercase">
             {t('post.tags')}
           </span>
           {post.data.tags.map((tag) => (
@@ -190,7 +190,7 @@ const crumbs = [
         <Giscus locale={locale} />
       ) : (
         post.data.comments === false && (
-          <p class="text-base-content/60 mt-10 text-sm">{t('post.commentsDisabled')}</p>
+          <p class="text-base-content/70 mt-10 text-sm">{t('post.commentsDisabled')}</p>
         )
       )
     }

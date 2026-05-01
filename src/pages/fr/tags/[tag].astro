@@ -21,10 +21,9 @@ const { tagName } = Astro.props as Props;
 const { tag } = Astro.params;
 const locale = 'fr';
 const t = useTranslations(locale);
-const posts = (await getPosts(locale)).filter((p) =>
-  p.data.tags.some((tg) => slugify(tg) === tag),
-);
+const posts = (await getPosts(locale)).filter((p) => p.data.tags.some((tg) => slugify(tg) === tag));
 ---
+
 <BaseLayout
   title={`#${tagName}`}
   pathWithoutLocale={`/tags/${tag}/`}
@@ -34,10 +33,11 @@ const posts = (await getPosts(locale)).filter((p) =>
   ]}
 >
   <header class="mb-6">
-    <p class="text-sm uppercase tracking-wide text-base-content/60">{t('list.tagPosts')}</p>
+    <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.tagPosts')}</p>
     <h1 class="text-3xl font-bold tracking-tight">#{tagName}</h1>
-    <p class="mt-1 text-sm text-base-content/60">
-      {posts.length} {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+    <p class="text-base-content/70 mt-1 text-sm">
+      {posts.length}
+      {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
     </p>
   </header>
   <PostList posts={posts} locale={locale} />

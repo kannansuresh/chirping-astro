@@ -25,6 +25,7 @@ const posts = (await getPosts(locale)).filter((p) =>
   p.data.categories.some((c) => slugify(c) === category),
 );
 ---
+
 <BaseLayout
   title={categoryName}
   pathWithoutLocale={`/categories/${category}/`}
@@ -34,10 +35,11 @@ const posts = (await getPosts(locale)).filter((p) =>
   ]}
 >
   <header class="mb-6">
-    <p class="text-sm uppercase tracking-wide text-base-content/60">{t('list.categoryPosts')}</p>
+    <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.categoryPosts')}</p>
     <h1 class="text-3xl font-bold tracking-tight">{categoryName}</h1>
-    <p class="mt-1 text-sm text-base-content/60">
-      {posts.length} {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+    <p class="text-base-content/70 mt-1 text-sm">
+      {posts.length}
+      {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
     </p>
   </header>
   <PostList posts={posts} locale={locale} />

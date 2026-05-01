@@ -509,7 +509,7 @@
     display: block;
   }
   .prose-chirpy figcaption {
-    @apply text-base-content/55 mt-2 text-center text-xs italic;
+    @apply text-base-content/70 mt-2 text-center text-xs italic;
   }
 
   /* Video embeds — responsive 16:9 iframe container */
@@ -686,7 +686,7 @@
 /* ---------- Header search pill ---------- */
 @layer components {
   .search-pill {
-    @apply border-base-300 bg-base-100 text-base-content/55 hover:text-base-content hover:border-base-content/30 inline-flex h-9 items-center gap-2 rounded-full border pr-1.5 pl-3 text-sm transition;
+    @apply border-base-300 bg-base-100 text-base-content/70 hover:text-base-content hover:border-base-content/30 inline-flex h-9 items-center gap-2 rounded-full border pr-1.5 pl-3 text-sm transition;
   }
   .search-pill__icon {
     @apply shrink-0;
@@ -695,7 +695,7 @@
     @apply flex-1 truncate text-left;
   }
   .search-pill__kbd {
-    @apply border-base-300 bg-base-200 text-base-content/60 inline-flex h-6 min-w-6 items-center justify-center rounded-md border px-1.5 font-mono text-xs;
+    @apply border-base-300 bg-base-200 text-base-content/70 inline-flex h-6 min-w-6 items-center justify-center rounded-md border px-1.5 font-mono text-xs;
   }
   /* On narrow viewports the topbar gets crowded (hamburger + breadcrumb +
      site title + search + language switcher), so collapse the search pill

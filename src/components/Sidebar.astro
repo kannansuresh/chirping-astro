@@ -29,7 +29,7 @@ const navItems = NAV.map((item) => ({
 <aside id="sidebar" class="chirpy-sidebar" aria-label="Sidebar">
   {/* Profile */}
   <header class="flex w-full flex-col items-center pt-4 pb-6 text-center">
-    <a href={home} class="block" aria-label={SITE.title}>
+    <a href={home} class="flex flex-col items-center" aria-label={SITE.title}>
       <span
         class="border-base-100 block h-28 w-28 overflow-hidden rounded-full border-4 shadow-sm transition hover:scale-[1.02]"
         style="background:linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, white));"
@@ -56,16 +56,13 @@ const navItems = NAV.map((item) => ({
           )
         }
       </span>
-    </a>
-    <a
-      href={home}
-      class="text-base-content hover:text-primary mt-4 text-xl font-semibold tracking-wide"
-    >
-      {SITE.title}
+      <span class="text-base-content hover:text-primary mt-4 text-xl font-semibold tracking-wide">
+        {SITE.title}
+      </span>
     </a>
     {
       SITE.author.bio && (
-        <p class="text-base-content/60 mt-1 max-w-56 text-sm italic">{SITE.author.bio}</p>
+        <p class="text-base-content/70 mt-1 max-w-56 text-sm italic">{SITE.author.bio}</p>
       )
     }
   </header>
