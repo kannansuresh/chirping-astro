@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../config';
+import { SITE, type Locale } from '../config';
 import { formatDate, isoDate } from '../i18n/utils';
 import { type Post, postPath, heroImage, shouldShowHero } from '../utils/posts';
 import SmartImage from './SmartImage.astro';
@@ -15,10 +15,18 @@ const href = postPath(post);
 const heroAsset = heroImage(post);
 const hasImage = Boolean(heroAsset) && shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
+const isDynamicCardHeight = post.data.dynamicPostCardHeight ?? SITE.dynamicPostCardHeight;
 ---
 
 <article class="chirpy-card">
-  <a href={href} class:list={['chirpy-card-link', hasImage ? 'has-image' : '']}>
+  <a
+    href={href}
+    class:list={[
+      'chirpy-card-link',
+      hasImage ? 'has-image' : 'no-image',
+      isDynamicCardHeight ? 'dynamic-size' : 'fixed-size',
+    ]}
+  >
     {
       hasImage && (
         <div class="chirpy-card-image-wrap">
@@ -36,11 +44,16 @@ const heroAlt = post.data.heroImageAlt ?? '';
     }
 
     <div class:list={['chirpy-card-body', hasImage ? '' : 'full']}>
-      <h2 class="chirpy-card-title">
+      <h2 class:list={['chirpy-card-title', hasImage ? '' : 'compact']}>
         {post.data.title}
       </h2>
 
-      <p class="text-base-content/70 mt-2 mb-3 line-clamp-2 text-base">
+      <p
+        class:list={[
+          'text-base-content/70 text-base',
+          hasImage ? 'mt-2 mb-3 line-clamp-2' : 'mt-1 mb-2 line-clamp-3',
+        ]}
+      >
         {post.data.description}
       </p>
 

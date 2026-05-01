@@ -94,6 +94,24 @@ A per-post override of `SITE.showFeaturedImages` from
 [src/config.ts](src/config.ts). Set `false` to suppress the hero on a
 single post even though the site default is "show".
 
+For listing-card sizing behavior (fixed vs dynamic height), use
+`SITE.dynamicPostCardHeight` in [src/config.ts](src/config.ts) for the
+site default, or set `dynamicPostCardHeight` in frontmatter to override
+it per post.
+
+### `dynamicPostCardHeight`
+
+```yaml
+dynamicPostCardHeight: true
+```
+
+Optional per-post override of `SITE.dynamicPostCardHeight`. This only
+affects how the post's card behaves on horizontal listing views:
+
+- `true`: this post's listing card can grow (dynamic height).
+- `false`: this post's listing card keeps fixed Chirpy-style height.
+- omitted: falls back to the site-level `SITE.dynamicPostCardHeight`.
+
 ### `canonicalURL`
 
 ```yaml

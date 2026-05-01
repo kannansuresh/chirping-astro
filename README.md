@@ -161,6 +161,7 @@ export const SITE: SiteConfig = {
   isoDates: false,
   showFeaturedImages: true,
   boxedArticles: false,
+  dynamicPostCardHeight: false,
   multilingual: true,
 };
 ```
@@ -292,21 +293,22 @@ not work in `dev`** — only after `bun run build`. This is by design.
 
 Every customisable knob lives in a small number of files:
 
-| Knob                                | File                                      |
-| ----------------------------------- | ----------------------------------------- |
-| Site title, URL, author, locales    | `src/config.ts` → `SITE`                  |
-| Sidebar navigation links            | `src/config.ts` → `NAV`                   |
-| Sidebar social icons                | `src/config.ts` → `SOCIALS`               |
-| Giscus comments                     | `src/config.ts` → `GISCUS` + `.env`       |
-| Theme colours (light + dark)        | `src/styles/global.css` (OKLCH tokens)    |
-| Layout sizing (sidebar width, etc.) | `src/styles/global.css` (custom CSS vars) |
-| UI strings per locale               | `src/i18n/ui.ts`                          |
-| Date formatting per locale          | `src/i18n/utils.ts` → `formatDate`        |
-| Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`     |
-| Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`    |
-| Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`     |
-| Frontmatter validation rules        | `src/content.config.ts`                   |
-| Astro / build integrations          | `astro.config.mjs`                        |
+| Knob                                | File                                           |
+| ----------------------------------- | ---------------------------------------------- |
+| Site title, URL, author, locales    | `src/config.ts` → `SITE`                       |
+| Sidebar navigation links            | `src/config.ts` → `NAV`                        |
+| Sidebar social icons                | `src/config.ts` → `SOCIALS`                    |
+| Giscus comments                     | `src/config.ts` → `GISCUS` + `.env`            |
+| Theme colours (light + dark)        | `src/styles/global.css` (OKLCH tokens)         |
+| Layout sizing (sidebar width, etc.) | `src/styles/global.css` (custom CSS vars)      |
+| UI strings per locale               | `src/i18n/ui.ts`                               |
+| Date formatting per locale          | `src/i18n/utils.ts` → `formatDate`             |
+| Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`          |
+| Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`         |
+| Listing card height behavior        | `src/config.ts` → `SITE.dynamicPostCardHeight` |
+| Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`          |
+| Frontmatter validation rules        | `src/content.config.ts`                        |
+| Astro / build integrations          | `astro.config.mjs`                             |
 
 ---
 
@@ -341,8 +343,9 @@ pubDate: 2026-05-01
 ---
 ```
 
-The full schema (including `tags`, `categories`, `heroImage`, `math`,
-`comments`, `pinned`, `toc`, `translationKey`, etc.) is documented
+The full schema (including `tags`, `categories`, `heroImage`,
+`dynamicPostCardHeight`, `math`, `comments`, `pinned`, `toc`,
+`translationKey`, etc.) is documented
 in the demo post **/posts/frontmatter-reference** and codified in
 `src/content.config.ts`.
 
@@ -935,6 +938,26 @@ Edit the keydown handler at the bottom of
 
 Drop a new file at `public/images/avatar.svg` (or change the path in
 `SITE.author.avatar`).
+
+### Control listing card height (fixed vs dynamic)
+
+Set `SITE.dynamicPostCardHeight` in `src/config.ts`:
+
+- `false` (default): image cards in horizontal listings keep a fixed,
+  Chirpy-like desktop height for consistent rows.
+- `true`: image cards can grow with longer title/description content,
+  while keeping the same baseline minimum height.
+
+This setting affects listing views (home, pagination, archives,
+category and tag pages) and applies only on desktop breakpoints.
+
+Need a one-off exception for a specific article? Add frontmatter:
+
+```yaml
+dynamicPostCardHeight: true
+```
+
+Per-post frontmatter takes precedence over the site-level default.
 
 ---
 

@@ -43,6 +43,12 @@ export interface SiteConfig {
    */
   boxedArticles: boolean;
   /**
+   * Control horizontal listing card height behavior on desktop.
+   * `false` keeps a fixed Chirpy-like card height for image cards.
+   * `true` allows cards to grow when title/description content is longer.
+   */
+  dynamicPostCardHeight: boolean;
+  /**
    * Show the language switcher in the top bar and link to translated
    * pages. Set to `false` for single-language sites — the switcher is
    * hidden and `<link rel="alternate" hreflang>` is omitted.
@@ -137,6 +143,7 @@ export const SITE: SiteConfig = {
   isoDates: false,
   showFeaturedImages: true,
   boxedArticles: false,
+  dynamicPostCardHeight: false,
   multilingual: true,
 };
 

@@ -99,6 +99,9 @@ Both are controlled by:
 
 - `SITE.showFeaturedImages` in [`src/config.ts`](src/config.ts) — the
   site-wide default.
+- `SITE.dynamicPostCardHeight` in [`src/config.ts`](src/config.ts) —
+  controls whether listing cards with hero thumbnails keep a fixed
+  desktop height (`false`) or can expand for longer excerpts (`true`).
 - `showFeaturedImage` per-post — overrides the site default.
 - `heroImage` per-post — provides the actual image source.
 
@@ -106,6 +109,9 @@ If `heroImage` is missing, no hero is rendered regardless of the
 flags. If `heroImage` is set but `showFeaturedImage: false`, the post
 page is text-only — but the card on listings can still use the hero,
 depending on your layout customisations.
+
+If your listing pages feel too rigid (or too uneven), this is the knob
+to tune globally without editing component markup.
 
 ## Inline images in prose
 

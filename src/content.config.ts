@@ -46,6 +46,8 @@ const baseFrontmatter = ({ image }: SchemaContext) =>
     heroImageAlt: z.string().optional(),
     /** Per-post override of SITE.showFeaturedImages (cards + hero). */
     showFeaturedImage: z.boolean().optional(),
+    /** Per-post override of SITE.dynamicPostCardHeight on listing cards. */
+    dynamicPostCardHeight: z.boolean().optional(),
     canonicalURL: z.url().optional(),
     comments: z.boolean().optional(),
     toc: z.boolean().default(true),

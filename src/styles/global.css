@@ -372,15 +372,17 @@
   .chirpy-card-link {
     @apply grid grid-cols-1 gap-0 md:grid-cols-12;
   }
-  /* Cards that have an image to the right (md+) get a fixed, uniform
-     height so listings line up cleanly. Cards without images are
-     allowed to be shorter (they're text-only). */
+  /* Image cards can be fixed-size (default Chirpy behavior) or dynamic
+     based on `SITE.dynamicPostCardHeight`. */
   .chirpy-card-link.has-image {
     @apply md:grid-cols-12;
   }
   @media (min-width: 768px) {
-    .chirpy-card-link.has-image {
+    .chirpy-card-link.has-image.fixed-size {
       height: 14rem; /* 224px — matches Chirpy's listing height */
+    }
+    .chirpy-card-link.has-image.dynamic-size {
+      min-height: 14rem;
     }
   }
   .chirpy-card-body {
@@ -388,6 +390,9 @@
   }
   .chirpy-card-body.full {
     @apply md:col-span-12;
+  }
+  .chirpy-card-link.no-image .chirpy-card-body {
+    @apply md:p-5;
   }
   /* Title and description gain line-clamps so a very long title (or a
      verbose description) cannot push the card past the fixed height. */
@@ -398,6 +403,24 @@
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .chirpy-card-title.compact {
+    @apply md:text-[1.4rem];
+  }
+  @media (min-width: 768px) {
+    .chirpy-card-link.has-image.dynamic-size .chirpy-card-title {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+      -webkit-box-orient: unset;
+      overflow: visible;
+    }
+    .chirpy-card-link.has-image.dynamic-size .chirpy-card-body > p {
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+      overflow: visible;
+      display: block;
+    }
   }
   .chirpy-card-image-wrap {
     @apply order-first overflow-hidden md:order-last md:col-span-5 md:h-full;

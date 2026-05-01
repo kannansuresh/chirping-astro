@@ -101,6 +101,10 @@ Les deux sont contrôlés par :
 
 - `SITE.showFeaturedImages` dans
   [`src/config.ts`](src/config.ts) — défaut global.
+- `SITE.dynamicPostCardHeight` dans [`src/config.ts`](src/config.ts)
+  — contrôle si les cartes de listing avec vignette gardent une
+  hauteur desktop fixe (`false`) ou peuvent s'étendre pour des extraits
+  plus longs (`true`).
 - `showFeaturedImage` par article — override le défaut global.
 - `heroImage` par article — fournit la source réelle.
 
@@ -109,6 +113,9 @@ Si `heroImage` est présent mais `showFeaturedImage: false`, la page
 de l'article est sans image — mais la carte sur les listings peut
 toujours utiliser le hero, selon votre personnalisation de mise en
 page.
+
+Si vos listings paraissent trop rigides (ou trop irréguliers), c'est le
+réglage global à ajuster sans modifier le markup des composants.
 
 ## Images en ligne dans la prose
 

@@ -97,6 +97,26 @@ Override par article de `SITE.showFeaturedImages`
 ([src/config.ts](src/config.ts)). Mettre `false` pour supprimer la
 bannière sur un article malgré la valeur par défaut.
 
+Pour le comportement de hauteur des cartes de listing (fixe vs
+dynamique), utilisez `SITE.dynamicPostCardHeight` dans
+[src/config.ts](src/config.ts) comme défaut global, ou
+`dynamicPostCardHeight` dans le frontmatter pour un override par
+article.
+
+### `dynamicPostCardHeight`
+
+```yaml
+dynamicPostCardHeight: true
+```
+
+Override optionnel par article de `SITE.dynamicPostCardHeight`. Cela
+agit uniquement sur le comportement de la carte de l'article dans les
+listings horizontaux :
+
+- `true` : la carte peut s'étendre (hauteur dynamique).
+- `false` : la carte garde une hauteur fixe style Chirpy.
+- omis : retour au réglage global `SITE.dynamicPostCardHeight`.
+
 ### `canonicalURL`
 
 ```yaml
