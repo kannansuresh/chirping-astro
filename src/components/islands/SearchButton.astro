@@ -13,6 +13,7 @@
  *   - Up/Down arrow keys move the highlight, Enter follows the link.
  *   - Esc / backdrop / close button close the modal AND clear state.
  */
+
 import { useTranslations, withBase } from '../../i18n/utils';
 import type { Locale } from '../../config';
 import { Icon } from 'astro-icon/components';
@@ -52,7 +53,13 @@ const i18n = {
   <kbd class="search-pill__kbd" aria-hidden="true">/</kbd>
 </button>
 
-<dialog data-search-modal class="modal modal-top sm:modal-middle" aria-label={t('search.title')}>
+<dialog
+  data-search-modal
+  class="modal modal-top sm:modal-middle"
+  aria-label={t('search.title')}
+  data-i18n={JSON.stringify(i18n)}
+  data-pagefind-script={pagefindScript}
+>
   <div
     class="modal-box bg-base-100 border-base-300 flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden border p-0 shadow-2xl sm:rounded-xl"
   >
@@ -133,22 +140,21 @@ const i18n = {
   </form>
 </dialog>
 
-<script is:inline define:vars={{ pagefindScript, i18n }}>
-  const PAGEFIND_SCRIPT = pagefindScript;
-  const I18N = i18n;
-
-  let pagefindModule = null;
-  let loadPromise = null;
+<script>
+  let pagefindModule: any = null;
+  let loadPromise: Promise<any> | null = null;
   /** Most recent search token — used to ignore stale async resolutions. */
   let searchToken = 0;
   let highlightIdx = -1;
-  let resultLinks = [];
-  let debounceTimer = null;
+  let resultLinks: HTMLElement[] = [];
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+  let PAGEFIND_SCRIPT: string | undefined;
+  let I18N: Record<string, string> = {};
 
   function loadPagefind() {
     if (pagefindModule) return Promise.resolve(pagefindModule);
     if (loadPromise) return loadPromise;
-    loadPromise = import(/* @vite-ignore */ PAGEFIND_SCRIPT)
+    loadPromise = import(/* @vite-ignore */ PAGEFIND_SCRIPT as string)
       .then(async (mod) => {
         if (typeof mod.init === 'function') await mod.init();
         pagefindModule = mod;
@@ -162,7 +168,7 @@ const i18n = {
     return loadPromise;
   }
 
-  function escapeHtml(s) {
+  function escapeHtml(s: string) {
     return String(s)
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
@@ -173,19 +179,19 @@ const i18n = {
 
   /** Pagefind returns excerpts already wrapped in `<mark>` tags. We escape
    *  everything else and re-allow only the canonical `<mark>` tokens. */
-  function sanitizeExcerpt(html) {
+  function sanitizeExcerpt(html: string) {
     const escaped = escapeHtml(html ?? '');
     return escaped.replaceAll('&lt;mark&gt;', '<mark>').replaceAll('&lt;/mark&gt;', '</mark>');
   }
 
-  function renderState(container, html) {
+  function renderState(container: HTMLElement, html: string) {
     container.innerHTML = html;
-    resultLinks = Array.from(container.querySelectorAll('[data-search-result-link]'));
+    resultLinks = Array.from(container.querySelectorAll<HTMLElement>('[data-search-result-link]'));
     highlightIdx = resultLinks.length > 0 ? 0 : -1;
     updateHighlight();
   }
 
-  function renderIdle(container) {
+  function renderIdle(container: HTMLElement) {
     renderState(
       container,
       `<div class="px-5 py-12 text-center">
@@ -197,7 +203,7 @@ const i18n = {
     );
   }
 
-  function renderSearching(container) {
+  function renderSearching(container: HTMLElement) {
     renderState(
       container,
       `<div class="px-5 py-12 text-center">
@@ -209,7 +215,7 @@ const i18n = {
     );
   }
 
-  function renderNoResults(container, term) {
+  function renderNoResults(container: HTMLElement, term: string) {
     renderState(
       container,
       `<div class="px-5 py-12 text-center">
@@ -224,7 +230,7 @@ const i18n = {
     );
   }
 
-  function formatCrumb(url) {
+  function formatCrumb(url: string) {
     try {
       const u = new URL(url, window.location.origin);
       const parts = u.pathname.replace(/\/+$/g, '').split('/').filter(Boolean);
@@ -235,12 +241,12 @@ const i18n = {
     }
   }
 
-  function renderResults(container, results, term) {
+  function renderResults(container: HTMLElement, results: any[]) {
     const count = results.length;
     const label = count === 1 ? I18N.resultsCountOne : I18N.resultsCount;
 
     const items = results
-      .map((r, i) => {
+      .map((r: any, i: number) => {
         const title = escapeHtml(r.meta?.title || r.url);
         const crumb = escapeHtml(formatCrumb(r.url));
         const excerpt = sanitizeExcerpt(r.excerpt || '');
@@ -286,7 +292,7 @@ const i18n = {
     });
   }
 
-  function moveHighlight(delta) {
+  function moveHighlight(delta: number) {
     if (resultLinks.length === 0) return;
     highlightIdx = (highlightIdx + delta + resultLinks.length) % resultLinks.length;
     updateHighlight();
@@ -299,57 +305,60 @@ const i18n = {
   }
 
   function init() {
-    const dialog = document.querySelector('[data-search-modal]');
-    const input = document.querySelector('[data-search-input]');
-    const clearBtn = document.querySelector('[data-search-clear]');
-    const results = document.querySelector('[data-search-results]');
+    const dialog = document.querySelector<HTMLDialogElement>('[data-search-modal]');
+    const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+    const clearBtn = document.querySelector<HTMLButtonElement>('[data-search-clear]');
+    const results = document.querySelector<HTMLElement>('[data-search-results]');
     if (!dialog || !input || !results || !clearBtn) return;
 
+    PAGEFIND_SCRIPT = dialog.dataset.pagefindScript;
+    I18N = JSON.parse(dialog.dataset.i18n || '{}');
+
     function reset() {
-      input.value = '';
-      clearBtn.classList.add('hidden');
-      clearBtn.classList.remove('inline-flex');
-      renderIdle(results);
+      input!.value = '';
+      clearBtn!.classList.add('hidden');
+      clearBtn!.classList.remove('inline-flex');
+      renderIdle(results!);
       searchToken++;
     }
 
-    async function runSearch(term) {
+    async function runSearch(term: string) {
       const myToken = ++searchToken;
       try {
         const pf = await loadPagefind();
         if (myToken !== searchToken) return;
-        renderSearching(results);
+        renderSearching(results!);
         const search = await pf.search(term);
         if (myToken !== searchToken) return;
         if (!search || !search.results || search.results.length === 0) {
-          renderNoResults(results, term);
+          renderNoResults(results!, term);
           return;
         }
         const top = search.results.slice(0, 12);
-        const data = await Promise.all(top.map((r) => r.data()));
+        const data = await Promise.all(top.map((r: any) => r.data()));
         if (myToken !== searchToken) return;
-        renderResults(results, data, term);
+        renderResults(results!, data);
       } catch (err) {
         console.error(err);
         renderState(
-          results,
+          results!,
           `<p class="text-error px-5 py-6 text-sm">Search index not available. Run <code class="bg-base-200 rounded px-1">bun run build</code>.</p>`,
         );
       }
     }
 
     function onInput() {
-      const term = input.value.trim();
+      const term = input!.value.trim();
       if (term) {
-        clearBtn.classList.remove('hidden');
-        clearBtn.classList.add('inline-flex');
+        clearBtn!.classList.remove('hidden');
+        clearBtn!.classList.add('inline-flex');
       } else {
-        clearBtn.classList.add('hidden');
-        clearBtn.classList.remove('inline-flex');
+        clearBtn!.classList.add('hidden');
+        clearBtn!.classList.remove('inline-flex');
       }
       clearTimeout(debounceTimer);
       if (!term) {
-        renderIdle(results);
+        renderIdle(results!);
         return;
       }
       debounceTimer = setTimeout(() => runSearch(term), 140);
@@ -359,14 +368,14 @@ const i18n = {
 
     clearBtn.addEventListener('click', () => {
       reset();
-      input.focus();
+      input!.focus();
     });
 
     // Reset whenever the dialog closes (Esc, backdrop click, close button).
     dialog.addEventListener('close', reset);
 
     // Keyboard nav while typing.
-    input.addEventListener('keydown', (e) => {
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         moveHighlight(1);
@@ -379,25 +388,25 @@ const i18n = {
     });
 
     async function openSearch() {
-      if (typeof dialog.showModal === 'function') dialog.showModal();
-      else dialog.setAttribute('open', '');
+      if (typeof dialog!.showModal === 'function') dialog!.showModal();
+      else dialog!.setAttribute('open', '');
       // Pre-load Pagefind so the first keystroke is instant.
       loadPagefind().catch(() => {});
-      requestAnimationFrame(() => input.focus());
+      requestAnimationFrame(() => input!.focus());
     }
 
     document.querySelectorAll('[data-search-open]').forEach((btn) => {
       btn.addEventListener('click', openSearch);
     });
 
-    function isTypingTarget(target) {
+    function isTypingTarget(target: EventTarget | null) {
       if (!(target instanceof HTMLElement)) return false;
       if (target.isContentEditable) return true;
       const tag = target.tagName;
       return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
     }
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
       const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k';
       const isSlash =
         e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !isTypingTarget(e.target);
