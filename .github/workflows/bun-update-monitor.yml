@@ -1,0 +1,66 @@
+name: Bun Update Monitor
+
+on:
+  schedule:
+    # Weekly on Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  PINNED_BUN_VERSION: '1.3.13'
+
+jobs:
+  monitor:
+    name: Monitor Bun version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Bun (latest)
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Compare pinned vs latest
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          LATEST_BUN_VERSION="$(bun --version)"
+          echo "latest=${LATEST_BUN_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Pinned Bun: ${PINNED_BUN_VERSION}"
+          echo "Latest Bun: ${LATEST_BUN_VERSION}"
+
+          if [ "${LATEST_BUN_VERSION}" = "${PINNED_BUN_VERSION}" ]; then
+            echo "behind=false" >> "$GITHUB_OUTPUT"
+            echo "Pinned Bun is up to date."
+            exit 0
+          fi
+
+          HIGHEST="$(printf '%s\n' "${PINNED_BUN_VERSION}" "${LATEST_BUN_VERSION}" | sort -V | tail -n1)"
+          if [ "${HIGHEST}" = "${LATEST_BUN_VERSION}" ]; then
+            echo "behind=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Bun update available::Pinned Bun ${PINNED_BUN_VERSION} is behind latest ${LATEST_BUN_VERSION}."
+          else
+            echo "behind=false" >> "$GITHUB_OUTPUT"
+            echo "Pinned Bun ${PINNED_BUN_VERSION} is newer than latest resolved ${LATEST_BUN_VERSION}."
+          fi
+
+      - name: Smoke build on latest Bun
+        run: |
+          bun install
+          bun run build
+
+      - name: Fail when pinned Bun is behind
+        if: steps.compare.outputs.behind == 'true'
+        shell: bash
+        run: |
+          echo "Pinned Bun ${PINNED_BUN_VERSION} is behind latest Bun ${{ steps.compare.outputs.latest }}."
+          echo "Update .github/workflows/deploy.yml and .github/workflows/pr-checks.yml, then regenerate bun.lock and open a PR."
+          exit 1
