@@ -12,6 +12,7 @@ toc: false
 ---
 
 import Callout from '../../../components/Callout.astro';
+import VideoEmbed from '../../../components/VideoEmbed.astro';
 import { Image } from 'astro:assets';
 import img1 from '../../../assets/images/coastline-rocks.jpg';
 import img2 from '../../../assets/images/sunlight-ocean.jpg';
@@ -146,6 +147,53 @@ classes (this is MDX, after all):
   <Image src={img3} alt="A sandy beach" widths={[400, 600]} class="rounded-lg" />
   <Image src={img4} alt="A coastal cliff" widths={[400, 600]} class="rounded-lg" />
 </div>
+
+## Embedding videos
+
+The theme ships a `<VideoEmbed>` component for responsive,
+privacy-friendly video embeds. It renders a 16:9 iframe with rounded
+corners and an optional caption — consistent with how the theme styles
+images.
+
+### YouTube
+
+Use the shorthand `platform` + `id` props — the component builds the
+embed URL automatically (using `youtube-nocookie.com` for privacy):
+
+<VideoEmbed
+  platform="youtube"
+  id="dQw4w9WgXcQ"
+  title="Rick Astley – Never Gonna Give You Up"
+  caption="A YouTube embed using the shorthand platform + id props."
+/>
+
+### Vimeo
+
+Works the same way:
+
+<VideoEmbed
+  platform="vimeo"
+  id="76979871"
+  title="The Long Game – a short film"
+  caption="A Vimeo embed."
+/>
+
+### Generic iframe src
+
+For any other provider, pass the full embed URL via `src`:
+
+```mdx
+<VideoEmbed
+  src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+  title="Custom embed URL"
+  caption="Optional caption text"
+/>
+```
+
+<Callout type="info" title="Privacy note">
+  YouTube embeds use <code>youtube-nocookie.com</code> by default, which does not set tracking
+  cookies until the viewer clicks play.
+</Callout>
 
 ## Alt text — please write some
 

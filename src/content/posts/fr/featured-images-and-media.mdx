@@ -12,6 +12,7 @@ toc: false
 ---
 
 import Callout from '../../../components/Callout.astro';
+import VideoEmbed from '../../../components/VideoEmbed.astro';
 import { Image } from 'astro:assets';
 import img1 from '../../../assets/images/coastline-rocks.jpg';
 import img2 from '../../../assets/images/sunlight-ocean.jpg';
@@ -150,6 +151,54 @@ Tailwind (c'est du MDX, après tout) :
   <Image src={img3} alt="Une plage de sable" widths={[400, 600]} class="rounded-lg" />
   <Image src={img4} alt="Une falaise côtière" widths={[400, 600]} class="rounded-lg" />
 </div>
+
+## Intégration de vidéos
+
+Le thème inclut un composant `<VideoEmbed>` pour des intégrations
+vidéo responsives et respectueuses de la vie privée. Il affiche une
+iframe en 16:9 avec des coins arrondis et une légende optionnelle —
+cohérent avec la mise en forme des images.
+
+### YouTube
+
+Utilisez les props raccourcies `platform` + `id` — le composant
+construit l'URL d'intégration automatiquement (en utilisant
+`youtube-nocookie.com` pour la confidentialité) :
+
+<VideoEmbed
+  platform="youtube"
+  id="dQw4w9WgXcQ"
+  title="Rick Astley – Never Gonna Give You Up"
+  caption="Intégration YouTube via les props platform + id."
+/>
+
+### Vimeo
+
+Même principe :
+
+<VideoEmbed
+  platform="vimeo"
+  id="76979871"
+  title="The Long Game — un court-métrage"
+  caption="Intégration Vimeo."
+/>
+
+### URL iframe générique
+
+Pour tout autre fournisseur, passez l'URL complète via `src` :
+
+```mdx
+<VideoEmbed
+  src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
+  title="URL d'intégration personnalisée"
+  caption="Texte de légende optionnel"
+/>
+```
+
+<Callout type="info" title="Vie privée">
+  Les intégrations YouTube utilisent <code>youtube-nocookie.com</code> par défaut, qui ne dépose pas
+  de cookies de suivi tant que le spectateur ne clique pas sur lecture.
+</Callout>
 
 ## Texte alternatif — écrivez-en
 

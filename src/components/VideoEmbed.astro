@@ -1,0 +1,60 @@
+---
+/**
+ * Responsive video embed for MDX content. Supports YouTube, Vimeo,
+ * and generic iframe sources. Use as:
+ *
+ *   <VideoEmbed src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="My video" />
+ *   <VideoEmbed src="https://player.vimeo.com/video/123456789" title="Vimeo clip" />
+ *
+ * Or use the shorthand `id` prop for YouTube:
+ *   <VideoEmbed platform="youtube" id="dQw4w9WgXcQ" title="My video" />
+ */
+
+interface Props {
+  /** Full iframe src URL. Takes priority over platform+id. */
+  src?: string;
+  /** Video platform for shorthand usage with `id`. */
+  platform?: 'youtube' | 'vimeo';
+  /** Video ID (used with `platform`). */
+  id?: string;
+  /** Accessible title for the iframe. */
+  title: string;
+  /** Optional caption displayed below the video. */
+  caption?: string;
+}
+
+const { src, platform, id, title, caption } = Astro.props;
+
+function buildSrc(): string {
+  if (src) return src;
+  if (platform === 'youtube' && id) {
+    return `https://www.youtube-nocookie.com/embed/${id}`;
+  }
+  if (platform === 'vimeo' && id) {
+    return `https://player.vimeo.com/video/${id}`;
+  }
+  throw new Error('VideoEmbed: provide either `src` or both `platform` and `id`.');
+}
+
+const iframeSrc = buildSrc();
+---
+
+<figure class="video-embed my-6">
+  <div class="video-embed__frame">
+    <iframe
+      src={iframeSrc}
+      title={title}
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+      loading="lazy"></iframe>
+  </div>
+  {
+    caption && (
+      <figcaption class="text-base-content/55 mt-2 text-center text-xs italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>

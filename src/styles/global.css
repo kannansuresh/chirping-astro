@@ -512,6 +512,17 @@
     @apply text-base-content/55 mt-2 text-center text-xs italic;
   }
 
+  /* Video embeds — responsive 16:9 iframe container */
+  .video-embed__frame {
+    @apply relative overflow-hidden rounded-md;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background: var(--color-sidebar-to);
+  }
+  .video-embed__frame > iframe {
+    @apply absolute inset-0 h-full w-full;
+    border: 0;
+  }
+
   /* Hero image — contained within content width, using the sidebar's
      subtle gradient as a placeholder background. */
   .post-hero {
