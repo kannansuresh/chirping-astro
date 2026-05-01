@@ -61,6 +61,10 @@ Chaque image OG présente :
   de couleur.
 - **Tags** (en bas à droite) — jusqu'à 3 tags en badges pilules.
 
+Voici l'image OG qui a été automatiquement générée pour **cet article même** :
+
+![Image OG auto-générée pour cet article](../../../assets/images/og-sample.png)
+
 ## Activer / désactiver
 
 La fonctionnalité est contrôlée par un seul paramètre dans

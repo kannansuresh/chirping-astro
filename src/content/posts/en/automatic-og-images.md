@@ -62,6 +62,10 @@ Each OG image features:
 - **Tags** (bottom-right) — up to 3 tags as pill badges, or the site
   hostname if no tags are set.
 
+Here's the OG image that was automatically generated for **this very post**:
+
+![Auto-generated OG image for this post](../../../assets/images/og-sample.png)
+
 ## Enabling / disabling
 
 The feature is controlled by a single flag in `src/config.ts`:
