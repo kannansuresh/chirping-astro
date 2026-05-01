@@ -12,14 +12,17 @@ interface Props {
 const { posts, locale } = Astro.props;
 const t = useTranslations(locale);
 ---
-{posts.length === 0 ? (
-  <p class="rounded-md border border-dashed border-base-300 px-6 py-10 text-center text-base-content/70">
-    {t('list.empty')}
-  </p>
-) : (
-  <div id="post-list">
-    {posts.map((post) => (
-      <PostCard post={post} locale={locale} />
-    ))}
-  </div>
-)}
+
+{
+  posts.length === 0 ? (
+    <p class="border-base-300 text-base-content/70 rounded-md border border-dashed px-6 py-10 text-center">
+      {t('list.empty')}
+    </p>
+  ) : (
+    <div id="post-list">
+      {posts.map((post) => (
+        <PostCard post={post} locale={locale} />
+      ))}
+    </div>
+  )
+}

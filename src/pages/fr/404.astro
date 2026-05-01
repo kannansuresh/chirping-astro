@@ -5,16 +5,19 @@ import { useTranslations, localizedPath } from '../../i18n/utils';
 const locale = 'fr';
 const t = useTranslations(locale);
 ---
+
 <BaseLayout
   title={t('404.title')}
   description={t('404.description')}
   narrow={true}
   crumbs={[{ label: '404' }]}
 >
-  <section class="flex flex-col items-center rounded-md border border-base-300 bg-base-100 px-6 py-20 text-center">
-    <p class="text-7xl font-black tracking-tight text-primary">404</p>
+  <section
+    class="border-base-300 bg-base-100 flex flex-col items-center rounded-md border px-6 py-20 text-center"
+  >
+    <p class="text-primary text-7xl font-black tracking-tight">404</p>
     <h1 class="mt-4 text-2xl font-bold tracking-tight">{t('404.title')}</h1>
-    <p class="mt-2 text-base-content/70">{t('404.description')}</p>
+    <p class="text-base-content/70 mt-2">{t('404.description')}</p>
     <a href={localizedPath('/', locale)} class="btn btn-primary mt-6">
       {t('404.cta')}
     </a>

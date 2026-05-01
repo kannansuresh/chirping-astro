@@ -27,36 +27,41 @@ const recent = posts
 
 const trending = tags.slice(0, 8);
 ---
-<div class="chirpy-panel">
-  {recent.length > 0 && (
-    <section class="mb-8">
-      <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
-        {locale === 'fr' ? 'Mises à jour récentes' : 'Recently Updated'}
-      </h2>
-      <ul class="chirpy-aside-list">
-        {recent.map((post) => (
-          <li>
-            <a href={postPath(post)} class="chirpy-aside-item truncate">
-              {post.data.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
 
-  {trending.length > 0 && (
-    <section>
-      <h2 class="mb-3 text-xs font-bold uppercase tracking-[0.1em] text-base-content/70">
-        {locale === 'fr' ? 'Étiquettes en vogue' : 'Trending Tags'}
-      </h2>
-      <div class="flex flex-wrap gap-2">
-        {trending.map((tag) => (
-          <a href={tagPath(locale, tag.name)} class="post-tag">
-            {tag.name}
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
+<div class="chirpy-panel">
+  {
+    recent.length > 0 && (
+      <section class="mb-8">
+        <h2 class="text-base-content/70 mb-3 text-xs font-bold tracking-[0.1em] uppercase">
+          {locale === 'fr' ? 'Mises à jour récentes' : 'Recently Updated'}
+        </h2>
+        <ul class="chirpy-aside-list">
+          {recent.map((post) => (
+            <li>
+              <a href={postPath(post)} class="chirpy-aside-item truncate">
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    trending.length > 0 && (
+      <section>
+        <h2 class="text-base-content/70 mb-3 text-xs font-bold tracking-[0.1em] uppercase">
+          {locale === 'fr' ? 'Étiquettes en vogue' : 'Trending Tags'}
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {trending.map((tag) => (
+            <a href={tagPath(locale, tag.name)} class="post-tag">
+              {tag.name}
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </div>

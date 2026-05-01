@@ -34,25 +34,31 @@ const decorated = items.map((h) => {
   return { ...h, parent: h.depth === 2 ? h.slug : (currentH2 ?? h.slug) };
 });
 ---
-{items.length > 0 && (
-  <nav
-    aria-labelledby="toc-heading"
-    class="toc sticky top-20 hidden max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 text-sm xl:block"
-  >
-    <h2 id="toc-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
-      {t('post.toc')}
-    </h2>
-    <ol class="toc-list space-y-1">
-      {decorated.map((h) => (
-        <li class={`toc-level-${h.depth}`} data-toc-parent={h.parent}>
-          <a href={`#${h.slug}`} data-toc-link={h.slug} data-toc-depth={h.depth}>
-            {h.text}
-          </a>
-        </li>
-      ))}
-    </ol>
-  </nav>
-)}
+
+{
+  items.length > 0 && (
+    <nav
+      aria-labelledby="toc-heading"
+      class="toc sticky top-20 hidden max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 text-sm xl:block"
+    >
+      <h2
+        id="toc-heading"
+        class="text-base-content/60 mb-3 text-xs font-semibold tracking-wide uppercase"
+      >
+        {t('post.toc')}
+      </h2>
+      <ol class="toc-list space-y-1">
+        {decorated.map((h) => (
+          <li class={`toc-level-${h.depth}`} data-toc-parent={h.parent}>
+            <a href={`#${h.slug}`} data-toc-link={h.slug} data-toc-depth={h.depth}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
 
 <script>
   function initSmartToc() {

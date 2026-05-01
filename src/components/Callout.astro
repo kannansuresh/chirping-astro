@@ -11,6 +11,7 @@ interface Props {
 
 const { type = 'info', title } = Astro.props;
 ---
+
 <aside class:list={['callout', `callout-${type}`]} role="note">
   {title && <p class="mb-1 font-semibold">{title}</p>}
   <div><slot /></div>
