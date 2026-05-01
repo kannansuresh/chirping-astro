@@ -5,8 +5,6 @@ pubDate: 2026-04-22
 tags: [giscus, commentaires, github, discussions]
 categories: [Tutoriels]
 translationKey: comments-with-giscus
-heroImage: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Bulles de dialogue dessinées sur un tableau noir'
 toc: true
 ---
 

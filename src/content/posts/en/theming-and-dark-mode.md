@@ -5,8 +5,6 @@ pubDate: 2026-04-21
 tags: [theme, daisyui, tailwind, dark-mode, customization]
 categories: [Tutorials]
 translationKey: theming-and-dark-mode
-heroImage: 'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Two paint swatches, one dark and one light, side by side'
 toc: true
 ---
 

@@ -5,8 +5,7 @@ pubDate: 2026-04-23
 tags: [recherche, pagefind, performance]
 categories: [Tutoriels]
 translationKey: search-with-pagefind
-heroImage: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Une loupe posée sur un carnet ouvert'
+
 toc: true
 ---
 

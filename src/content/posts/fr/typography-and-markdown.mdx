@@ -6,12 +6,13 @@ updatedDate: 2026-04-29
 tags: [typographie, markdown, mdx, design, reference]
 categories: [Référence]
 translationKey: typography-and-markdown
-heroImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Un livre ouvert sur un bureau en bois sous une lumière directionnelle'
 toc: true
 ---
 
 import Callout from '../../../components/Callout.astro';
+import { Image } from 'astro:assets';
+import imgKeyboard from '../../../assets/images/macbook-keyboard.jpg';
+import imgDesk from '../../../assets/images/light-through-window.png';
 
 Cet article est la **page de test typographique** du thème. Si vous
 modifiez les polices, la taille de la prose ou tout élément de la
@@ -163,16 +164,16 @@ En Markdown pur, vous pouvez aussi utiliser la classe CSS bas-niveau :
 
 Les images Markdown en ligne occupent toute la largeur de la prose :
 
-![Lumière entrant par une fenêtre sur un bureau en bois](https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=80&auto=format&fit=crop)
+<Image
+  src={imgDesk}
+  alt="Lumière entrant par une fenêtre sur un bureau en bois"
+  widths={[400, 800, 1200]}
+/>
 
 Une figure légendée avec `<figcaption>` :
 
 <figure>
-  <img
-    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80&auto=format&fit=crop"
-    alt="Gros plan sur un clavier de MacBook"
-    loading="lazy"
-  />
+  <Image src={imgKeyboard} alt="Gros plan sur un clavier de MacBook" widths={[400, 800, 1200]} />
   <figcaption>Photo de Ales Nesetril sur Unsplash</figcaption>
 </figure>
 

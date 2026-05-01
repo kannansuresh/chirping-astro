@@ -7,8 +7,6 @@ categories: [Authoring]
 translationKey: latex-math-with-katex
 math: true
 toc: true
-heroImage: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'A blackboard covered in handwritten mathematical equations'
 ---
 
 This site supports **LaTeX-style math** out of the box. Equations are

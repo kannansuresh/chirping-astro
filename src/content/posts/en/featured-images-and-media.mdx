@@ -12,6 +12,11 @@ toc: false
 ---
 
 import Callout from '../../../components/Callout.astro';
+import { Image } from 'astro:assets';
+import img1 from '../../../assets/images/coastline-rocks.jpg';
+import img2 from '../../../assets/images/sunlight-ocean.jpg';
+import img3 from '../../../assets/images/sandy-beach.jpg';
+import img4 from '../../../assets/images/coastal-cliff.jpg';
 
 This post is a small **photo essay** that demonstrates the theme's
 image features end-to-end. Notice the things this page is doing that
@@ -77,7 +82,7 @@ through Astro's image service, which fetches the source at build
 time, transcodes it to WebP, and emits a responsive `srcset`:
 
 ```yaml
-heroImage: https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1600&q=80&auto=format&fit=crop
+heroImage: ../../../assets/images/light-through-window.png
 heroImageAlt: Soft daylight on a wooden desk
 ```
 
@@ -117,15 +122,19 @@ to tune globally without editing component markup.
 
 Inline Markdown images render edge-to-edge inside the prose column:
 
-![Coastline rocks photographed under overcast skies](https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=80&auto=format&fit=crop)
+<Image
+  src={img1}
+  alt="Coastline rocks photographed under overcast skies"
+  widths={[400, 800, 1200]}
+/>
 
 A captioned figure with a `<figcaption>`:
 
 <figure>
-  <img
-    src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1600&q=80&auto=format&fit=crop"
+  <Image
+    src={img2}
     alt="Sunlight breaking through clouds over the ocean"
-    loading="lazy"
+    widths={[400, 800, 1200]}
   />
   <figcaption>Sunlight on the horizon. Photo by Sean O. on Unsplash.</figcaption>
 </figure>
@@ -134,18 +143,8 @@ Side-by-side images? Drop them inside an HTML `<div>` with Tailwind
 classes (this is MDX, after all):
 
 <div class="grid gap-3 sm:grid-cols-2">
-  <img
-    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80&auto=format&fit=crop"
-    alt="A sandy beach"
-    loading="lazy"
-    class="rounded-lg"
-  />
-  <img
-    src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=900&q=80&auto=format&fit=crop"
-    alt="A coastal cliff"
-    loading="lazy"
-    class="rounded-lg"
-  />
+  <Image src={img3} alt="A sandy beach" widths={[400, 600]} class="rounded-lg" />
+  <Image src={img4} alt="A coastal cliff" widths={[400, 600]} class="rounded-lg" />
 </div>
 
 ## Alt text — please write some

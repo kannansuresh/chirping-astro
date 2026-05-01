@@ -12,6 +12,11 @@ toc: false
 ---
 
 import Callout from '../../../components/Callout.astro';
+import { Image } from 'astro:assets';
+import img1 from '../../../assets/images/coastline-rocks.jpg';
+import img2 from '../../../assets/images/sunlight-ocean.jpg';
+import img3 from '../../../assets/images/sandy-beach.jpg';
+import img4 from '../../../assets/images/coastal-cliff.jpg';
 
 Cet article est un petit **essai photo** qui illustre les
 fonctionnalités d'image du thème de bout en bout. Notez ce que cette
@@ -79,7 +84,7 @@ qui télécharge la source au build, la convertit en WebP, et émet un
 `srcset` responsive :
 
 ```yaml
-heroImage: https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1600&q=80&auto=format&fit=crop
+heroImage: ../../../assets/images/light-through-window.png
 heroImageAlt: Lumière douce du jour sur un bureau en bois
 ```
 
@@ -121,15 +126,19 @@ réglage global à ajuster sans modifier le markup des composants.
 
 Les images Markdown en ligne occupent toute la largeur de la prose :
 
-![Roches de côte photographiées sous un ciel couvert](https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=80&auto=format&fit=crop)
+<Image
+  src={img1}
+  alt="Roches de côte photographiées sous un ciel couvert"
+  widths={[400, 800, 1200]}
+/>
 
 Une figure légendée avec `<figcaption>` :
 
 <figure>
-  <img
-    src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=1600&q=80&auto=format&fit=crop"
+  <Image
+    src={img2}
     alt="Le soleil perçant les nuages au-dessus de l'océan"
-    loading="lazy"
+    widths={[400, 800, 1200]}
   />
   <figcaption>Soleil sur l'horizon. Photo de Sean O. sur Unsplash.</figcaption>
 </figure>
@@ -138,18 +147,8 @@ Images côte à côte ? Mettez-les dans un `<div>` HTML avec des classes
 Tailwind (c'est du MDX, après tout) :
 
 <div class="grid gap-3 sm:grid-cols-2">
-  <img
-    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&q=80&auto=format&fit=crop"
-    alt="Une plage de sable"
-    loading="lazy"
-    class="rounded-lg"
-  />
-  <img
-    src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=900&q=80&auto=format&fit=crop"
-    alt="Une falaise côtière"
-    loading="lazy"
-    class="rounded-lg"
-  />
+  <Image src={img3} alt="Une plage de sable" widths={[400, 600]} class="rounded-lg" />
+  <Image src={img4} alt="Une falaise côtière" widths={[400, 600]} class="rounded-lg" />
 </div>
 
 ## Texte alternatif — écrivez-en

@@ -7,8 +7,6 @@ categories: [Rédaction]
 translationKey: latex-math-with-katex
 math: true
 toc: true
-heroImage: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: "Un tableau noir couvert d'équations mathématiques manuscrites"
 ---
 
 Ce site supporte les **mathématiques de style LaTeX** prêtes à

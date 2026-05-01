@@ -5,8 +5,6 @@ pubDate: 2026-04-27
 tags: [code, coloration-syntaxique, expressive-code, shiki, markdown]
 categories: [Rédaction]
 translationKey: code-blocks-and-syntax-highlighting
-heroImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Gros plan sur une carte électronique'
 toc: true
 ---
 

@@ -6,12 +6,13 @@ updatedDate: 2026-04-29
 tags: [typography, markdown, mdx, design, reference]
 categories: [Reference]
 translationKey: typography-and-markdown
-heroImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'An open book on a wooden desk with strong directional light'
 toc: true
 ---
 
 import Callout from '../../../components/Callout.astro';
+import { Image } from 'astro:assets';
+import imgKeyboard from '../../../assets/images/macbook-keyboard.jpg';
+import imgDesk from '../../../assets/images/light-through-window.png';
 
 This post is the **typography test page** for the theme. If you change
 fonts, prose sizing, or anything in the `prose-chirpy` typography stack,
@@ -160,16 +161,16 @@ In plain Markdown, you can also reach for the lower-level CSS class:
 
 Inline Markdown images render edge-to-edge inside the prose column:
 
-![Light streaming through a window onto a wooden desk](https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=80&auto=format&fit=crop)
+<Image
+  src={imgDesk}
+  alt="Light streaming through a window onto a wooden desk"
+  widths={[400, 800, 1200]}
+/>
 
 A captioned figure with a `<figcaption>`:
 
 <figure>
-  <img
-    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80&auto=format&fit=crop"
-    alt="A close-up of a MacBook keyboard"
-    loading="lazy"
-  />
+  <Image src={imgKeyboard} alt="A close-up of a MacBook keyboard" widths={[400, 800, 1200]} />
   <figcaption>Photo by Ales Nesetril on Unsplash</figcaption>
 </figure>
 

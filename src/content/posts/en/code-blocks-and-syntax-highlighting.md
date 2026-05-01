@@ -5,8 +5,6 @@ pubDate: 2026-04-27
 tags: [code, syntax-highlighting, expressive-code, shiki, markdown]
 categories: [Authoring]
 translationKey: code-blocks-and-syntax-highlighting
-heroImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'A close-up photograph of a circuit board'
 toc: true
 ---
 

@@ -5,8 +5,6 @@ pubDate: 2026-04-21
 tags: [theme, daisyui, tailwind, mode-sombre, personnalisation]
 categories: [Tutoriels]
 translationKey: theming-and-dark-mode
-heroImage: 'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Deux échantillons de peinture, un foncé et un clair, côte à côte'
 toc: true
 ---
 
@@ -110,15 +108,15 @@ Au-delà de la palette daisyUI standard, le thème définit quelques
 tokens de mise en page — modifiez-les dans `global.css` pour
 re-calibrer le dimensionnement :
 
-| Token                   | Défaut       | Utilisé pour                    |
-| ----------------------- | ------------ | ------------------------------- |
-| `--width-sidebar`       | `18rem`      | Largeur de la barre latérale    |
-| `--width-panel`         | `14rem`      | Panneau « Tags populaires »     |
-| `--height-topbar`       | `3.25rem`    | Hauteur de la barre du haut     |
-| `--width-prose`         | `50rem`      | Largeur max de la prose         |
-| `--color-sidebar-from`  | OKLCH        | Début du dégradé sidebar        |
-| `--color-sidebar-to`    | OKLCH        | Fin du dégradé sidebar          |
-| `--color-sidebar-text`  | OKLCH        | Couleur du texte de la sidebar  |
+| Token                  | Défaut    | Utilisé pour                   |
+| ---------------------- | --------- | ------------------------------ |
+| `--width-sidebar`      | `18rem`   | Largeur de la barre latérale   |
+| `--width-panel`        | `14rem`   | Panneau « Tags populaires »    |
+| `--height-topbar`      | `3.25rem` | Hauteur de la barre du haut    |
+| `--width-prose`        | `50rem`   | Largeur max de la prose        |
+| `--color-sidebar-from` | OKLCH     | Début du dégradé sidebar       |
+| `--color-sidebar-to`   | OKLCH     | Fin du dégradé sidebar         |
+| `--color-sidebar-text` | OKLCH     | Couleur du texte de la sidebar |
 
 ## Renommer ou remplacer les thèmes
 

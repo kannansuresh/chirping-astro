@@ -5,8 +5,6 @@ pubDate: 2026-04-22
 tags: [giscus, comments, github, discussions]
 categories: [Tutorials]
 translationKey: comments-with-giscus
-heroImage: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: 'Speech bubbles drawn on a chalkboard'
 toc: true
 ---
 

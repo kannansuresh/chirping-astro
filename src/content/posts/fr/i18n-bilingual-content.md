@@ -5,8 +5,7 @@ pubDate: 2026-04-24
 tags: [i18n, internationalisation, locales, francais, anglais]
 categories: [Tutoriels]
 translationKey: i18n-bilingual-content
-heroImage: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1600&q=80&auto=format&fit=crop'
-heroImageAlt: "Pages d'un dictionnaire ouvert avec des annotations manuscrites"
+
 toc: true
 ---
 
