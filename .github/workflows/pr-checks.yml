@@ -103,7 +103,7 @@ jobs:
           fi
           if [ -s .ci-eslint.txt ]; then
             mapfile -t files < .ci-eslint.txt
-            bunx eslint --max-warnings=0 "${files[@]}"
+            bun eslint --max-warnings=0 "${files[@]}"
           fi
 
       - name: Run Prettier
@@ -118,7 +118,7 @@ jobs:
           fi
           if [ -s .ci-prettier.txt ]; then
             mapfile -t files < .ci-prettier.txt
-            bunx prettier --check "${files[@]}"
+            bun prettier --check "${files[@]}"
           fi
 
   typecheck:
