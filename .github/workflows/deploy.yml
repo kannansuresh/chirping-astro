@@ -1,8 +1,10 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
+  workflow_run:
+    workflows: ['PR Checks']
     branches: [main]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -28,6 +30,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     # Bind the build to the same `github-pages` environment as the deploy
     # job. This is what makes `vars.*` and `secrets.*` defined under
     # _Settings → Environments → github-pages_ resolvable here at build
