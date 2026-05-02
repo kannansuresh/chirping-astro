@@ -1,10 +1,10 @@
 name: Sync Starter Template
 
 on:
-  push:
+  workflow_run:
+    workflows: ['PR Checks']
     branches: [main]
-    paths-ignore:
-      - '.github/workflows/sync-starter.yml'
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +14,7 @@ jobs:
   sync:
     name: Sync to Starter Repo
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
 
     steps:
       - name: Checkout source
