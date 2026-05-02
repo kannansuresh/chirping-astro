@@ -47,8 +47,77 @@ See the included sample post for all available frontmatter fields.
 
 ## Deploy to GitHub Pages
 
-1. Go to **Settings → Pages → Source → GitHub Actions**.
-2. Push to `main` — the included deploy workflow handles the rest.
+The included `.github/workflows/deploy.yml` builds and deploys your site automatically on every push to `main`. To set it up:
+
+### 1. Enable GitHub Pages
+
+Go to your repo **Settings → Pages → Source** and select **GitHub Actions**.
+
+### 2. Set environment variables (optional)
+
+Go to **Settings → Environments → github-pages → Environment variables** and add any of:
+
+| Variable                    | Purpose                               | Default                        |
+| --------------------------- | ------------------------------------- | ------------------------------ |
+| `SITE_URL`                  | Your production URL                   | `https://<username>.github.io` |
+| `BASE_PATH`                 | Sub-path for the site                 | `/<repo-name>`                 |
+| `PUBLIC_GITHUB_HANDLE`      | GitHub profile link in sidebar        | Your GitHub username           |
+| `PUBLIC_TWITTER_HANDLE`     | Twitter/X link in sidebar             | _(none)_                       |
+| `PUBLIC_CONTACT_EMAIL`      | Email link in sidebar                 | _(none)_                       |
+| `PUBLIC_GISCUS_ENABLED`     | Enable comments (`true`/`false`)      | _(none)_                       |
+| `PUBLIC_GISCUS_REPO`        | `owner/repo` for Giscus               | _(none)_                       |
+| `PUBLIC_GISCUS_REPO_ID`     | From [giscus.app](https://giscus.app) | _(none)_                       |
+| `PUBLIC_GISCUS_CATEGORY`    | Discussion category name              | _(none)_                       |
+| `PUBLIC_GISCUS_CATEGORY_ID` | From [giscus.app](https://giscus.app) | _(none)_                       |
+
+> **Note:** All variables are optional. The site builds and deploys with zero configuration — variables just enable extra features.
+
+### 3. Push to `main`
+
+That's it. The workflow will build and deploy your site. Your site will be available at `https://<username>.github.io/<repo-name>/`.
+
+## Custom Domain
+
+To use your own domain (e.g., `https://blog.example.com`):
+
+1. Set the `SITE_URL` environment variable to your full domain URL (no trailing slash).
+2. Set `BASE_PATH` to empty (or `/`).
+3. Configure your DNS — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
+
+## Giscus Comments
+
+To enable GitHub Discussions-powered comments on posts:
+
+1. Install the [Giscus app](https://github.com/apps/giscus) on your repo.
+2. Go to [giscus.app](https://giscus.app), fill in your repo details, and copy the generated values.
+3. Add these environment variables in **Settings → Environments → github-pages**:
+   - `PUBLIC_GISCUS_ENABLED` = `true`
+   - `PUBLIC_GISCUS_REPO` = `your-username/your-repo`
+   - `PUBLIC_GISCUS_REPO_ID` = _(from giscus.app)_
+   - `PUBLIC_GISCUS_CATEGORY` = `Announcements` _(or your chosen category)_
+   - `PUBLIC_GISCUS_CATEGORY_ID` = _(from giscus.app)_
+
+## Single Language Mode
+
+This starter ships with English + French (i18n). To run a single-language site:
+
+1. Open `src/config.ts` and set `multilingual: false`.
+2. Delete the `src/content/posts/fr/` folder (and `src/content/pages/fr/` if present).
+3. Remove the `src/pages/fr/` directory.
+
+The language switcher will disappear and all `hreflang` tags are omitted.
+
+## Customization
+
+| What                            | Where                                |
+| ------------------------------- | ------------------------------------ |
+| Site title, description, author | `src/config.ts` → `SITE`             |
+| Navigation links                | `src/config.ts` → `NAV`              |
+| Social links                    | `src/config.ts` → `SOCIAL`           |
+| Avatar image                    | `public/images/avatar.svg`           |
+| Default OG image                | `public/images/og-default.svg`       |
+| Global styles                   | `src/styles/global.css`              |
+| Theme colors                    | daisyUI theme tokens in `global.css` |
 
 ## Commands
 
@@ -62,7 +131,15 @@ See the included sample post for all available frontmatter fields.
 
 ## Documentation
 
-For full documentation on all features (i18n, dark mode, math, comments, OG images, etc.), see the [main repository](https://github.com/kannansuresh/chirping-astro).
+For full documentation on all features (i18n, dark mode, math, comments, OG images, etc.), see the [main repository README](https://github.com/kannansuresh/chirping-astro#readme).
+
+## Contributing & Issues
+
+> **This starter repository is automatically synced from the [main Chirping Astro repository](https://github.com/kannansuresh/chirping-astro).** Please do not open pull requests here — changes will be overwritten on the next sync.
+
+- **Found a bug?** [Open an issue](https://github.com/kannansuresh/chirping-astro/issues) on the main repository.
+- **Want to contribute?** See the [contributing guide](https://github.com/kannansuresh/chirping-astro/blob/main/CONTRIBUTING.md) on the main repository.
+- **Have a question?** Use [Discussions](https://github.com/kannansuresh/chirping-astro/discussions) on the main repository.
 
 ## License
 

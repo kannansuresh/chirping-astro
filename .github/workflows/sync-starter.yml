@@ -70,9 +70,9 @@ jobs:
           # Copy starter README (replaces main repo README)
           cp source/.starter/README.md starter/README.md
 
-          # Copy deploy workflow only (no PR checks/bots needed for starter)
+          # Copy starter-specific deploy workflow
           mkdir -p starter/.github/workflows
-          cp source/.github/workflows/deploy.yml starter/.github/workflows/
+          cp source/.starter/workflows/deploy.yml starter/.github/workflows/deploy.yml
 
       - name: Push changes
         shell: bash
