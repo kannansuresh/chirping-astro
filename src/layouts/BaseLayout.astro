@@ -124,7 +124,9 @@ const meta: SeoMeta =
           try {
             var stored = localStorage.getItem('theme');
             var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            var theme = stored ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+            var valid = stored === 'chirpy-dark' || stored === 'chirpy-light';
+            var theme = valid ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+            if (!valid && stored) localStorage.setItem('theme', theme);
             document.documentElement.setAttribute('data-theme', theme);
           } catch {
             /* ignore */
