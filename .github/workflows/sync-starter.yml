@@ -22,11 +22,15 @@ jobs:
           path: source
 
       - name: Checkout starter repo
-        uses: actions/checkout@v6
-        with:
-          repository: kannansuresh/chirping-astro-starter
-          token: ${{ secrets.STARTER_REPO_TOKEN }}
-          path: starter
+        shell: bash
+        env:
+          STARTER_TOKEN: ${{ secrets.STARTER_REPO_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${STARTER_TOKEN}@github.com/kannansuresh/chirping-astro-starter.git" starter 2>/dev/null || {
+            mkdir starter && cd starter
+            git init -b main
+            git remote add origin "https://x-access-token:${STARTER_TOKEN}@github.com/kannansuresh/chirping-astro-starter.git"
+          }
 
       - name: Sync files
         shell: bash
