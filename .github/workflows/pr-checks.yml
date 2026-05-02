@@ -134,7 +134,7 @@ jobs:
   build:
     name: Build
     needs: changes
-    if: needs.changes.outputs.run_build == 'true'
+    if: github.event_name == 'pull_request' && needs.changes.outputs.run_build == 'true'
     runs-on: ubuntu-latest
 
     steps:
