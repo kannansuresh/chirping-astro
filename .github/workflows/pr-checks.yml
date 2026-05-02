@@ -3,6 +3,8 @@ name: PR Checks
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -205,9 +207,9 @@ jobs:
 
       - name: Build without auto OG generation
         env:
-          CI_SKIP_AUTO_OG_IMAGE: 'true'
-          CI_SKIP_RSS_SITEMAP: 'true'
-          CI_SKIP_CONTENT_COLLECTIONS: 'true'
+          CI_SKIP_AUTO_OG_IMAGE: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+          CI_SKIP_RSS_SITEMAP: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
+          CI_SKIP_CONTENT_COLLECTIONS: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
         run: bun run build
 
   no-op:
