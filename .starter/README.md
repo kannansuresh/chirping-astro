@@ -6,15 +6,25 @@ A minimal starter template for [Chirping Astro](https://github.com/kannansuresh/
 
 ## Quick Start
 
+### Option 1: Astro CLI (recommended)
+
 ```bash
-# Clone this starter
+npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+```
+
+The wizard will prompt you for a project name, install dependencies, and initialize git.
+
+### Option 2: Clone directly
+
+```bash
 git clone https://github.com/kannansuresh/chirping-astro-starter.git my-blog
 cd my-blog
-
-# Install dependencies
 bun install
+```
 
-# Start dev server
+### Start dev server
+
+```bash
 bun dev
 ```
 

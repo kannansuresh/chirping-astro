@@ -96,6 +96,12 @@ page pour rejoindre le dépôt GitHub configuré (renseignez
 Envie de partir de zéro sans le contenu de démo ? Utilisez le
 [**Chirping Astro Starter**](https://github.com/kannansuresh/chirping-astro-starter)
 — une version minimale, prête à déployer, automatiquement synchronisée
-avec ce thème. Clonez-le, activez GitHub Pages, poussez, et c'est en ligne.
+avec ce thème :
+
+```bash
+npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+```
+
+Activez GitHub Pages, poussez, et c'est en ligne.
 
 Bonne écriture. ✨

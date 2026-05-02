@@ -100,7 +100,11 @@ You do **not** need Node.js installed alongside Bun.
 
 > **Tip:** For a clean starting point without demo content, use the
 > [Starter Template](https://github.com/kannansuresh/chirping-astro-starter)
-> instead of cloning this repository.
+> instead of cloning this repository:
+>
+> ```bash
+> npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+> ```
 
 ### 1. Get the code
 
