@@ -14,80 +14,69 @@ concurrency:
   group: pr-checks-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-
 jobs:
   changes:
     name: Detect Changes
     runs-on: ubuntu-latest
     outputs:
-      run_eslint: ${{ steps.changed.outputs.run_eslint }}
-      run_prettier: ${{ steps.changed.outputs.run_prettier }}
-      run_typecheck: ${{ steps.changed.outputs.run_typecheck }}
-      run_build: ${{ steps.changed.outputs.run_build }}
+      run_lint_format: ${{ steps.detect.outputs.run_lint_format }}
+      run_typecheck: ${{ steps.detect.outputs.run_typecheck }}
+      run_build: ${{ steps.detect.outputs.run_build }}
 
     steps:
       - name: Checkout
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Detect changed files
-        id: changed
+        id: detect
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch origin "${{ github.base_ref }}" --depth=1
-            git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" > .ci-changed.txt
-          else
-            git ls-files > .ci-changed.txt
+          # Non-PR events always run everything
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "run_lint_format=true" >> "$GITHUB_OUTPUT"
+            echo "run_typecheck=true" >> "$GITHUB_OUTPUT"
+            echo "run_build=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
-          : > .ci-eslint.txt
-          : > .ci-prettier.txt
-          grep -E '\.(astro|ts|tsx|js|jsx)$' .ci-changed.txt >> .ci-eslint.txt || true
-          grep -E '\.(astro|ts|tsx|js|jsx|md|mdx|css|json)$' .ci-changed.txt >> .ci-prettier.txt || true
-          grep -E '(^src/|^astro\.config\.mjs$|^tsconfig\.json$|^src/content\.config\.ts$|^src/env\.d\.ts$|^package\.json$|^bun\.lock$|\.astro$|\.ts$|\.tsx$|\.js$|\.jsx$)' .ci-changed.txt > .ci-typecheck.txt || true
-          grep -E '(^src/|^public/|^astro\.config\.mjs$|^tsconfig\.json$|^package\.json$|^bun\.lock$)' .ci-changed.txt > .ci-build.txt || true
+          git diff --name-only --diff-filter=ACMR \
+            "${{ github.event.pull_request.base.sha }}...HEAD" > .ci-changed.txt
 
-          if [ -s .ci-eslint.txt ]; then echo "run_eslint=true" >> "$GITHUB_OUTPUT"; else echo "run_eslint=false" >> "$GITHUB_OUTPUT"; fi
-          if [ -s .ci-prettier.txt ]; then echo "run_prettier=true" >> "$GITHUB_OUTPUT"; else echo "run_prettier=false" >> "$GITHUB_OUTPUT"; fi
-          if [ -s .ci-typecheck.txt ]; then echo "run_typecheck=true" >> "$GITHUB_OUTPUT"; else echo "run_typecheck=false" >> "$GITHUB_OUTPUT"; fi
-          if [ -s .ci-build.txt ]; then echo "run_build=true" >> "$GITHUB_OUTPUT"; else echo "run_build=false" >> "$GITHUB_OUTPUT"; fi
+          run_lint_format=false
+          run_typecheck=false
+          run_build=false
 
-      - name: Upload changed file lists
-        if: steps.changed.outputs.run_eslint == 'true' || steps.changed.outputs.run_prettier == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-changed-files
-          if-no-files-found: error
-          retention-days: 1
-          path: |
-            .ci-eslint.txt
-            .ci-prettier.txt
+          if grep -qE '\.(astro|ts|tsx|js|jsx|md|mdx|css|json)$' .ci-changed.txt; then
+            run_lint_format=true
+          fi
+          if grep -qE '(^src/|^astro\.config\.mjs$|^tsconfig\.json$|^package\.json$|^bun\.lock$)' .ci-changed.txt; then
+            run_typecheck=true
+            run_build=true
+          fi
 
-  lint:
-    name: Lint Changed Files
+          echo "run_lint_format=${run_lint_format}" >> "$GITHUB_OUTPUT"
+          echo "run_typecheck=${run_typecheck}" >> "$GITHUB_OUTPUT"
+          echo "run_build=${run_build}" >> "$GITHUB_OUTPUT"
+
+  lint-format:
+    name: Lint & Format
     needs: changes
-    if: needs.changes.outputs.run_eslint == 'true'
+    if: needs.changes.outputs.run_lint_format == 'true'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Download changed file lists
-        uses: actions/download-artifact@v5
         with:
-          name: ci-changed-files
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
 
       - name: Restore dependency cache
         uses: actions/cache@v4
@@ -95,57 +84,42 @@ jobs:
           path: |
             ~/.bun/install/cache
             node_modules
-          key: ${{ runner.os }}-bun-1.3.13-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-1.3.13-
+            ${{ runner.os }}-bun-
 
-      - name: Install dependencies (frozen lockfile)
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Run ESLint on changed files
+      - name: Run ESLint
         shell: bash
         run: |
-          mapfile -t files < .ci-eslint.txt
-          bunx eslint --max-warnings=0 "${files[@]}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only --diff-filter=ACMR \
+              "${{ github.event.pull_request.base.sha }}...HEAD" \
+              | grep -E '\.(astro|ts|tsx|js|jsx)$' > .ci-eslint.txt || true
+          else
+            git ls-files '*.astro' '*.ts' '*.tsx' '*.js' '*.jsx' > .ci-eslint.txt
+          fi
+          if [ -s .ci-eslint.txt ]; then
+            mapfile -t files < .ci-eslint.txt
+            bunx eslint --max-warnings=0 "${files[@]}"
+          fi
 
-  format:
-    name: Format Check Changed Files
-    needs: changes
-    if: needs.changes.outputs.run_prettier == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Download changed file lists
-        uses: actions/download-artifact@v5
-        with:
-          name: ci-changed-files
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
-
-      - name: Restore dependency cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.bun/install/cache
-            node_modules
-          key: ${{ runner.os }}-bun-1.3.13-${{ hashFiles('bun.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-1.3.13-
-
-      - name: Install dependencies (frozen lockfile)
-        run: bun install --frozen-lockfile
-
-      - name: Run Prettier on changed files
+      - name: Run Prettier
         shell: bash
         run: |
-          mapfile -t files < .ci-prettier.txt
-          bunx prettier --check "${files[@]}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only --diff-filter=ACMR \
+              "${{ github.event.pull_request.base.sha }}...HEAD" \
+              | grep -E '\.(astro|ts|tsx|js|jsx|md|mdx|css|json)$' > .ci-prettier.txt || true
+          else
+            git ls-files '*.astro' '*.ts' '*.tsx' '*.js' '*.jsx' '*.md' '*.mdx' '*.css' '*.json' > .ci-prettier.txt
+          fi
+          if [ -s .ci-prettier.txt ]; then
+            mapfile -t files < .ci-prettier.txt
+            bunx prettier --check "${files[@]}"
+          fi
 
   typecheck:
     name: Typecheck
@@ -159,8 +133,6 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
 
       - name: Restore dependency cache
         uses: actions/cache@v4
@@ -169,11 +141,11 @@ jobs:
             ~/.bun/install/cache
             node_modules
             .astro
-          key: ${{ runner.os }}-bun-1.3.13-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-1.3.13-
+            ${{ runner.os }}-bun-
 
-      - name: Install dependencies (frozen lockfile)
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
       - name: Run typecheck
@@ -191,8 +163,6 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.13
 
       - name: Restore dependency cache
         uses: actions/cache@v4
@@ -201,61 +171,45 @@ jobs:
             ~/.bun/install/cache
             node_modules
             .astro
-          key: ${{ runner.os }}-bun-1.3.13-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-bun-1.3.13-
+            ${{ runner.os }}-bun-
 
-      - name: Install dependencies (frozen lockfile)
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build without auto OG generation
+      - name: Build
         env:
           CI_SKIP_AUTO_OG_IMAGE: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
           CI_SKIP_RSS_SITEMAP: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
           CI_SKIP_CONTENT_COLLECTIONS: ${{ github.event_name == 'pull_request' && 'true' || 'false' }}
         run: bun run build
 
-  no-op:
-    name: No-op Summary
-    needs: changes
-    if: needs.changes.outputs.run_eslint != 'true' && needs.changes.outputs.run_prettier != 'true' && needs.changes.outputs.run_typecheck != 'true' && needs.changes.outputs.run_build != 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Nothing to validate
-        run: echo "No build-impacting or lintable files changed; heavy checks skipped."
-
   status:
     name: PR Checks Status
-    needs: [changes, lint, format, typecheck, build, no-op]
+    needs: [changes, lint-format, typecheck, build]
     if: always()
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verify upstream job results
+      - name: Verify results
         shell: bash
         run: |
           set -euo pipefail
 
-          CHANGES_RESULT="${{ needs.changes.result }}"
-          LINT_RESULT="${{ needs.lint.result }}"
-          FORMAT_RESULT="${{ needs.format.result }}"
-          TYPECHECK_RESULT="${{ needs.typecheck.result }}"
-          BUILD_RESULT="${{ needs.build.result }}"
-          NOOP_RESULT="${{ needs.no-op.result }}"
+          results=(
+            "${{ needs.changes.result }}"
+            "${{ needs.lint-format.result }}"
+            "${{ needs.typecheck.result }}"
+            "${{ needs.build.result }}"
+          )
 
-          echo "changes=${CHANGES_RESULT}"
-          echo "lint=${LINT_RESULT}"
-          echo "format=${FORMAT_RESULT}"
-          echo "typecheck=${TYPECHECK_RESULT}"
-          echo "build=${BUILD_RESULT}"
-          echo "no-op=${NOOP_RESULT}"
-
-          for result in "${CHANGES_RESULT}" "${LINT_RESULT}" "${FORMAT_RESULT}" "${TYPECHECK_RESULT}" "${BUILD_RESULT}" "${NOOP_RESULT}"; do
-            if [ "${result}" = "failure" ] || [ "${result}" = "cancelled" ]; then
+          for r in "${results[@]}"; do
+            echo "  -> ${r}"
+            if [ "${r}" = "failure" ] || [ "${r}" = "cancelled" ]; then
               echo "::error::One or more PR check jobs failed or were cancelled."
               exit 1
             fi
           done
 
-          echo "All required PR checks are successful or intentionally skipped."
+          echo "All PR checks passed."
