@@ -18,6 +18,7 @@ jobs:
   changes:
     name: Detect Changes
     runs-on: ubuntu-latest
+    if: github.actor != 'imgbot[bot]'
     outputs:
       run_lint_format: ${{ steps.detect.outputs.run_lint_format }}
       run_typecheck: ${{ steps.detect.outputs.run_typecheck }}

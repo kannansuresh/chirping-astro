@@ -1,0 +1,26 @@
+name: Auto-merge ImgBot
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge ImgBot PR
+    runs-on: ubuntu-latest
+    if: github.actor == 'imgbot[bot]'
+
+    steps:
+      - name: Approve PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr review "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --approve
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge "${{ github.event.pull_request.number }}" --repo "${{ github.repository }}" --auto --squash
