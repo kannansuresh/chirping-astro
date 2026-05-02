@@ -16,7 +16,7 @@ authoring experience — without writing your own theme from scratch.
 > If you're running locally, browse
 > [/posts/welcome](http://localhost:4321/posts/welcome) for a guided
 > tour and links to feature-specific deep dives.
-
+>
 > **Want to start fresh?** Use the
 > [Starter Template](https://github.com/kannansuresh/chirping-astro-starter)
 > — a minimal, ready-to-deploy version with sample content and zero

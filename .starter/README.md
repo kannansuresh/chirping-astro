@@ -100,7 +100,7 @@ To use your own domain (e.g., `https://blog.example.com`) exclusively for this s
 
 If your GitHub user site (`<username>.github.io`) already points to a custom domain (e.g., `example.com`), then **all project sites** under that account are automatically served under that domain:
 
-```
+```text
 username.github.io        → example.com          (user site)
 username.github.io/blog   → example.com/blog     (this repo)
 ```
