@@ -8,10 +8,14 @@ It targets technical writers who want a fast, accessible, statically
 generated blog with first-class i18n, dark mode, and a modern
 authoring experience — without writing your own theme from scratch.
 
+![Chirping Astro device mockup](./src/assets/devices-mockup.png)
+
 > **Live demo posts on this site walk through every feature in
-> detail.** Once it's running locally, browse from
-> [/posts/welcome](http://localhost:4321/posts/welcome) to find a
-> guided tour and links to feature-specific deep dives.
+> detail.** Start with the hosted demo:
+> [https://kannansuresh.github.io/chirping-astro](https://kannansuresh.github.io/chirping-astro).
+> If you're running locally, browse
+> [/posts/welcome](http://localhost:4321/posts/welcome) for a guided
+> tour and links to feature-specific deep dives.
 
 ---
 
@@ -1064,8 +1068,11 @@ When changing repo ownership or moving forks, verify these values in `.env` and 
 
 ### PR checks fast mode
 
-The PR validation workflow in [.github/workflows/pr-checks.yml](./.github/workflows/pr-checks.yml)
-uses a performance mode for build jobs by setting these env vars:
+The checks workflow in [.github/workflows/pr-checks.yml](./.github/workflows/pr-checks.yml)
+runs on both pull requests and direct pushes to `main`.
+
+On pull requests, it uses a performance mode for build jobs by setting
+these env vars:
 
 - `CI_SKIP_AUTO_OG_IMAGE=true`: skips generated OG image PNG creation.
 - `CI_SKIP_RSS_SITEMAP=true`: disables sitemap integration and emits empty RSS feeds.
@@ -1075,8 +1082,8 @@ uses a performance mode for build jobs by setting these env vars:
 This mode is intentionally CI-only. It keeps PR checks fast while still validating
 the app shell and route graph integrity.
 
-For release confidence, `main` deploy builds should continue to run with all three
-flags unset (or `false`) so full site output is generated.
+On direct pushes to `main`, those flags are left as `false` so checks run
+against full site output.
 
 ---
 
