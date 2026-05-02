@@ -88,4 +88,11 @@ editor, or click the **Chirping Astro** link in the site footer to jump
 to the configured GitHub repo (set `PUBLIC_GITHUB_HANDLE` and
 `PUBLIC_GITHUB_REPO` in `.env`).
 
+## Starter template
+
+Want to skip the demo content and start fresh? Use the
+[**Chirping Astro Starter**](https://github.com/kannansuresh/chirping-astro-starter)
+— a minimal, ready-to-deploy version that's automatically kept in sync
+with this theme. Clone it, enable GitHub Pages, push, and you're live.
+
 Happy chirping. ✨

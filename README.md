@@ -17,6 +17,11 @@ authoring experience — without writing your own theme from scratch.
 > [/posts/welcome](http://localhost:4321/posts/welcome) for a guided
 > tour and links to feature-specific deep dives.
 
+> **Want to start fresh?** Use the
+> [Starter Template](https://github.com/kannansuresh/chirping-astro-starter)
+> — a minimal, ready-to-deploy version with sample content and zero
+> boilerplate to remove.
+
 ---
 
 ## Table of contents
@@ -92,6 +97,10 @@ You do **not** need Node.js installed alongside Bun.
 ---
 
 ## Quickstart
+
+> **Tip:** For a clean starting point without demo content, use the
+> [Starter Template](https://github.com/kannansuresh/chirping-astro-starter)
+> instead of cloning this repository.
 
 ### 1. Get the code
 

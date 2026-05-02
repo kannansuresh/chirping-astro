@@ -91,4 +91,11 @@ votre éditeur, ou cliquez sur le lien **Chirping Astro** du pied de
 page pour rejoindre le dépôt GitHub configuré (renseignez
 `PUBLIC_GITHUB_HANDLE` et `PUBLIC_GITHUB_REPO` dans `.env`).
 
+## Template de démarrage
+
+Envie de partir de zéro sans le contenu de démo ? Utilisez le
+[**Chirping Astro Starter**](https://github.com/kannansuresh/chirping-astro-starter)
+— une version minimale, prête à déployer, automatiquement synchronisée
+avec ce thème. Clonez-le, activez GitHub Pages, poussez, et c'est en ligne.
+
 Bonne écriture. ✨
