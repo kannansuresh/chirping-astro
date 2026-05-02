@@ -78,11 +78,29 @@ That's it. The workflow will build and deploy your site. Your site will be avail
 
 ## Custom Domain
 
-To use your own domain (e.g., `https://blog.example.com`):
+### Dedicated domain for this site
 
-1. Set the `SITE_URL` environment variable to your full domain URL (no trailing slash).
+To use your own domain (e.g., `https://blog.example.com`) exclusively for this site:
+
+1. Set `SITE_URL` = `https://blog.example.com`
 2. Set `BASE_PATH` to empty (or `/`).
 3. Configure your DNS — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
+
+### Using a custom domain on your GitHub user site
+
+If your GitHub user site (`<username>.github.io`) already points to a custom domain (e.g., `example.com`), then **all project sites** under that account are automatically served under that domain:
+
+```
+username.github.io        → example.com          (user site)
+username.github.io/blog   → example.com/blog     (this repo)
+```
+
+In this case, you don't need any extra DNS setup. Just set:
+
+- `SITE_URL` = `https://example.com`
+- `BASE_PATH` = `/<repo-name>` (e.g., `/blog`)
+
+The deploy workflow already defaults `BASE_PATH` to `/<repo-name>`, so if you're happy with `example.com/<repo-name>/` as your blog URL, **no configuration is needed at all** — it works out of the box.
 
 ## Giscus Comments
 
