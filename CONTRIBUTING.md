@@ -34,6 +34,14 @@ bun run format:check
 bun run build
 ```
 
+Note on CI behavior:
+
+- PR checks use an optimized build mode to keep turnaround fast.
+- That mode skips generated OG images, sitemap generation, RSS item population,
+  and post-derived content collection reads.
+- If your change affects content rendering, SEO/RSS/sitemap output, or OG image
+  generation, include a normal local `bun run build` result in your PR notes.
+
 ## What to contribute
 
 - Bug fixes

@@ -117,6 +117,7 @@ const GITHUB_HANDLE = import.meta.env.PUBLIC_GITHUB_HANDLE ?? '';
 const GITHUB_REPO = import.meta.env.PUBLIC_GITHUB_REPO ?? 'chirping-astro';
 const TWITTER_HANDLE = import.meta.env.PUBLIC_TWITTER_HANDLE ?? '';
 const CONTACT_EMAIL = import.meta.env.PUBLIC_CONTACT_EMAIL ?? '';
+const AUTO_OG_DISABLED_IN_CI = (import.meta.env.CI_SKIP_AUTO_OG_IMAGE ?? 'false') === 'true';
 
 /**
  * Public GitHub coordinates of the deployed source. Used by the footer's
@@ -152,7 +153,7 @@ export const SITE: SiteConfig = {
   boxedArticles: false,
   dynamicPostCardHeight: false,
   multilingual: true,
-  autoOgImage: true,
+  autoOgImage: !AUTO_OG_DISABLED_IN_CI,
 };
 
 export const NAV: readonly NavItem[] = [

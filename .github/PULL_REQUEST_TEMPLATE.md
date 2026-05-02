@@ -17,6 +17,7 @@ Describe what this PR changes and why.
 - [ ] `bun run lint`
 - [ ] `bun run format:check`
 - [ ] `bun run build`
+- [ ] If this PR touches SEO/RSS/sitemap/content-route behavior, I verified a full non-fast build (without `CI_SKIP_AUTO_OG_IMAGE`, `CI_SKIP_RSS_SITEMAP`, `CI_SKIP_CONTENT_COLLECTIONS`).
 
 ## Screenshots (if UI change)
 

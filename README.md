@@ -117,6 +117,10 @@ Open `.env` and fill in:
 # Public site URL (no trailing slash). Used for canonical, OG, hreflang, sitemap.
 SITE_URL=https://chirping-astro.example.com
 
+# Optional base path for sub-path hosting (for example GitHub Pages).
+# Keep empty for local dev and root-domain hosting.
+BASE_PATH=
+
 # Author / social handles. Leave any of them blank to drop the matching
 # icon from the sidebar. The footer's "Theme" link uses GITHUB_HANDLE +
 # GITHUB_REPO, so users never have to edit URLs by hand.
@@ -133,6 +137,12 @@ PUBLIC_GISCUS_REPO=your-handle/your-repo
 PUBLIC_GISCUS_REPO_ID=R_xxxxxxxxxxx
 PUBLIC_GISCUS_CATEGORY=Announcements
 PUBLIC_GISCUS_CATEGORY_ID=DIC_xxxxxxxxxxx
+
+# CI-only optimization flags (normally keep false).
+# The PR Checks workflow enables these automatically for faster PR builds.
+CI_SKIP_AUTO_OG_IMAGE=false
+CI_SKIP_RSS_SITEMAP=false
+CI_SKIP_CONTENT_COLLECTIONS=false
 ```
 
 You can leave `PUBLIC_GISCUS_*` as placeholders for now — the theme
@@ -1051,6 +1061,22 @@ When changing repo ownership or moving forks, verify these values in `.env` and 
 - `PUBLIC_GISCUS_REPO_ID`
 - `PUBLIC_GISCUS_CATEGORY`
 - `PUBLIC_GISCUS_CATEGORY_ID`
+
+### PR checks fast mode
+
+The PR validation workflow in [.github/workflows/pr-checks.yml](./.github/workflows/pr-checks.yml)
+uses a performance mode for build jobs by setting these env vars:
+
+- `CI_SKIP_AUTO_OG_IMAGE=true`: skips generated OG image PNG creation.
+- `CI_SKIP_RSS_SITEMAP=true`: disables sitemap integration and emits empty RSS feeds.
+- `CI_SKIP_CONTENT_COLLECTIONS=true`: short-circuits post collection reads used by
+  post-derived pages (post pages, paginated listings, tag/category detail pages).
+
+This mode is intentionally CI-only. It keeps PR checks fast while still validating
+the app shell and route graph integrity.
+
+For release confidence, `main` deploy builds should continue to run with all three
+flags unset (or `false`) so full site output is generated.
 
 ---
 

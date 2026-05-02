@@ -89,6 +89,20 @@ Quand **désactivé** :
 - Les articles sans `heroImage` utilisent `SITE.defaultOgImage`
   (typiquement `/images/og-default.svg`).
 
+### Note CI (pull requests)
+
+Le workflow de vérification des PR active un drapeau d'optimisation
+réservé à la CI :
+
+```env
+CI_SKIP_AUTO_OG_IMAGE=true
+```
+
+Quand ce drapeau est activé, la génération des images OG est ignorée
+pendant les builds de PR pour réduire le temps CI. Les builds de
+déploiement/production doivent le laisser vide (ou `false`) pour
+générer toutes les images OG.
+
 ## Personnaliser le design
 
 Le template d'image OG se trouve dans `src/utils/og-image.ts`. Il

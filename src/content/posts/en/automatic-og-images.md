@@ -89,6 +89,18 @@ When **disabled**:
 - Posts without `heroImage` fall back to `SITE.defaultOgImage`
   (typically `/images/og-default.svg`).
 
+### CI note (pull requests)
+
+The PR checks workflow enables a CI-only optimization flag:
+
+```env
+CI_SKIP_AUTO_OG_IMAGE=true
+```
+
+When this flag is set, OG image generation is skipped during PR builds
+to reduce CI time. Production/deploy builds should leave it unset (or
+`false`) so full OG output is generated.
+
 ## Customising the design
 
 The OG image template lives in `src/utils/og-image.ts`. It exports a
@@ -134,20 +146,20 @@ The template uses **Inter** (400 + 700) loaded from
 1. Install the font package: `bun add @fontsource/your-font`
 2. Update the file paths in `src/utils/og-image.ts`:
 
-```ts
-const fontsDir = join(process.cwd(), 'node_modules/@fontsource/your-font/files');
-const fontRegular = readFileSync(join(fontsDir, 'your-font-latin-400-normal.woff'));
-const fontBold = readFileSync(join(fontsDir, 'your-font-latin-700-normal.woff'));
-```
+   ```ts
+   const fontsDir = join(process.cwd(), 'node_modules/@fontsource/your-font/files');
+   const fontRegular = readFileSync(join(fontsDir, 'your-font-latin-400-normal.woff'));
+   const fontBold = readFileSync(join(fontsDir, 'your-font-latin-700-normal.woff'));
+   ```
 
 3. Update the font name in the `satori()` options:
 
-```ts
-fonts: [
-  { name: 'YourFont', data: fontRegular, weight: 400, style: 'normal' },
-  { name: 'YourFont', data: fontBold, weight: 700, style: 'normal' },
-],
-```
+   ```ts
+   fonts: [
+     { name: 'YourFont', data: fontRegular, weight: 400, style: 'normal' },
+     { name: 'YourFont', data: fontBold, weight: 700, style: 'normal' },
+   ],
+   ```
 
 ### Changing the layout
 

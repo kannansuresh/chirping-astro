@@ -20,6 +20,7 @@ export type Post = CollectionEntry<'posts'> & {
 };
 
 const isProd = import.meta.env.PROD;
+const skipPostCollections = import.meta.env.CI_SKIP_CONTENT_COLLECTIONS === 'true';
 
 /** Derive the locale from `posts/<locale>/foo` slug-ish ID. */
 function localeFromId(id: string): Locale {
@@ -89,6 +90,7 @@ export function sortPostsByDate(posts: Post[]): Post[] {
 
 /** Get all posts for a locale (drafts hidden in prod, sorted). */
 export async function getPosts(locale: Locale): Promise<Post[]> {
+  if (skipPostCollections) return [];
   const all = await getCollection('posts', (entry) => {
     if (isProd && entry.data.draft) return false;
     const lang = entry.data.lang ?? localeFromId(entry.id);

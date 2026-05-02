@@ -21,6 +21,7 @@ import { SITE } from './src/config';
 const rawBase = (process.env.BASE_PATH ?? '/').replace(/\/$/, '');
 const BASE = rawBase.startsWith('/') ? rawBase : `/${rawBase}`;
 const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
+const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
 
 /**
  * Tiny inline integration: after `@astrojs/sitemap` runs, rewrite the
@@ -189,24 +190,28 @@ export default defineConfig({
     // MDX must come after Expressive Code so EC can transform fenced
     // code blocks inside .mdx files too.
     mdx(),
-    sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: {
-          en: 'en',
-          fr: 'fr',
-        },
-      },
-      // Browsers (and only browsers) apply this XSL to render a
-      // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.
-      // Search-engine crawlers ignore the processing instruction.
-      // Note: `@astrojs/sitemap` rewrites this into an ABSOLUTE URL using
-      // `site`. The `rewriteSitemapXslToRelative()` integration below
-      // turns it back into a root-relative path so local preview works.
-      xslURL: SITEMAP_XSL_HREF,
-      filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
-    }),
-    rewriteSitemapXslToRelative(),
+    ...(SKIP_RSS_SITEMAP
+      ? []
+      : [
+          sitemap({
+            i18n: {
+              defaultLocale: 'en',
+              locales: {
+                en: 'en',
+                fr: 'fr',
+              },
+            },
+            // Browsers (and only browsers) apply this XSL to render a
+            // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.
+            // Search-engine crawlers ignore the processing instruction.
+            // Note: `@astrojs/sitemap` rewrites this into an ABSOLUTE URL using
+            // `site`. The `rewriteSitemapXslToRelative()` integration below
+            // turns it back into a root-relative path so local preview works.
+            xslURL: SITEMAP_XSL_HREF,
+            filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
+          }),
+          rewriteSitemapXslToRelative(),
+        ]),
   ],
 
   vite: {

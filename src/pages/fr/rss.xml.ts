@@ -6,6 +6,19 @@ import { getPosts, postPath } from '../../utils/posts';
 
 export const GET: APIRoute = async (context) => {
   const locale = 'fr';
+  if (import.meta.env.CI_SKIP_RSS_SITEMAP === 'true') {
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const siteWithBase = `${(context.site ?? new URL(SITE.url)).origin}${base}`;
+    return rss({
+      title: `${SITE.title} (FR)`,
+      description: SITE.description,
+      site: siteWithBase,
+      stylesheet: `${base}/rss/styles.xsl`,
+      items: [],
+      customData: `<language>fr-fr</language>`,
+    });
+  }
+
   const posts = await getPosts(locale);
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const siteWithBase = `${(context.site ?? new URL(SITE.url)).origin}${base}`;
