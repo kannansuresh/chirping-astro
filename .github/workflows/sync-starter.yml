@@ -1,0 +1,91 @@
+name: Sync Starter Template
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/workflows/sync-starter.yml'
+      - '.starter/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync to Starter Repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          path: source
+
+      - name: Checkout starter repo
+        uses: actions/checkout@v6
+        with:
+          repository: kannansuresh/chirping-astro-starter
+          token: ${{ secrets.STARTER_REPO_TOKEN }}
+          path: starter
+
+      - name: Sync files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Clean starter (preserve .git)
+          find starter -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+
+          # Copy core project files
+          cp source/package.json starter/
+          cp source/bun.lock starter/ 2>/dev/null || true
+          cp source/tsconfig.json starter/
+          cp source/astro.config.mjs starter/
+          cp source/eslint.config.js starter/
+          cp source/.prettierrc* starter/ 2>/dev/null || true
+          cp source/.prettierignore starter/ 2>/dev/null || true
+          cp source/.gitignore starter/
+          cp source/bunfig.toml starter/ 2>/dev/null || true
+          cp source/LICENSE starter/
+
+          # Copy .env.example (without CI-only flags)
+          grep -v '^CI_SKIP_' source/.env.example > starter/.env.example || cp source/.env.example starter/.env.example
+
+          # Copy source code
+          cp -r source/src starter/
+          cp -r source/public starter/
+
+          # Remove demo posts (replaced by starter sample)
+          rm -rf starter/src/content/posts/en/*
+          rm -rf starter/src/content/posts/fr/*
+
+          # Copy starter-specific content
+          cp source/.starter/content/posts/en/getting-started.md starter/src/content/posts/en/
+          cp source/.starter/content/posts/fr/getting-started.md starter/src/content/posts/fr/
+
+          # Copy starter README (replaces main repo README)
+          cp source/.starter/README.md starter/README.md
+
+          # Copy deploy workflow only (no PR checks/bots needed for starter)
+          mkdir -p starter/.github/workflows
+          cp source/.github/workflows/deploy.yml starter/.github/workflows/
+
+      - name: Push changes
+        shell: bash
+        working-directory: starter
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to sync."
+            exit 0
+          fi
+
+          git commit -m "sync: update from chirping-astro@${GITHUB_SHA::7}"
+          git push
