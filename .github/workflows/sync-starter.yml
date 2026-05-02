@@ -91,5 +91,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "sync: update from chirping-astro@${GITHUB_SHA::7}"
+          git commit -m "sync: update from chirping-astro@${GITHUB_SHA::7} [skip ci]"
           git push
