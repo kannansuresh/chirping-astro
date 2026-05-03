@@ -96,7 +96,7 @@ Want to skip the demo content and start fresh? Use the
 with this theme:
 
 ```bash
-npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+bunx create-astro@latest --template kannansuresh/chirping-astro-starter
 ```
 
 Enable GitHub Pages, push, and you're live.

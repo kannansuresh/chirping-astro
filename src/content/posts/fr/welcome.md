@@ -99,7 +99,7 @@ Envie de partir de zéro sans le contenu de démo ? Utilisez le
 avec ce thème :
 
 ```bash
-npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+bunx create-astro@latest --template kannansuresh/chirping-astro-starter
 ```
 
 Activez GitHub Pages, poussez, et c'est en ligne.

@@ -9,7 +9,7 @@ A minimal starter template for [Chirping Astro](https://github.com/kannansuresh/
 ### Option 1: Astro CLI (recommended)
 
 ```bash
-npm create astro@latest -- --template kannansuresh/chirping-astro-starter
+bunx create-astro@latest --template kannansuresh/chirping-astro-starter
 ```
 
 The wizard will prompt you for a project name, install dependencies, and initialize git.
