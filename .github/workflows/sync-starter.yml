@@ -59,6 +59,7 @@ jobs:
           # Copy source code
           cp -r source/src starter/
           cp -r source/public starter/
+          cp -r source/.husky starter/
 
           # Remove demo posts (replaced by starter sample)
           rm -rf starter/src/content/posts/en/*
