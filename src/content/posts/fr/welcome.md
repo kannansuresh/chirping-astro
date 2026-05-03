@@ -43,6 +43,9 @@ celui qui correspond à ce que vous voulez apprendre en premier.
 - **Deux thèmes daisyUI** (`chirpy-light` / `chirpy-dark`) avec un
   bouton de bascule animé qui utilise l'API View Transitions quand
   elle est disponible.
+- **Politique de confidentialité** — modèles bilingues personnalisables
+  avec un lien de pied de page basculable (défini `showPrivacyPolicy: true/false`
+  dans `src/config.ts`).
 - **Temps de lecture, table des matières flottante avec scroll-spy,
   RSS par locale, sitemap hreflang, gestion accessible du focus** —
   les détails ennuyeux faits correctement.

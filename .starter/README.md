@@ -82,7 +82,20 @@ Go to **Settings → Environments → github-pages → Environment variables** a
 
 > **Note:** All variables are optional. The site builds and deploys with zero configuration — variables just enable extra features.
 
-### 3. Push to `main`
+### 3. Customize the Privacy Policy (optional)
+
+Edit the bilingual privacy policy templates:
+
+```text
+src/content/pages/en/privacy.md
+src/content/pages/fr/privacy.md
+```
+
+Replace placeholder values in `[BRACKETS]` (site name, contact email, etc.).
+The privacy policy appears in the footer with a link — disable it by setting
+`showPrivacyPolicy: false` in `src/config.ts`.
+
+### 4. Push to `main`
 
 That's it. The workflow will build and deploy your site. Your site will be available at `https://<username>.github.io/<repo-name>/`.
 

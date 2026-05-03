@@ -63,6 +63,12 @@ export interface SiteConfig {
    * `defaultOgImage` for all posts without a hero.
    */
   autoOgImage: boolean;
+  /**
+   * Show a link to the Privacy Policy page in the footer. Set to `false`
+   * to hide it. The privacy policy pages still build; remove them from
+   * `src/content/pages/<locale>/privacy.md` if you don't want them at all.
+   */
+  showPrivacyPolicy: boolean;
 }
 
 export interface NavItem {
@@ -154,6 +160,7 @@ export const SITE: SiteConfig = {
   dynamicPostCardHeight: false,
   multilingual: true,
   autoOgImage: !AUTO_OG_DISABLED_IN_CI,
+  showPrivacyPolicy: true,
 };
 
 export const NAV: readonly NavItem[] = [
