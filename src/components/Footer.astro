@@ -1,6 +1,6 @@
 ---
 import { SITE, REPO, type Locale } from '../config';
-import { useTranslations } from '../i18n/utils';
+import { localizedPath, useTranslations } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -20,6 +20,16 @@ const year = new Date().getFullYear();
     <a href={SITE.author.url ?? '#'} rel="noopener" class="hover:text-primary">{SITE.author.name}</a
     >.{' '}
     {t('footer.copyright')}
+    {
+      SITE.showPrivacyPolicy && (
+        <>
+          {' · '}
+          <a href={localizedPath('/privacy', locale)} class="hover:text-primary">
+            {t('footer.privacy')}
+          </a>
+        </>
+      )
+    }
   </p>
   <p>
     {t('footer.poweredBy')}{' '}

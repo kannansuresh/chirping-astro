@@ -1,0 +1,19 @@
+---
+import { getEntry, render } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import { SITE } from '../config';
+
+const locale = 'en';
+const entry = await getEntry('pages', `${locale}/privacy`);
+if (!entry) return Astro.rewrite('/404');
+const { Content } = await render(entry);
+---
+
+<PageLayout
+  title={entry.data.title}
+  description={entry.data.description ?? SITE.description}
+  locale={locale}
+  math={entry.data.math}
+>
+  <Content />
+</PageLayout>

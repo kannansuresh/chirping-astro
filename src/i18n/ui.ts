@@ -100,6 +100,7 @@ export const messages = {
 
     'footer.poweredBy': 'Powered by',
     'footer.theme': 'Theme',
+    'footer.privacy': 'Privacy Policy',
     'footer.copyright': 'All rights reserved.',
   },
 
@@ -196,6 +197,7 @@ export const messages = {
 
     'footer.poweredBy': 'Propulsé par',
     'footer.theme': 'Thème',
+    'footer.privacy': 'Politique de confidentialité',
     'footer.copyright': 'Tous droits réservés.',
   },
 } as const satisfies Record<Locale, Record<string, string>>;

@@ -76,6 +76,8 @@ authoring experience — without writing your own theme from scratch.
   with View Transitions API animation
 - **Automatic OG images** generated at build time with Satori + Resvg
   for posts without a hero image (toggleable via `SITE.autoOgImage`)
+- **Privacy Policy** — customizable bilingual templates with footer link
+  (toggleable via `SITE.showPrivacyPolicy`)
 - RSS per locale, hreflang alternates, locale-aware sitemap
 - Strict TypeScript, ESLint (zero warnings), Prettier, accessibility
   focus (skip-to-content, ARIA roles, `prefers-reduced-motion`)
@@ -195,6 +197,7 @@ export const SITE: SiteConfig = {
   dynamicPostCardHeight: false,
   multilingual: true,
   autoOgImage: true,
+  showPrivacyPolicy: true,
 };
 ```
 
@@ -225,11 +228,13 @@ rm src/content/posts/en/*.md src/content/posts/en/*.mdx
 rm src/content/posts/fr/*.md src/content/posts/fr/*.mdx
 ```
 
-Update the about pages too:
+Update the about pages and other static pages:
 
 ```text
 src/content/pages/en/about.md
 src/content/pages/fr/about.md
+src/content/pages/en/privacy.md  (optional, already has customizable template)
+src/content/pages/fr/privacy.md  (optional, already has customizable template)
 ```
 
 ### 6. Develop
@@ -338,6 +343,8 @@ Every customisable knob lives in a small number of files:
 | Posts-per-page on listings          | `src/config.ts` → `SITE.postsPerPage`          |
 | Boxed post / page articles          | `src/config.ts` → `SITE.boxedArticles`         |
 | Listing card height behavior        | `src/config.ts` → `SITE.dynamicPostCardHeight` |
+| Privacy Policy link in footer       | `src/config.ts` → `SITE.showPrivacyPolicy`     |
+| Privacy Policy content (customize)  | `src/content/pages/{en,fr}/privacy.md`         |
 | Multilingual UI (language switcher) | `src/config.ts` → `SITE.multilingual`          |
 | Auto-generated OG images            | `src/config.ts` → `SITE.autoOgImage`           |
 | Frontmatter validation rules        | `src/content.config.ts`                        |

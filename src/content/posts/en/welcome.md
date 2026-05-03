@@ -41,6 +41,8 @@ to learn first.
   locale-synced, with a per-post override.
 - **Two daisyUI themes** (`chirpy-light` / `chirpy-dark`) with an
   animated toggle that uses the View Transitions API where supported.
+- **Privacy Policy** — bilingual customizable templates with a toggleable
+  footer link (set `showPrivacyPolicy: true/false` in `src/config.ts`).
 - **Reading time, sticky TOC with scroll-spy, RSS per locale,
   hreflang sitemap, accessible focus management** — the boring details
   done right.
