@@ -1,11 +1,11 @@
 /* global URL */
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import { SITE } from '../config';
-import { getPosts, postPath } from '../utils/posts';
+import { SITE } from '~/config';
+import { getPosts, postPath } from '~/utils/posts';
 
 export const GET: APIRoute = async (context) => {
-  const locale = 'en';
+  const { locale } = context.props;
   if (import.meta.env.CI_SKIP_RSS_SITEMAP === 'true') {
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const siteWithBase = `${(context.site ?? new URL(SITE.url)).origin}${base}`;
@@ -39,3 +39,10 @@ export const GET: APIRoute = async (context) => {
     customData: `<language>en-us</language>`,
   });
 };
+
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}

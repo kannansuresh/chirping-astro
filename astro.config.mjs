@@ -107,12 +107,12 @@ export default defineConfig({
   },
 
   // i18n config: EN is default and serves at root (no prefix), FR served at /fr.
-  // We rely on filesystem routing (src/pages and src/pages/fr) for the actual
+  // We rely on filesystem routing (src/pages and src/pages/[...locale]) for the actual
   // routes, but still expose locales here so integrations like sitemap can
   // generate hreflang alternates correctly.
   i18n: {
-    locales: ['en', 'fr'],
-    defaultLocale: 'en',
+    locales: [...SITE.locales],
+    defaultLocale: SITE.defaultLocale,
     routing: {
       prefixDefaultLocale: false,
       redirectToDefaultLocale: false,
@@ -195,11 +195,8 @@ export default defineConfig({
       : [
           sitemap({
             i18n: {
-              defaultLocale: 'en',
-              locales: {
-                en: 'en',
-                fr: 'fr',
-              },
+              defaultLocale: SITE.defaultLocale,
+              locales: Object.fromEntries(SITE.locales.map((l) => [l, l])),
             },
             // Browsers (and only browsers) apply this XSL to render a
             // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.

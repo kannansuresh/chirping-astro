@@ -1,29 +1,35 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PostList from '../../../components/PostList.astro';
-import Pagination from '../../../components/Pagination.astro';
-import { SITE } from '../../../config';
-import { localizedPath, useTranslations } from '../../../i18n/utils';
-import { getPosts } from '../../../utils/posts';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import Pagination from '~/components/Pagination.astro';
+import { SITE } from '~/config';
+import { localizedPath, useTranslations } from '~/i18n/utils';
+import { getPosts } from '~/utils/posts';
 
 interface Props {
   current: number;
   last: number;
+  locale: any;
 }
 
 export async function getStaticPaths() {
-  const locale = 'fr';
-  const posts = await getPosts(locale);
-  const pageSize = SITE.postsPerPage;
-  const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
-  const params: Array<{ params: { page: string }; props: Props }> = [];
-  for (let p = 2; p <= lastPage; p++) {
-    params.push({ params: { page: String(p) }, props: { current: p, last: lastPage } });
+  let paths = [];
+  for (const locale of SITE.locales) {
+    const allPosts = await getPosts(locale);
+    const totalPages = Math.ceil(allPosts.length / SITE.postsPerPage);
+    const localeParams = { locale: locale === SITE.defaultLocale ? undefined : locale };
+    // Skip page 1 (handled by index.astro)
+    for (let i = 2; i <= totalPages; i++) {
+      paths.push({
+        params: { ...localeParams, page: String(i) },
+        props: { locale, current: i, last: totalPages },
+      });
+    }
   }
-  return params;
+  return paths;
 }
 
-const locale = 'fr';
+const { locale } = Astro.props;
 const t = useTranslations(locale);
 const { current, last } = Astro.props as Props;
 const allPosts = await getPosts(locale);

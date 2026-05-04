@@ -1,9 +1,17 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, formatDate } from '../i18n/utils';
-import { getPosts, groupByYearMonth, postPath } from '../utils/posts';
+import { SITE } from '~/config';
 
-const locale = 'en';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { useTranslations, formatDate } from '~/i18n/utils';
+import { getPosts, groupByYearMonth, postPath } from '~/utils/posts';
+
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+const { locale } = Astro.props;
 const t = useTranslations(locale);
 const posts = await getPosts(locale);
 const groups = groupByYearMonth(posts, locale);

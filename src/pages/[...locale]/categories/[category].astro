@@ -1,0 +1,53 @@
+---
+import { SITE } from '~/config';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import { useTranslations, localizedPath } from '~/i18n/utils';
+import { getPosts, getCategoriesWithCount, slugify } from '~/utils/posts';
+
+interface Props {
+  categoryName: string;
+  locale: any;
+}
+
+export async function getStaticPaths() {
+  let paths = [];
+  for (const locale of SITE.locales) {
+    const categories = await getCategoriesWithCount(locale);
+    const localeParams = { locale: locale === SITE.defaultLocale ? undefined : locale };
+    paths.push(
+      ...categories.map((c) => ({
+        params: { ...localeParams, category: slugify(c.name) },
+        props: { categoryName: c.name, locale },
+      })),
+    );
+  }
+  return paths;
+}
+
+const { categoryName, locale } = Astro.props as Props;
+const { category } = Astro.params;
+const t = useTranslations(locale);
+const posts = (await getPosts(locale)).filter(
+  (p) => p.data.categories && p.data.categories.some((c) => slugify(c) === category),
+);
+---
+
+<BaseLayout
+  title={categoryName}
+  pathWithoutLocale={`/categories/${category}/`}
+  crumbs={[
+    { label: t('categories.title'), href: localizedPath('/categories/', locale) },
+    { label: categoryName },
+  ]}
+>
+  <header class="mb-6">
+    <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.categoryPosts')}</p>
+    <h1 class="text-3xl font-bold tracking-tight">{categoryName}</h1>
+    <p class="text-base-content/70 mt-1 text-sm">
+      {posts.length}
+      {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+    </p>
+  </header>
+  <PostList posts={posts} locale={locale} />
+</BaseLayout>

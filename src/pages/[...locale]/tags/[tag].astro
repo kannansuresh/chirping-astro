@@ -1,25 +1,32 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PostList from '../../../components/PostList.astro';
-import { useTranslations, localizedPath } from '../../../i18n/utils';
-import { getPosts, getTagsWithCount, slugify } from '../../../utils/posts';
+import { SITE } from '~/config';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import { useTranslations, localizedPath } from '~/i18n/utils';
+import { getPosts, getTagsWithCount, slugify } from '~/utils/posts';
 
 interface Props {
   tagName: string;
+  locale: any;
 }
 
 export async function getStaticPaths() {
-  const locale = 'fr';
-  const tags = await getTagsWithCount(locale);
-  return tags.map((tag) => ({
-    params: { tag: slugify(tag.name) },
-    props: { tagName: tag.name } satisfies Props,
-  }));
+  let paths = [];
+  for (const locale of SITE.locales) {
+    const tags = await getTagsWithCount(locale);
+    const localeParams = { locale: locale === SITE.defaultLocale ? undefined : locale };
+    paths.push(
+      ...tags.map((tag) => ({
+        params: { ...localeParams, tag: slugify(tag.name) },
+        props: { tagName: tag.name, locale },
+      })),
+    );
+  }
+  return paths;
 }
 
-const { tagName } = Astro.props as Props;
+const { tagName, locale } = Astro.props as Props;
 const { tag } = Astro.params;
-const locale = 'fr';
 const t = useTranslations(locale);
 const posts = (await getPosts(locale)).filter((p) => p.data.tags.some((tg) => slugify(tg) === tag));
 ---

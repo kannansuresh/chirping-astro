@@ -4,7 +4,8 @@
  * across layouts, components, RSS, sitemap, and SEO.
  */
 
-export type Locale = 'en' | 'fr';
+export const locales = ['en', 'fr'] as const;
+export type Locale = (typeof locales)[number];
 
 export interface SiteConfig {
   /** Public URL of the deployed site, no trailing slash. */
@@ -152,7 +153,7 @@ export const SITE: SiteConfig = {
   },
   defaultOgImage: '/images/og-default.svg',
   defaultLocale: 'en',
-  locales: ['en', 'fr'] as const,
+  locales: locales,
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,
