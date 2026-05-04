@@ -1,9 +1,15 @@
 ---
 import { getEntry, render } from 'astro:content';
-import PageLayout from '../layouts/PageLayout.astro';
-import { SITE } from '../config';
+import PageLayout from '~/layouts/PageLayout.astro';
+import { SITE } from '~/config';
 
-const locale = 'en';
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+const { locale } = Astro.props;
 const entry = await getEntry('pages', `${locale}/about`);
 if (!entry) return Astro.rewrite('/404');
 const { Content } = await render(entry);

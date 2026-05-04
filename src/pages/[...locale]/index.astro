@@ -1,12 +1,18 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostList from '../../components/PostList.astro';
-import Pagination from '../../components/Pagination.astro';
-import { SITE } from '../../config';
-import { localizedPath } from '../../i18n/utils';
-import { getPosts } from '../../utils/posts';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import Pagination from '~/components/Pagination.astro';
+import { SITE } from '~/config';
+import { localizedPath } from '~/i18n/utils';
+import { getPosts } from '~/utils/posts';
 
-const locale = 'fr';
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+const { locale } = Astro.props;
 
 const posts = await getPosts(locale);
 const pageSize = SITE.postsPerPage;

@@ -1,9 +1,17 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, withBase } from '../i18n/utils';
+import { SITE } from '~/config';
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { useTranslations, withBase } from '~/i18n/utils';
 import { Icon } from 'astro-icon/components';
 
-const locale = 'en';
+export function getStaticPaths() {
+  return SITE.locales.map((l) => ({
+    params: { locale: l === SITE.defaultLocale ? undefined : l },
+    props: { locale: l },
+  }));
+}
+const { locale } = Astro.props;
 const t = useTranslations(locale);
 const pagefindScript = withBase('/_pagefind/pagefind.js');
 
