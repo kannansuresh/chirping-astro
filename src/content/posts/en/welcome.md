@@ -59,6 +59,7 @@ image; and so on.
 | Frontmatter & schema  | [Frontmatter reference](/posts/frontmatter-reference)                           |
 | Typography & Markdown | [Typography & Markdown](/posts/typography-and-markdown)                         |
 | Code blocks           | [Code blocks & syntax highlighting](/posts/code-blocks-and-syntax-highlighting) |
+| Alert code blocks     | [Alert plugin: all variants](/posts/alerts-all-variants)                        |
 | LaTeX math            | [LaTeX math with KaTeX](/posts/latex-math-with-katex)                           |
 | MDX components        | [MDX components & callouts](/posts/mdx-components-and-callouts)                 |
 | i18n                  | [Bilingual content & i18n](/posts/i18n-bilingual-content)                       |

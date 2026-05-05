@@ -50,6 +50,26 @@ Renders as:
 </div>
 ```
 
+## Alert blocks (daisyUI)
+
+If you want daisyUI alert components directly from Markdown/MDX, use the
+`alert` language identifier. A dedicated remark plugin converts each block
+into daisyUI-compatible alert markup.
+
+````markdown
+```alert
+type: success
+style: soft
+icon: lucide:check-circle
+title: Purchase confirmed!
+description: Your order has been placed successfully.
+```
+````
+
+For the complete matrix of variants (`type`, `style`, `direction`,
+`icon`, `title`, `description`, `class`), see
+[Alert plugin: showcase of all variants](/posts/alerts-all-variants).
+
 ## Frame title
 
 Add `title="..."` to label the block — it shows in a window-style

@@ -13,6 +13,12 @@
   logs: false;
 }
 
+/* ---------- Alert plugin safelist ---------- */
+/* Force Tailwind to emit classes used by the remark-alert plugin, which
+   generates raw HTML that the content scanner may not see at build time. */
+@source inline("alert-{info,success,warning,error,soft,outline,dash,vertical,horizontal}");
+@source inline("sm:alert-horizontal");
+
 /* ---------- Chirpy LIGHT ---------- */
 @plugin "daisyui/theme" {
   name: 'chirpy-light';
@@ -564,6 +570,11 @@
   }
   .callout-error {
     @apply border-error bg-error/10;
+  }
+
+  /* Alert plugin: only add space when alerts are stacked together. */
+  .prose-chirpy div[role='alert'] + div[role='alert'] {
+    @apply mt-4;
   }
 }
 

@@ -15,6 +15,11 @@ theme built on **Astro 6.x**. It targets technical writers who need a fast,
 accessible blog with first-class i18n, dark mode, MDX authoring, and zero
 server-side runtime.
 
+Markdown authoring also includes two custom remark code-block transforms:
+
+- `ashtml` → raw HTML rendering
+- `alert` → daisyUI alert markup with icon, title/description, and variant classes
+
 | Dimension | Value |
 |-----------|-------|
 | Framework | Astro 6.x (static output) |
@@ -63,6 +68,9 @@ server-side runtime.
     │   ├── ui.ts              # Per-locale UI string dictionaries
     │   ├── utils.ts           # localePrefix(), formatDate(), etc.
     │   └── index.ts           # Re-exports
+    ├── plugins/
+    │   ├── remark-ashtml.ts   # `ashtml` fenced code block -> raw HTML
+    │   └── remark-alert.ts    # `alert` fenced code block -> daisyUI alert HTML
     ├── layouts/
     │   ├── BaseLayout.astro   # Shell: topbar, sidebar, footer, no-FOUC script
     │   ├── PageLayout.astro   # Wrapper for static pages
@@ -454,6 +462,11 @@ These are **CI-only**. Never set them in `.env` for local builds.
 3. To pair with a translation in another locale, add the same `translationKey`
    to both files.
 
+### Use daisyUI alerts in Markdown/MDX
+1. Add a fenced code block with language `alert`.
+2. Use optional keys: `type`, `style`, `direction`, `icon`, `title`, `description`, `class`.
+3. For full examples, see `src/content/posts/<locale>/alerts-all-variants.md`.
+
 ### Add a new locale
 Follow the full checklist in the [Adding a new locale](#adding-a-new-locale-eg-de) section of i18n Rules.
 
@@ -511,6 +524,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | **Pagefind needs a build** | Search is not available in `bun run dev`. Run `bun run build` + `bun run preview`. |
 | **Zero ESLint warnings** | `bun run lint` must pass with no warnings before merging. |
 | **Math is opt-in** | Never load KaTeX globally — use `math: true` frontmatter per post. |
+| **Alert classes need safelisting** | `remark-alert` emits classes at build-time HTML generation. Keep `@source inline(...)` safelist entries in `src/styles/global.css` aligned with supported alert variants. |
 | **Five places for theme names** | Renaming `chirpy-light`/`chirpy-dark` requires updating all five locations atomically. |
 | **hreflang only for existing translations** | Don't manually add hreflang tags — they are generated automatically from `translationKey` pairs. |
 | **`draft: true` posts** | Excluded from prod builds, RSS, and sitemap, but visible in `bun run dev`. |
@@ -529,6 +543,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | New locale routes 404 in dev | Restart `bun run dev` after adding files under `src/pages/<locale>/`. |
 | `astro check` fails on `astro:content` | Run `bun run dev` or `bun run build` once to generate `.astro/types.d.ts`. |
 | Math rendered as raw `$…$` | Add `math: true` to frontmatter and rebuild. |
+| Stacked alert blocks touch each other | Keep `.prose-chirpy div[role='alert'] + div[role='alert']` spacing rule in `src/styles/global.css`. |
 | `pubDate: Required` build error | A post is missing `pubDate` in frontmatter — error message names the file. |
 | Sitemap missing hreflang | Ensure both translations share the same `translationKey` (or identical slug). |
 | After changing default locale, old default URLs now 404 | The old default locale needs its own `src/pages/<old-locale>/` folder with every route file. |
@@ -545,6 +560,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | `@tailwindcss/vite` | v4 | Tailwind Vite integration |
 | `daisyui` | v5 | Component/theme library |
 | `astro-expressive-code` | latest | Syntax-highlighted code blocks |
+| `@iconify/utils` | latest | Build-time icon resolution for `remark-alert` |
 | `remark-math` + `rehype-katex` | latest | LaTeX math support |
 | `pagefind` | latest | Static search index |
 | `@astrojs/sitemap` | latest | Sitemap generation |

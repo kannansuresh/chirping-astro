@@ -50,6 +50,26 @@ Rendu final :
 </div>
 ```
 
+## Blocs d'alerte (daisyUI)
+
+Si vous voulez des composants d'alerte daisyUI directement depuis
+Markdown/MDX, utilisez l'identifiant de langage `alert`. Un plugin
+remark dédié convertit chaque bloc en markup d'alerte compatible daisyUI.
+
+````markdown
+```alert
+type: success
+style: soft
+icon: lucide:check-circle
+title: Achat confirmé !
+description: Votre commande a été passée avec succès.
+```
+````
+
+Pour la matrice complète des variantes (`type`, `style`, `direction`,
+`icon`, `title`, `description`, `class`), consultez
+[Plugin alert : démonstration de toutes les variantes](/fr/posts/alerts-all-variants).
+
 ## Titre de cadre
 
 Ajoutez `title="..."` pour étiqueter le bloc — il apparaît dans une

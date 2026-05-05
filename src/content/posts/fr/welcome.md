@@ -62,6 +62,7 @@ arbore une image à la une, etc.
 | Frontmatter & schéma   | [Référence du frontmatter](/fr/posts/frontmatter-reference)                 |
 | Typographie & Markdown | [Typographie & Markdown](/fr/posts/typography-and-markdown)                 |
 | Blocs de code          | [Blocs de code & coloration](/fr/posts/code-blocks-and-syntax-highlighting) |
+| Blocs d'alerte         | [Plugin alert : toutes les variantes](/fr/posts/alerts-all-variants)        |
 | Mathématiques LaTeX    | [Mathématiques LaTeX avec KaTeX](/fr/posts/latex-math-with-katex)           |
 | Composants MDX         | [Composants MDX & callouts](/fr/posts/mdx-components-and-callouts)          |
 | i18n                   | [Contenu bilingue & i18n](/fr/posts/i18n-bilingual-content)                 |

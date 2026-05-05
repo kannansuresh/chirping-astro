@@ -60,7 +60,8 @@ authoring experience — without writing your own theme from scratch.
   `chirpy-dark` themes
 - **Markdown + MDX** with [Expressive Code](https://expressive-code.com)
   (syntax highlighting, frame titles, copy buttons, line markers,
-  diffs, collapsible sections), raw HTML rendering from `ashtml` blocks, GFM, autolinked headings, callouts
+  diffs, collapsible sections), raw HTML rendering from `ashtml` blocks,
+  daisyUI alerts from `alert` blocks, GFM, autolinked headings, callouts
 - **LaTeX math** via [KaTeX](https://katex.org) (`remark-math` +
   `rehype-katex`), pre-rendered at build time. The stylesheet is
   loaded **only on pages that opt in** with `math: true` in
@@ -208,7 +209,7 @@ string in `src/i18n/ui.ts` (`nav.home`, `nav.about`, etc.).
 
 ### 5. Replace the demo content
 
-The repo ships with eleven demo posts (in EN and FR) that explain
+The repo ships with twelve demo posts (in EN and FR) that explain
 each feature of the theme. Once you have explored them locally,
 replace them with your own:
 
@@ -500,13 +501,17 @@ features:
 - **Word wrap** — `wrap` modifier.
 - **Collapsible sections** — `collapse={start-end}`.
 - **Raw HTML** — `ashtml` language identifier renders raw HTML.
+- **daisyUI alerts** — `alert` language identifier renders daisyUI
+  alert component markup (type, style, direction, icon, title,
+  description, and custom classes).
 
 Themes (`github-light` / `github-dark-dimmed`) are bound to the
 site's `<html data-theme="...">` attribute via `themeCssSelector`,
 so the code palette flips instantly when the user toggles the theme.
 
 See the demo post **/posts/code-blocks-and-syntax-highlighting** for
-working examples of every feature.
+working examples of the Expressive Code features, and
+**/posts/alerts-all-variants** for alert-block variants.
 
 ---
 
