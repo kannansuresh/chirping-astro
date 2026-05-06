@@ -9,6 +9,7 @@ import { SITE, NAV, SOCIALS, type Locale } from '../config';
 import { useTranslations, localizedPath, withBase } from '../i18n/utils';
 import type { UIKey } from '../i18n/ui';
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import ThemeToggle from './islands/ThemeToggle.astro';
 
 interface Props {
@@ -18,6 +19,9 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const home = localizedPath('/', locale);
+const avatar = SITE.author.avatar;
+const isStringAvatar = typeof avatar === 'string';
+const avatarSrc = isStringAvatar ? avatar.trim() : '';
 
 const navItems = NAV.map((item) => ({
   ...item,
@@ -35,20 +39,28 @@ const navItems = NAV.map((item) => ({
         style="background:linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, white));"
       >
         {
-          SITE.author.avatar ? (
-            <img
-              src={
-                SITE.author.avatar.startsWith('/')
-                  ? withBase(SITE.author.avatar)
-                  : SITE.author.avatar
-              }
-              alt={SITE.author.name}
-              width="112"
-              height="112"
-              class="h-full w-full object-cover"
-              loading="eager"
-              decoding="async"
-            />
+          avatar ? (
+            isStringAvatar ? (
+              <img
+                src={avatarSrc.startsWith('/') ? withBase(avatarSrc) : avatarSrc}
+                alt={SITE.author.name}
+                width="112"
+                height="112"
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <Image
+                src={avatar}
+                alt={SITE.author.name}
+                width={112}
+                height={112}
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            )
           ) : (
             <span class="text-primary-content flex h-full w-full items-center justify-center text-3xl font-bold">
               {SITE.title.charAt(0)}

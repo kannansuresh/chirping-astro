@@ -1,4 +1,5 @@
 import type { Locale } from '../config';
+import type { ImageMetadata } from 'astro';
 
 export interface SiteConfig {
   title: string;
@@ -6,7 +7,7 @@ export interface SiteConfig {
   author: {
     name: string;
     url?: string;
-    avatar?: string;
+    avatar?: string | ImageMetadata;
     bio?: string;
   };
   defaultOgImage: string;

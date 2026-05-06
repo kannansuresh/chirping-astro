@@ -56,7 +56,7 @@ export const SITE: SiteConfig = {
   author: {
     name: 'Chirping Astro',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
-    avatar: avatarImg.src,
+    avatar: avatarImg,
     bio: 'A text-focused Astro V6 theme.',
   },
   /** Default OG image. */
