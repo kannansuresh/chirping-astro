@@ -445,18 +445,18 @@ with one line and registers daisyUI plus two custom themes:
 ```css
 @import 'tailwindcss';
 
-@plugin "daisyui" {
+@plugin 'daisyui' {
   themes: false;
   logs: false;
 }
 
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-light';
   default: true;
   /* OKLCH tokens here */
 }
 
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-dark';
   prefersdark: true;
   /* dark OKLCH tokens here */

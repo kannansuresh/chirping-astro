@@ -8,7 +8,7 @@
  */
 
 @import 'tailwindcss';
-@plugin "daisyui" {
+@plugin 'daisyui' {
   themes: false; /* we provide our own themes below */
   logs: false;
 }
@@ -16,11 +16,11 @@
 /* ---------- Alert plugin safelist ---------- */
 /* Force Tailwind to emit classes used by the remark-alert plugin, which
    generates raw HTML that the content scanner may not see at build time. */
-@source inline("alert-{info,success,warning,error,soft,outline,dash,vertical,horizontal}");
-@source inline("sm:alert-horizontal");
+@source inline('alert-{info,success,warning,error,soft,outline,dash,vertical,horizontal}');
+@source inline('sm:alert-horizontal');
 
 /* ---------- Chirpy LIGHT ---------- */
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-light';
   default: true;
   prefersdark: false;
@@ -68,7 +68,7 @@
 }
 
 /* ---------- Chirpy DARK ---------- */
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-dark';
   default: false;
   prefersdark: true;

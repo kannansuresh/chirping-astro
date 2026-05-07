@@ -25,12 +25,12 @@ v4 with one line and registers daisyUI plus the two custom themes:
 ```css title="src/styles/global.css"
 @import 'tailwindcss';
 
-@plugin "daisyui" {
+@plugin 'daisyui' {
   themes: false;
   logs: false;
 }
 
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-light';
   default: true;
   --color-base-100: oklch(100% 0 0);
@@ -38,7 +38,7 @@ v4 with one line and registers daisyUI plus the two custom themes:
   /* ... */
 }
 
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
   name: 'chirpy-dark';
   prefersdark: true;
   --color-base-100: oklch(22% 0.005 264);
