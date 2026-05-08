@@ -61,7 +61,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "husky": "^9.1.7",
     "katex": "^0.16.45",
-    "lint-staged": "^16.4.0",
+    "lint-staged": "^17.0.3",
     "pagefind": "^1.4.0",
     "prettier": "^3.4.0",
     "prettier-plugin-astro": "^0.14.1",
