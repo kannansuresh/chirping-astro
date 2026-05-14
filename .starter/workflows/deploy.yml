@@ -31,9 +31,6 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
       - name: Build with Astro
         env:
           SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
@@ -78,6 +75,10 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
             echo "GitHub Pages is not enabled yet (HTTP $status). Skipping deployment."
           fi
+
+      - name: Setup Pages
+        if: steps.pages.outputs.enabled == 'true'
+        uses: actions/configure-pages@v6
 
       - name: Deploy to GitHub Pages
         id: deployment
