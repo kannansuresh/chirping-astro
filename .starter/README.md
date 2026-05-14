@@ -44,8 +44,8 @@ Create a new `.md` or `.mdx` file in `src/content/posts/en/`:
 
 ```markdown
 ---
-title: 'My First Post'
-description: 'A short summary of this post.'
+title: "My First Post"
+description: "A short summary of this post."
 pubDate: 2026-01-01
 tags: [hello, world]
 categories: [General]
@@ -58,11 +58,15 @@ See the included sample post for all available frontmatter fields.
 
 ## Deploy to GitHub Pages
 
-The included `.github/workflows/deploy.yml` builds and deploys your site automatically on every push to `main`. To set it up:
+The included `.github/workflows/deploy.yml` builds your site on every push to `main`.
+Deployment runs automatically once GitHub Pages is enabled for the repository.
+To set it up:
 
 ### 1. Enable GitHub Pages
 
 Go to your repo **Settings → Pages → Source** and select **GitHub Actions**.
+
+> If Pages is not enabled yet, the workflow still builds but skips the deploy step.
 
 ### 2. Set environment variables (optional)
 
@@ -99,6 +103,16 @@ The privacy policy appears in the footer with a link — disable it by setting
 ### 4. Push to `main`
 
 That's it. The workflow will build and deploy your site. Your site will be available at `https://<username>.github.io/<repo-name>/`.
+
+### 5. Run (or re-run) the deploy workflow after enabling Pages
+
+If your first workflow run happened before step 1, deploy was skipped by design.
+After enabling Pages, trigger deployment with either option:
+
+1. Push any new commit to `main`.
+2. Or go to **Actions → Deploy to GitHub Pages → Run workflow**.
+
+The next run will execute the deploy job and publish your site.
 
 ## Custom Domain
 

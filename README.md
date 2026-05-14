@@ -171,19 +171,19 @@ Open `src/config.ts` and edit:
 
 ```ts
 export const SITE: SiteConfig = {
-  url: import.meta.env.SITE_URL ?? 'https://your-domain.com',
-  title: 'Your Site Title',
-  description: 'Your site tagline here.',
+  url: import.meta.env.SITE_URL ?? "https://your-domain.com",
+  title: "Your Site Title",
+  description: "Your site tagline here.",
   author: {
-    name: 'Your Name',
+    name: "Your Name",
     // `url` is built automatically from PUBLIC_GITHUB_HANDLE — leave it.
     // Preferred: imported local asset metadata (optimization-first path).
     avatar: avatarImg,
-    bio: 'A one-line bio shown in the sidebar.',
+    bio: "A one-line bio shown in the sidebar.",
   },
   defaultOgImage: ogDefaultImg.src,
-  defaultLocale: 'en',
-  locales: ['en', 'fr'] as const,
+  defaultLocale: "en",
+  locales: ["en", "fr"] as const,
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,
@@ -201,8 +201,8 @@ export const SITE: SiteConfig = {
     // Footer-level visibility toggles.
     showPrivacyPolicy: true,
     showThemeCredits: true,
-    themeName: 'Chirping Astro',
-    themeUrl: 'https://github.com/kannansuresh/chirping-astro',
+    themeName: "Chirping Astro",
+    themeUrl: "https://github.com/kannansuresh/chirping-astro",
   },
 };
 ```
@@ -443,7 +443,7 @@ This theme follows the official daisyUI v5 install steps:
 with one line and registers daisyUI plus two custom themes:
 
 ```css
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'daisyui' {
   themes: false;
@@ -451,13 +451,13 @@ with one line and registers daisyUI plus two custom themes:
 }
 
 @plugin 'daisyui/theme' {
-  name: 'chirpy-light';
+  name: "chirpy-light";
   default: true;
   /* OKLCH tokens here */
 }
 
 @plugin 'daisyui/theme' {
-  name: 'chirpy-dark';
+  name: "chirpy-dark";
   prefersdark: true;
   /* dark OKLCH tokens here */
 }
@@ -621,9 +621,9 @@ The default locale (EN) **never has a prefix**. This is enforced by:
 locale. TypeScript ensures all keys are present in every locale.
 
 ```ts
-const t = useTranslations('fr');
-t('nav.home'); // 'Accueil'
-formatDate(d, 'fr'); // '12 avril 2026'
+const t = useTranslations("fr");
+t("nav.home"); // 'Accueil'
+formatDate(d, "fr"); // '12 avril 2026'
 ```
 
 ### Adding a third locale (e.g. `de`)
@@ -906,9 +906,21 @@ favicons, images, internal links) gets prefixed correctly.
    `src/config.ts` with the same `?? ''` + truthy-filter pattern
    already used for socials.
 
-5. **Repo settings** → _Settings → Pages → Source_ = **GitHub Actions**.
+5. **Enable Pages for the repository**: _Settings → Pages → Source_ =
+   **GitHub Actions**.
 
-6. **Custom domain?** Set `vars.BASE_PATH` to an empty value (or
+The workflow includes a guard: if Pages is not enabled yet, the
+build job still succeeds and the deploy step is skipped.
+
+6. **Run (or re-run) the deploy workflow** after enabling Pages.
+
+If your first run happened before step 5, trigger another run with
+either of these:
+
+- Push a new commit to `main`.
+- Open _Actions → Deploy to GitHub Pages_ and click **Run workflow**.
+
+7. **Custom domain?** Set `vars.BASE_PATH` to an empty value (or
    simply don't override the variable and serve from a **user/org**
    Pages site like `<user>.github.io`, where there is no sub-path) and
    add a `public/CNAME` file containing your domain. Astro will copy
