@@ -70,6 +70,7 @@ arbore une image à la une, etc.
 | Commentaires           | [Commentaires avec Giscus](/fr/posts/comments-with-giscus)                  |
 | Thème                  | [Thème & mode sombre](/fr/posts/theming-and-dark-mode)                      |
 | Images à la une        | [Images à la une & médias](/fr/posts/featured-images-and-media)             |
+| Articles non listés    | [Articles non listés : partager sans publier](/fr/posts/unlisted-posts)     |
 
 ## Épinglé ou non
 

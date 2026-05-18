@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import PostLayout from '~/layouts/PostLayout.astro';
-import { getPosts, postSlug, sortPostsByDate, type Post } from '~/utils/posts';
+import { getPosts, getUnlistedPosts, postSlug, sortPostsByDate, type Post } from '~/utils/posts';
 
 interface Props {
   post: Post;
@@ -16,6 +16,12 @@ export async function getStaticPaths() {
   let paths = [];
   for (const locale of allLocales) {
     const posts = await getPosts(locale);
+    // Unlisted posts are excluded from all listings but still need a
+    // generated URL so they're accessible by direct link.
+    const unlistedPosts = await getUnlistedPosts(locale);
+    // Prev/next navigation only spans listed posts (unlisted posts are
+    // invisible to readers browsing the site, so linking to them from
+    // prev/next would be confusing).
     const chronological = sortPostsByDate(posts);
     const localeParams = { locale: locale === SITE.defaultLocale ? undefined : locale };
 
@@ -31,6 +37,14 @@ export async function getStaticPaths() {
           },
         };
       }),
+    );
+
+    // Unlisted posts: generate routes but no prev/next neighbours.
+    paths.push(
+      ...unlistedPosts.map((post) => ({
+        params: { ...localeParams, slug: postSlug(post) },
+        props: { post, prev: undefined, next: undefined },
+      })),
     );
   }
   return paths;

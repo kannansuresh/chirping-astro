@@ -61,6 +61,30 @@ Default `false`. When `true`, the post is included in dev mode (so you
 can see it while writing) but **excluded** from production builds, the
 sitemap and the RSS feed.
 
+### `unlisted` and `unlistedHideFromSeo`
+
+```yaml
+unlisted: true
+```
+
+Default `false`. When `true`, the post is **built and deployed** (its
+URL works) but hidden from every listing surface: home page, archives,
+tags, categories, RSS, and sitemap. Use this to share a post by direct
+link without surfacing it in navigation.
+
+```yaml
+unlistedHideFromSeo: false
+```
+
+Controls the `<meta name="robots" content="noindex, nofollow">` tag
+independently. Defaults to `true` when `unlisted: true`. Set to `false`
+to keep an unlisted post indexable by search engines, or set to `true`
+on a listed post to hide it from search engines without removing it from
+listings.
+
+See the [Unlisted posts guide](/posts/unlisted-posts) for the full
+picture and a live demo.
+
 ### `heroImage` and `heroImageAlt`
 
 ```yaml
@@ -207,6 +231,7 @@ updatedDate: 2026-05-03
 tags: [example, reference]
 categories: [Reference]
 draft: false
+unlisted: false
 heroImage: ../../../assets/images/posts/featured-images-and-media/coastline.jpg
 heroImageAlt: A long exposure of a rocky coastline
 showFeaturedImage: true

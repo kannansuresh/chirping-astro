@@ -69,6 +69,24 @@ const baseFrontmatter = ({ image }: SchemaContext) =>
      * If omitted, falls back to the file slug (relative to the locale folder).
      */
     translationKey: z.string().optional(),
+    /**
+     * Unlisted posts/pages are NOT shown in any listing (home, archives,
+     * tags, categories, RSS, sitemap) but remain accessible to anyone who
+     * knows the direct URL.
+     *
+     * Use `unlistedHideFromSeo: true` (the default when `unlisted: true`)
+     * to also emit `<meta name="robots" content="noindex, nofollow">` so
+     * search engines won't index or follow links on the page.
+     */
+    unlisted: z.boolean().default(false),
+    /**
+     * When `true`, adds `<meta name="robots" content="noindex, nofollow">`
+     * to the page. Defaults to `true` whenever `unlisted: true`; can be
+     * set independently to hide a listed post from search engines, or to
+     * keep an unlisted post indexable (e.g. for sharing via a canonical URL
+     * you control).
+     */
+    unlistedHideFromSeo: z.boolean().optional(),
   });
 
 export type PostFrontmatter = z.infer<ReturnType<typeof baseFrontmatter>>;

@@ -185,6 +185,8 @@ the file path — **do not add a `lang:` field** unless overriding.
 | `comments` | boolean | ❌ | `false` disables Giscus on this post |
 | `translationKey` | string | ❌ | Pairs the same post across locales; auto-pairs on matching slug |
 | `dynamicPostCardHeight` | boolean | ❌ | Per-post override of `SITE.dynamicPostCardHeight` |
+| `unlisted` | boolean | ❌ | Hidden from all listings, RSS, and sitemap; URL still accessible |
+| `unlistedHideFromSeo` | boolean | ❌ | Emits `noindex, nofollow` robots meta; defaults to `true` when `unlisted: true` |
 
 ### File naming
 
@@ -497,6 +499,14 @@ These are **CI-only**. Never set them in `.env` for local builds.
 3. To pair with a translation in another locale, add the same `translationKey`
    to both files.
 
+### Make a post unlisted (accessible by URL, hidden from listings)
+1. Add `unlisted: true` to the post's frontmatter.
+2. The post is excluded from: home listing, pagination, archives, tags, categories, RSS, sitemap.
+3. The post URL is still generated and accessible by direct link.
+4. By default, `<meta name="robots" content="noindex, nofollow">` is also emitted.
+   Set `unlistedHideFromSeo: false` to keep the post indexable while still hiding it from listings.
+5. Unlisted posts do not appear in prev/next post navigation.
+
 ### Use daisyUI alerts in Markdown/MDX
 1. Add a fenced code block with language `alert`.
 2. Use optional keys: `type`, `style`, `direction`, `icon`, `title`, `description`, `class`.
@@ -565,6 +575,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | **SVG optimizer is still experimental in Astro 6.2** | Keep it under `experimental.svgOptimizer`; do not move it to a top-level `svgOptimizer` key unless Astro docs explicitly promote it. |
 | **hreflang only for existing translations** | Don't manually add hreflang tags — they are generated automatically from `translationKey` pairs. |
 | **`draft: true` posts** | Excluded from prod builds, RSS, and sitemap, but visible in `bun run dev`. |
+| **`unlisted: true` posts** | Excluded from all listings, RSS, and sitemap, but their URL is still generated and accessible. `unlistedHideFromSeo` defaults to `true` when `unlisted: true`, emitting `noindex, nofollow`. Unlisted posts are not included in prev/next navigation. |
 | **GitHub Pages needs `BASE_PATH`** | Set to `/<repo-name>` for project Pages; leave empty for root/custom domain. |
 
 ---
@@ -765,4 +776,4 @@ conventions:
 
 ---
 
-*This file was last updated on 2026-05-06.*
+*This file was last updated on 2026-05-18.*

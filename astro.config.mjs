@@ -26,6 +26,54 @@ const SITEMAP_XSL_HREF = `${BASE}/sitemap/styles.xsl`;
 const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
 
 /**
+ * Set of URL path segments that belong to unlisted posts/pages.
+ * Populated by `collectUnlistedUrls()` integration before the sitemap
+ * integration runs, so the sitemap `filter` can exclude them.
+ *
+ * We use path segments (e.g. "posts/my-slug") rather than full URLs so
+ * the check works regardless of `SITE_URL` or `BASE_PATH` values.
+ */
+const unlistedPathSegments = new Set();
+
+/**
+ * Integration that reads the content collection at build time and
+ * populates `unlistedPathSegments` with the URL path segments of every
+ * unlisted post. Must be listed BEFORE `@astrojs/sitemap` in the
+ * integrations array.
+ */
+function collectUnlistedUrls() {
+  return {
+    name: 'chirpy:collect-unlisted-urls',
+    hooks: {
+      'astro:build:start': async () => {
+        try {
+          // Dynamically import so this only runs during builds (not in
+          // the config evaluation phase where astro:content isn't ready).
+          const { getCollection } = await import('astro:content');
+          const entries = await getCollection('posts');
+          for (const entry of entries) {
+            if (!entry.data.unlisted) continue;
+            // Derive locale and slug from the entry id (e.g. "en/my-post.md").
+            const segs = entry.id.split(/[\\/]/);
+            const locale = segs[0] && /** @type {readonly string[]} */ (SITE.locales).includes(segs[0]) ? segs[0] : SITE.defaultLocale;
+            const slug = segs.slice(1).join('/').replace(/\.(md|mdx)$/i, '');
+            if (locale === SITE.defaultLocale) {
+              unlistedPathSegments.add(`posts/${slug}`);
+            } else {
+              unlistedPathSegments.add(`${locale}/posts/${slug}`);
+            }
+          }
+        } catch {
+          // Content collections aren't available in all build contexts
+          // (e.g. CI fast mode). Silently skip — the sitemap will include
+          // unlisted posts in that case, which is acceptable for CI.
+        }
+      },
+    },
+  };
+}
+
+/**
  * Tiny inline integration: after `@astrojs/sitemap` runs, rewrite the
  * absolute XSL `href` it emits (always prefixed with `site`, e.g.
  * `https://aneejian.com/sitemap/styles.xsl`) to a root-relative path.
@@ -195,6 +243,7 @@ export default defineConfig({
     ...(SKIP_RSS_SITEMAP
       ? []
       : [
+          collectUnlistedUrls(),
           sitemap({
             i18n: {
               defaultLocale: SITE.defaultLocale,
@@ -207,7 +256,14 @@ export default defineConfig({
             // `site`. The `rewriteSitemapXslToRelative()` integration below
             // turns it back into a root-relative path so local preview works.
             xslURL: SITEMAP_XSL_HREF,
-            filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
+            filter: (page) => {
+              if (page.includes('/draft/') || page.endsWith('/404/')) return false;
+              // Exclude unlisted posts from the sitemap.
+              for (const seg of unlistedPathSegments) {
+                if (page.includes(String(seg))) return false;
+              }
+              return true;
+            },
           }),
           rewriteSitemapXslToRelative(),
         ]),

@@ -13,6 +13,13 @@ export interface SeoMeta {
   tags?: string[];
   locale: Locale;
   hreflangs: ReturnType<typeof alternates>;
+  /**
+   * When `true`, the SEO component emits
+   * `<meta name="robots" content="noindex, nofollow">`.
+   * Set automatically for unlisted posts/pages when
+   * `unlistedHideFromSeo` is `true` (the default).
+   */
+  noindex?: boolean;
 }
 
 interface BuildSeoArgs {
@@ -31,6 +38,8 @@ interface BuildSeoArgs {
    * pages where a translation may be missing.
    */
   availableLocales?: readonly Locale[];
+  /** Emit `<meta name="robots" content="noindex, nofollow">`. */
+  noindex?: boolean;
 }
 
 /** Build the SEO data block consumed by `<SEO />`. */
@@ -46,5 +55,6 @@ export function buildSeo(args: BuildSeoArgs): SeoMeta {
     tags: args.tags,
     locale: args.locale,
     hreflangs: alternates(args.pathWithoutLocale, args.availableLocales),
+    noindex: args.noindex,
   };
 }

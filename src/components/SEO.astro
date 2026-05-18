@@ -31,6 +31,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
 <title>{meta.title}</title>
 <meta name="description" content={meta.description} />
 <link rel="canonical" href={meta.canonical} />
+{meta.noindex && <meta name="robots" content="noindex, nofollow" />}
 
 {/* Feed + sitemap auto-discovery */}
 <link

@@ -432,6 +432,42 @@ Set `draft: true` to keep a post out of production builds, the
 sitemap, and the RSS feed. Drafts still render in `bun run dev` so
 you can preview them.
 
+### Unlisted posts
+
+Set `unlisted: true` to hide a post from all listings (home page,
+archives, tags, categories, RSS, sitemap) while keeping it accessible
+to anyone who knows the direct URL. This is useful for sharing a
+work-in-progress with a specific audience, or for posts you want to
+link to without surfacing them in navigation.
+
+```yaml
+---
+title: My unlisted post
+description: Only visible via direct link.
+pubDate: 2026-05-01
+unlisted: true
+---
+```
+
+By default, unlisted posts also get
+`<meta name="robots" content="noindex, nofollow">` so search engines
+won't index them. You can opt out of that behaviour independently:
+
+```yaml
+# Unlisted from listings, but still indexable by search engines:
+unlisted: true
+unlistedHideFromSeo: false
+
+# Listed normally, but hidden from search engines:
+unlisted: false
+unlistedHideFromSeo: true
+```
+
+| Field                       | Default            | Effect                                 |
+| --------------------------- | ------------------ | -------------------------------------- |
+| `unlisted: true`            | `false`            | Hidden from all listings, RSS, sitemap |
+| `unlistedHideFromSeo: true` | same as `unlisted` | Adds `noindex, nofollow` robots meta   |
+
 ---
 
 ## Tailwind v4 + daisyUI

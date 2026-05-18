@@ -88,11 +88,28 @@ export function sortPostsByDate(posts: Post[]): Post[] {
   });
 }
 
-/** Get all posts for a locale (drafts hidden in prod, sorted). */
+/** Get all posts for a locale (drafts + unlisted hidden in prod, sorted). */
 export async function getPosts(locale: Locale): Promise<Post[]> {
   if (skipPostCollections) return [];
   const all = await getCollection('posts', (entry) => {
     if (isProd && entry.data.draft) return false;
+    if (entry.data.unlisted) return false;
+    const lang = entry.data.lang ?? localeFromId(entry.id);
+    return lang === locale;
+  });
+  return sortPosts(all.map(normalize));
+}
+
+/**
+ * Get unlisted posts for a locale (used only in `getStaticPaths` so
+ * their URLs are still generated and accessible by direct link).
+ * Drafts are still excluded in production.
+ */
+export async function getUnlistedPosts(locale: Locale): Promise<Post[]> {
+  if (skipPostCollections) return [];
+  const all = await getCollection('posts', (entry) => {
+    if (isProd && entry.data.draft) return false;
+    if (!entry.data.unlisted) return false;
     const lang = entry.data.lang ?? localeFromId(entry.id);
     return lang === locale;
   });

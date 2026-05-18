@@ -79,6 +79,9 @@ const seo = buildSeo({
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
   availableLocales,
+  // An unlisted post hides from SEO by default unless the author
+  // explicitly sets `unlistedHideFromSeo: false`.
+  noindex: post.data.unlisted && (post.data.unlistedHideFromSeo ?? true),
 });
 
 const crumbs = [

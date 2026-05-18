@@ -67,6 +67,7 @@ image; and so on.
 | Comments              | [Comments with Giscus](/posts/comments-with-giscus)                             |
 | Theming               | [Theming & dark mode](/posts/theming-and-dark-mode)                             |
 | Featured images       | [Featured images & media](/posts/featured-images-and-media)                     |
+| Unlisted posts        | [Unlisted posts: share without publishing](/posts/unlisted-posts)               |
 
 ## What's pinned, what's listed
 

@@ -61,6 +61,31 @@ draft: true
 Défaut `false`. Quand vrai, l'article est inclus en mode dev mais
 **exclu** des builds de production, du sitemap et du flux RSS.
 
+### `unlisted` et `unlistedHideFromSeo`
+
+```yaml
+unlisted: true
+```
+
+Défaut `false`. Quand vrai, l'article est **compilé et déployé** (son
+URL fonctionne) mais masqué de toutes les surfaces de listing : page
+d'accueil, archives, tags, catégories, RSS et sitemap. Utilisez cela
+pour partager un article par lien direct sans le faire remonter dans
+la navigation.
+
+```yaml
+unlistedHideFromSeo: false
+```
+
+Contrôle la balise `<meta name="robots" content="noindex, nofollow">`
+indépendamment. Vaut `true` par défaut quand `unlisted: true`. Mettez
+`false` pour garder un article non listé indexable par les moteurs de
+recherche, ou `true` sur un article listé pour le cacher des moteurs
+de recherche sans le retirer des listings.
+
+Consultez le [guide des articles non listés](/fr/posts/unlisted-posts)
+pour l'explication complète et une démo en direct.
+
 ### `heroImage` et `heroImageAlt`
 
 ```yaml
@@ -213,6 +238,7 @@ updatedDate: 2026-05-03
 tags: [exemple, reference]
 categories: [Référence]
 draft: false
+unlisted: false
 heroImage: ../../../assets/images/posts/featured-images-and-media/coastline.jpg
 heroImageAlt: Une longue exposition d'une côte rocheuse
 showFeaturedImage: true
