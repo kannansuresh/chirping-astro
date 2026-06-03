@@ -9,11 +9,12 @@
  *  - resolve translation siblings via `translationKey`
  */
 
-import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 import { SITE, type Locale } from '../config';
 import { withBase } from '../i18n/utils';
+import { slugify } from './slugify';
 
 export type Post = CollectionEntry<'posts'> & {
   data: CollectionEntry<'posts'>['data'] & { lang: Locale; translationKey: string };
@@ -241,15 +242,7 @@ export function heroImage(post: Post): ImageMetadata | string | undefined {
   return img as ImageMetadata;
 }
 
-/** Slugify a tag/category for use in URLs. */
-export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
+export { slugify } from './slugify';
 
 /** Build the URL for a tag listing page in a given locale. */
 export function tagPath(locale: Locale, tag: string): string {

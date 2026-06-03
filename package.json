@@ -18,6 +18,7 @@
     "pagefind": "pagefind --site dist --output-subdir _pagefind",
     "postbuild": "echo \"Pagefind index generated in dist/_pagefind\"",
     "typecheck": "astro check",
+    "test": "bun test",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{astro,ts,tsx,js,jsx,md,mdx,css,json}\"",
