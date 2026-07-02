@@ -1,6 +1,6 @@
 ---
 title: 'Bienvenue sur Chirping Astro'
-description: "Commencez ici. Une visite guidée de toutes les fonctionnalités de ce thème Astro v6 + Tailwind v4 + daisyUI — et la liste des articles dédiés qui détaillent chacune d'entre elles."
+description: "Commencez ici. Une visite guidée de toutes les fonctionnalités de ce thème Astro v7 + Tailwind v4 + daisyUI — et la liste des articles dédiés qui détaillent chacune d'entre elles."
 pubDate: 2026-04-30
 updatedDate: 2026-04-30
 tags: [astro, tailwind, daisyui, theme, demarrage]

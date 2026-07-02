@@ -11,7 +11,7 @@
 ## Project Overview
 
 **Chirping Astro** is a Chirpy-inspired, multilingual, statically generated blog
-theme built on **Astro 6.x**. It targets technical writers who need a fast,
+theme built on **Astro 7.x**. It targets technical writers who need a fast,
 accessible blog with first-class i18n, dark mode, MDX authoring, and zero
 server-side runtime.
 
@@ -22,7 +22,7 @@ Markdown authoring also includes two custom remark code-block transforms:
 
 | Dimension | Value |
 |-----------|-------|
-| Framework | Astro 6.x (static output) |
+| Framework | Astro 7.x (static output) |
 | Package manager | **Bun ≥ 1.1.0** (only supported PM; lockfile is `bun.lock`) |
 | Styling | Tailwind CSS v4 + daisyUI v5 |
 | Languages | TypeScript (strict), Astro, MDX, CSS |
@@ -382,7 +382,7 @@ bun run preview     # manually test /, /posts/…, /en/posts/…, /fr/ language 
 
 - SVG optimization is enabled in `astro.config.mjs` via
   `experimental.svgOptimizer = svgoOptimizer({ multipass: true })`.
-- In Astro 6.2.x this remains an **experimental flag**. The new API replaces
+- In Astro 7.x this remains an **experimental flag**. The new API replaces
   the old `experimental.svgo` flag but is not yet a stable top-level config key.
 - This optimization primarily applies to imported SVGs used as **components**.
   URL-served SVG assets can still benefit from one-time source-file minification.
@@ -574,7 +574,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | **Alert classes need safelisting** | `remark-alert` emits classes at build-time HTML generation. Keep `@source inline(...)` safelist entries in `src/styles/global.css` aligned with supported alert variants. |
 | **Five places for theme names** | Renaming `chirpy-light`/`chirpy-dark` requires updating all five locations atomically. |
 | **Fonts are config-driven** | Keep font definitions in `astro.config.mjs` + `<Font />` tags in `BaseLayout.astro`; avoid ad-hoc `<link>` tags or CSS `@import` font files. |
-| **SVG optimizer is still experimental in Astro 6.2** | Keep it under `experimental.svgOptimizer`; do not move it to a top-level `svgOptimizer` key unless Astro docs explicitly promote it. |
+| **SVG optimizer is still experimental in Astro 7.x** | Keep it under `experimental.svgOptimizer`; do not move it to a top-level `svgOptimizer` key unless Astro docs explicitly promote it. |
 | **hreflang only for existing translations** | Don't manually add hreflang tags — they are generated automatically from `translationKey` pairs. |
 | **`draft: true` posts** | Excluded from prod builds, RSS, and sitemap, but visible in `bun run dev`. |
 | **`unlisted: true` posts** | Excluded from all listings, RSS, and sitemap, but their URL is still generated and acc
@@ -594,7 +594,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | New locale routes 404 in dev | Restart `bun run dev` after adding files under `src/pages/<locale>/`. |
 | `astro check` fails on `astro:content` | Run `bun run dev` or `bun run build` once to generate `.astro/types.d.ts`. |
 | Custom fonts not loading after provider changes | Keep fonts on `fontProviders.local()` when network/TLS blocks third-party font metadata endpoints; verify `<Font cssVariable="..." />` tags still exist in `BaseLayout.astro`. |
-| SVG optimizer placement is being questioned | In Astro 6.2.x the correct config remains `experimental.svgOptimizer`, not a top-level key. Re-check Astro docs before moving it. |
+| SVG optimizer placement is being questioned | In Astro 7.x the correct config remains `experimental.svgOptimizer`, not a top-level key. Re-check Astro docs before moving it. |
 | Math rendered as raw `$…$` | Add `math: true` to frontmatter and rebuild. |
 | Stacked alert blocks touch each other | Keep `.prose-chirpy div[role='alert'] + div[role='alert']` spacing rule in `src/styles/global.css`. |
 | `pubDate: Required` build error | A post is missing `pubDate` in frontmatter — error message names the file. |
@@ -780,4 +780,4 @@ conventions:
 
 ---
 
-*This file was last updated on 2026-06-03.*
+*This file was last updated on 2026-07-02.*

@@ -1,23 +1,23 @@
 // @ts-check
-import { defineConfig, fontProviders, svgoOptimizer } from 'astro/config';
-import process from 'node:process';
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import icon from 'astro-icon';
-import expressiveCode from 'astro-expressive-code';
 import tailwindcss from '@tailwindcss/vite';
-import rehypeSlug from 'rehype-slug';
+import expressiveCode from 'astro-expressive-code';
+import icon from 'astro-icon';
+import { defineConfig, fontProviders, svgoOptimizer } from 'astro/config';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import { remarkAsHtml } from './src/plugins/remark-ashtml.ts';
 import { remarkAlert } from './src/plugins/remark-alert.ts';
-import { unified } from '@astrojs/markdown-remark';
+import { remarkAsHtml } from './src/plugins/remark-ashtml.ts';
 
 import { SITE } from './src/config';
 
@@ -278,7 +278,7 @@ export default defineConfig({
 
   experimental: {
     contentIntellisense: true,
-    // Astro 6.2.x still exposes SVG optimization as an experimental flag.
+    // Astro 7.x still exposes SVG optimization as an experimental flag.
     // The 6.2 change renamed the old `experimental.svgo` flag to the new
     // `experimental.svgOptimizer` API; it is not a stable top-level config yet.
     svgOptimizer: svgoOptimizer({

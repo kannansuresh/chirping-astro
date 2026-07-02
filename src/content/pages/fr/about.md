@@ -44,7 +44,7 @@ calme comptent plus que les animations et les espaces publicitaires.
 
 ## Construit avec
 
-- [**Astro 6.x**](https://astro.build/) — Content Collections, MDX,
+- [**Astro 7.x**](https://astro.build/) — Content Collections, MDX,
   RSS et view transitions
 - [**Tailwind CSS v4**](https://tailwindcss.com/) via le plugin
   `@tailwindcss/vite`, avec [**daisyUI v5**](https://daisyui.com/) pour
