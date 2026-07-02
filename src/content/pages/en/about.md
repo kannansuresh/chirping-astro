@@ -40,7 +40,7 @@ than animations and ad slots.
 
 ## Built with
 
-- [**Astro 6.x**](https://astro.build/) — Content Collections, MDX, RSS,
+- [**Astro 7.x**](https://astro.build/) — Content Collections, MDX, RSS,
   and view transitions
 - [**Tailwind CSS v4**](https://tailwindcss.com/) via the `@tailwindcss/vite`
   plugin, with [**daisyUI v5**](https://daisyui.com/) for theming

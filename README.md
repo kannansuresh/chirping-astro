@@ -1,6 +1,6 @@
 # Chirping Astro
 
-A Chirpy-inspired, single-template, multilingual **Astro v6** theme
+A Chirpy-inspired, single-template, multilingual **Astro v7** theme
 built with **Tailwind CSS v4**, **daisyUI v5**, **MDX**, **Pagefind**
 search, **Giscus** comments, and **KaTeX** for math.
 
@@ -52,7 +52,7 @@ authoring experience — without writing your own theme from scratch.
 
 ## Features at a glance
 
-- **Astro 6.x** + Content Collections (loader API) + Zod-validated
+- **Astro 7.x** + Content Collections (loader API) + Zod-validated
   frontmatter
 - **Bun** as the only package manager / runtime (>= 1.1.0)
 - **Tailwind CSS v4** via the official `@tailwindcss/vite` plugin

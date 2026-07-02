@@ -1,6 +1,6 @@
 ---
 title: 'Welcome to Chirping Astro'
-description: 'Start here. A guided tour of every feature this Astro v6 + Tailwind v4 + daisyUI theme ships with — and a map of the dedicated demo posts that show each one in detail.'
+description: 'Start here. A guided tour of every feature this Astro v7 + Tailwind v4 + daisyUI theme ships with — and a map of the dedicated demo posts that show each one in detail.'
 pubDate: 2026-04-30
 updatedDate: 2026-04-30
 tags: [astro, tailwind, daisyui, theme, getting-started]
@@ -13,7 +13,7 @@ toc: true
 ---
 
 Hello, and welcome. **Chirping Astro** is a single-template, multilingual
-Astro v6 theme inspired by [Chirpy](https://chirpy.cotes.page/) and rebuilt
+Astro v7 theme inspired by [Chirpy](https://chirpy.cotes.page/) and rebuilt
 from scratch with a strict TypeScript codebase, Tailwind v4, daisyUI v5,
 MDX, Pagefind and Giscus.
 

@@ -1,5 +1,5 @@
 /**
- * Content Collections (Astro v6 loader API).
+ * Content Collections (Astro v7 loader API).
  *
  * Folder convention: `src/content/<collection>/<locale>/**`
  *  - posts/en/**  -> EN posts
@@ -11,8 +11,8 @@
  * manually (but they may override it in frontmatter).
  */
 
-import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { z } from 'zod';
 
 import { SITE } from './config';

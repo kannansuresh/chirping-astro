@@ -1,7 +1,7 @@
 import process from 'node:process';
 import avatarImg from './assets/images/site/avatar.svg';
 import ogDefaultImg from './assets/images/site/og-default.svg';
-import type { SiteConfig, NavItem, SocialLink, GiscusConfig } from './types/config';
+import type { GiscusConfig, NavItem, SiteConfig, SocialLink } from './types/config';
 
 /**
  * Global site + theme configuration.
@@ -53,13 +53,13 @@ export const SITE: SiteConfig = {
   title: 'Chirping Astro',
   /** Site tagline / description. */
   description:
-    'A modern, multilingual Astro v6 theme inspired by Chirpy — built with Tailwind v4, daisyUI, MDX, Pagefind, and Giscus.',
+    'A modern, multilingual Astro v7 theme inspired by Chirpy — built with Tailwind v4, daisyUI, MDX, Pagefind, and Giscus.',
   /** Author/handle shown in footer + meta. */
   author: {
     name: 'Chirping Astro',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: avatarImg,
-    bio: 'A text-focused Astro V6 theme.',
+    bio: 'A text-focused Astro v7 theme.',
   },
   /** Default OG image. */
   defaultOgImage: ogDefaultImg.src,
