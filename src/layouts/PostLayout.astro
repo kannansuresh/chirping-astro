@@ -4,7 +4,6 @@ import PostNav from '../components/PostNav.astro';
 import SmartImage from '../components/SmartImage.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
-import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, SITE, type Locale } from '../config';
 import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
@@ -88,6 +87,11 @@ const crumbs = [
   { label: t('nav.posts'), href: localizedPath('/', locale) },
   { label: post.data.title },
 ];
+
+let MathStylesComponent;
+if (post.data.math) {
+  MathStylesComponent = (await import('../components/MathStyles.astro')).default;
+}
 ---
 
 <BaseLayout
@@ -101,7 +105,7 @@ const crumbs = [
   seo={seo}
   availableLocales={availableLocales}
 >
-  {post.data.math && <MathStyles />}
+  {post.data.math && MathStylesComponent && <MathStylesComponent />}
   {
     post.data.toc && headings.length > 0 && (
       <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
