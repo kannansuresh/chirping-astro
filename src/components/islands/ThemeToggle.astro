@@ -69,7 +69,8 @@ const t = useTranslations(locale);
     const dx = Math.max(origin.x, window.innerWidth - origin.x);
     const dy = Math.max(origin.y, window.innerHeight - origin.y);
     const radius = Math.hypot(dx, dy);
-    root.style.setProperty('--theme-radius', `${radius}px`);
+    // Add a safety margin to prevent edge flickering on extremely large or high-DPI viewports.
+    root.style.setProperty('--theme-radius', `${radius + 100}px`);
     root.dataset.themeAnim = theme === 'chirpy-dark' ? 'to-dark' : 'to-light';
 
     const transition = (
