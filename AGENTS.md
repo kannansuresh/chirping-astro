@@ -104,8 +104,8 @@ The file `.env.example` is the canonical reference — never commit `.env`.
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `SITE_URL` | ✅ | Canonical origin (no trailing slash). Used for OG, RSS, sitemap, hreflang. |
-| `BASE_PATH` | GitHub Pages only | Sub-path prefix (e.g. `/chirping-astro`). Leave empty for root hosting. |
+| `SITE_URL` | ✅ | Canonical origin (no trailing slash). Auto-detected in GitHub Actions. |
+| `BASE_PATH` | GitHub Pages only | Sub-path prefix (e.g. `/chirping-astro`). Auto-detected in GitHub Actions. |
 | `PUBLIC_GITHUB_HANDLE` | Optional | Sidebar GitHub icon + `SITE.author.url` |
 | `PUBLIC_GITHUB_REPO` | Optional | Repo slug for custom integrations |
 | `PUBLIC_TWITTER_HANDLE` | Optional | Sidebar Twitter icon |
@@ -579,7 +579,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | **`draft: true` posts** | Excluded from prod builds, RSS, and sitemap, but visible in `bun run dev`. |
 | **`unlisted: true` posts** | Excluded from all listings, RSS, and sitemap, but their URL is still generated and acc
 | **Tags/categories must survive `slugify`** | `slugify` in `src/utils/slugify.ts` is Unicode-aware via ECMAScript property escapes (`\p{L}\p{N}\p{M}`). Non-Latin tags (e.g. テスト, മലയാളം) are preserved as-is. Do not downgrade to ASCII-only matching. |essible. `unlistedHideFromSeo` defaults to `true` when `unlisted: true`, emitting `noindex, nofollow`. Unlisted posts are not included in prev/next navigation. |
-| **GitHub Pages needs `BASE_PATH`** | Set to `/<repo-name>` for project Pages; leave empty for root/custom domain. |
+| **GitHub Pages auto-detects `BASE_PATH`** | The `deploy.yml` workflow auto-detects `BASE_PATH` and `SITE_URL` via `actions/configure-pages`, so no manual configuration is needed for most setups. |
 
 ---
 

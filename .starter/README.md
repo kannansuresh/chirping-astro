@@ -72,18 +72,18 @@ Go to your repo **Settings → Pages → Source** and select **GitHub Actions**.
 
 Go to **Settings → Environments → github-pages → Environment variables** and add any of:
 
-| Variable                    | Purpose                               | Default                        |
-| --------------------------- | ------------------------------------- | ------------------------------ |
-| `SITE_URL`                  | Your production URL                   | `https://<username>.github.io` |
-| `BASE_PATH`                 | Sub-path for the site                 | `/<repo-name>`                 |
-| `PUBLIC_GITHUB_HANDLE`      | GitHub profile link in sidebar        | Your GitHub username           |
-| `PUBLIC_TWITTER_HANDLE`     | Twitter/X link in sidebar             | _(none)_                       |
-| `PUBLIC_CONTACT_EMAIL`      | Email link in sidebar                 | _(none)_                       |
-| `PUBLIC_GISCUS_ENABLED`     | Enable comments (`true`/`false`)      | _(none)_                       |
-| `PUBLIC_GISCUS_REPO`        | `owner/repo` for Giscus               | _(none)_                       |
-| `PUBLIC_GISCUS_REPO_ID`     | From [giscus.app](https://giscus.app) | _(none)_                       |
-| `PUBLIC_GISCUS_CATEGORY`    | Discussion category name              | _(none)_                       |
-| `PUBLIC_GISCUS_CATEGORY_ID` | From [giscus.app](https://giscus.app) | _(none)_                       |
+| Variable                    | Purpose                               | Default              |
+| --------------------------- | ------------------------------------- | -------------------- |
+| `SITE_URL`                  | Your production URL                   | Auto-detected        |
+| `BASE_PATH`                 | Sub-path for the site                 | Auto-detected        |
+| `PUBLIC_GITHUB_HANDLE`      | GitHub profile link in sidebar        | Your GitHub username |
+| `PUBLIC_TWITTER_HANDLE`     | Twitter/X link in sidebar             | _(none)_             |
+| `PUBLIC_CONTACT_EMAIL`      | Email link in sidebar                 | _(none)_             |
+| `PUBLIC_GISCUS_ENABLED`     | Enable comments (`true`/`false`)      | _(none)_             |
+| `PUBLIC_GISCUS_REPO`        | `owner/repo` for Giscus               | _(none)_             |
+| `PUBLIC_GISCUS_REPO_ID`     | From [giscus.app](https://giscus.app) | _(none)_             |
+| `PUBLIC_GISCUS_CATEGORY`    | Discussion category name              | _(none)_             |
+| `PUBLIC_GISCUS_CATEGORY_ID` | From [giscus.app](https://giscus.app) | _(none)_             |
 
 > **Note:** All variables are optional. The site builds and deploys with zero configuration — variables just enable extra features.
 
@@ -120,9 +120,8 @@ The next run will execute the deploy job and publish your site.
 
 To use your own domain (e.g., `https://blog.example.com`) exclusively for this site:
 
-1. Set `SITE_URL` = `https://blog.example.com`
-2. Set `BASE_PATH` to empty (or `/`).
-3. Configure your DNS — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
+1. Configure your DNS and repository settings — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
+2. The workflow automatically detects custom domains and configures `SITE_URL` and `BASE_PATH` correctly. **No manual configuration is needed at all** — it works out of the box!
 
 ### Using a custom domain on your GitHub user site
 
@@ -133,12 +132,7 @@ username.github.io        → example.com          (user site)
 username.github.io/blog   → example.com/blog     (this repo)
 ```
 
-In this case, you don't need any extra DNS setup. Just set:
-
-- `SITE_URL` = `https://example.com`
-- `BASE_PATH` = `/<repo-name>` (e.g., `/blog`)
-
-The deploy workflow already defaults `BASE_PATH` to `/<repo-name>`, so if you're happy with `example.com/<repo-name>/` as your blog URL, **no configuration is needed at all** — it works out of the box.
+In this case, you don't need any extra DNS setup. The workflow detects the origin (`example.com`) and path (`/blog`) and configures it automatically!
 
 ## Giscus Comments
 

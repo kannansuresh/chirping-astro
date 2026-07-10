@@ -41,9 +41,53 @@ jobs:
     # _Settings → Environments → github-pages_ resolvable here at build
     # time. Without it, only repository-level vars/secrets are visible.
     environment: github-pages
+    outputs:
+      pages_enabled: ${{ steps.pages_check.outputs.enabled }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Check if GitHub Pages is enabled
+        id: pages_check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages")
+
+          if [ "$status" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "GitHub Pages is not enabled yet (HTTP $status). Skipping deployment."
+          fi
+
+      - name: Setup Pages
+        id: pages_config
+        if: steps.pages_check.outputs.enabled == 'true'
+        uses: actions/configure-pages@v6
+
+      - name: Resolve Environment Variables
+        run: |
+          # SITE_URL
+          if [ -n "${{ vars.SITE_URL }}" ]; then
+            echo "SITE_URL=${{ vars.SITE_URL }}" >> $GITHUB_ENV
+          elif [ "${{ steps.pages_check.outputs.enabled }}" == "true" ]; then
+            echo "SITE_URL=${{ steps.pages_config.outputs.origin }}" >> $GITHUB_ENV
+          else
+            echo "SITE_URL=https://${{ github.repository_owner }}.github.io" >> $GITHUB_ENV
+          fi
+
+          # BASE_PATH
+          if [ -n "${{ vars.BASE_PATH }}" ]; then
+            echo "BASE_PATH=${{ vars.BASE_PATH }}" >> $GITHUB_ENV
+          elif [ "${{ steps.pages_check.outputs.enabled }}" == "true" ]; then
+            echo "BASE_PATH=${{ steps.pages_config.outputs.base_path }}" >> $GITHUB_ENV
+          else
+            echo "BASE_PATH=/${{ github.event.repository.name }}" >> $GITHUB_ENV
+          fi
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -62,15 +106,6 @@ jobs:
         # theme treats as "feature disabled" — so every var is optional
         # and you only set the ones you actually use.
         env:
-          # --- Site identity ---
-          # Falls back to the canonical github.io origin for the current
-          # owner so a brand-new fork builds successfully with zero
-          # configuration. Override by setting `vars.SITE_URL` in the UI.
-          SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
-          # Sub-path for GitHub Pages. Hard-coded fallback to the repo
-          # name keeps the build correct even before the variable is
-          # configured. Override by setting `vars.BASE_PATH` in the UI.
-          BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
           # --- Author / social handles (all optional) ---
           PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
           PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO || github.event.repository.name }}
@@ -97,28 +132,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check if GitHub Pages is enabled
-        id: pages
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          status=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages")
-
-          if [ "$status" = "200" ]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages is not enabled yet (HTTP $status). Skipping deployment."
-          fi
-
-      - name: Setup Pages
-        if: steps.pages.outputs.enabled == 'true'
-        uses: actions/configure-pages@v6
-
       - name: Deploy to GitHub Pages
         id: deployment
-        if: steps.pages.outputs.enabled == 'true'
+        if: needs.build.outputs.pages_enabled == 'true'
         uses: actions/deploy-pages@v5

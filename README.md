@@ -884,8 +884,8 @@ favicons, images, internal links) gets prefixed correctly.
 
    | Variable                    | Purpose                                             | Fallback if unset                                  |
    | --------------------------- | --------------------------------------------------- | -------------------------------------------------- |
-   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap             | `https://<owner>.github.io`                        |
-   | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`) | derived from `${{ github.event.repository.name }}` |
+   | `SITE_URL`                  | Canonical origin for OG / RSS / sitemap             | Auto-detected by GitHub Pages                      |
+   | `BASE_PATH`                 | Sub-path for project Pages (e.g. `/chirping-astro`) | Auto-detected by GitHub Pages                      |
    | `PUBLIC_GITHUB_HANDLE`      | Footer link, sidebar GitHub icon, `SITE.author.url` | derived from `${{ github.repository_owner }}`      |
    | `PUBLIC_GITHUB_REPO`        | Optional repo slug for custom integrations          | derived from `${{ github.event.repository.name }}` |
    | `PUBLIC_TWITTER_HANDLE`     | Sidebar Twitter icon                                | icon hidden                                        |
@@ -924,8 +924,7 @@ favicons, images, internal links) gets prefixed correctly.
        steps:
          - name: Build with Astro
            env:
-             SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
-             BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
+             # SITE_URL and BASE_PATH are auto-resolved prior to this step!
              PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
              PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO   || github.event.repository.name }}
              PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
@@ -957,11 +956,10 @@ favicons, images, internal links) gets prefixed correctly.
    - Push a new commit to `main`.
    - Open _Actions → Deploy to GitHub Pages_ and click **Run workflow**.
 
-7. **Custom domain?** Set `vars.BASE_PATH` to an empty value (or
-   simply don't override the variable and serve from a **user/org**
-   Pages site like `<user>.github.io`, where there is no sub-path) and
-   add a `public/CNAME` file containing your domain. Astro will copy
-   it into `dist/` on every build.
+7. **Custom domain?** The workflow automatically detects custom domains and
+   root-level deployments, so you **do not** need to manually configure
+   `SITE_URL` or `BASE_PATH`! Simply add a `public/CNAME` file containing your
+   domain (or configure it in your repository settings), and it works out of the box.
 
 ### Other static hosts
 
