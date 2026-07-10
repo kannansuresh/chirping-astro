@@ -25,8 +25,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   for (const locale of SITE.locales) {
     const posts = await getPosts(locale);
     for (const post of posts) {
-      // Generate OG images for ALL posts (even those with heroImage)
-      // so we always have a consistent, optimized fallback.
+      // Skip posts that already have a custom heroImage to save build time.
+      if (post.data.heroImage) continue;
+
       const slug = postSlug(post);
       const prefix = locale === SITE.defaultLocale ? '' : `${locale}/`;
       paths.push({
