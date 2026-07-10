@@ -18,6 +18,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import { remarkAlert } from './src/plugins/remark-alert.ts';
 import { remarkAsHtml } from './src/plugins/remark-ashtml.ts';
+import { rehypeBaseLinks } from './src/plugins/rehype-base-links.ts';
 
 import { SITE } from './src/config';
 
@@ -202,6 +203,7 @@ export default defineConfig({
             rel: ['nofollow', 'noopener', 'noreferrer'],
           },
         ],
+        [rehypeBaseLinks, { base: BASE }],
       ],
       gfm: true,
     }),
