@@ -6,6 +6,8 @@
 exact = false
 # Save peer dependencies
 peer = true
+# Prevent supply chain attacks
+minimumReleaseAge = 86400
 
 [install.cache]
 disable = false
