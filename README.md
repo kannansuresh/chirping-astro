@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD024 -->
+
 # Chirping Astro
 
 A Chirpy-inspired, single-template, multilingual **Astro v7** theme

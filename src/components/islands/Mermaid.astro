@@ -30,7 +30,7 @@
       renderId++;
 
       for (let i = 0; i < wrappers.length; i++) {
-        const wrapper = wrappers[i];
+        const wrapper = wrappers[i] as HTMLElement;
 
         // Skip if this wrapper is already rendered with the current theme
         if (wrapper.dataset.renderedTheme === theme) continue;

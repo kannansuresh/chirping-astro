@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD024 -->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `minimumReleaseAge` to `bunfig.toml` to prevent supply chain attacks.
+
 - Added `rehype-base-links` (now `satteri-base-links`) plugin to prefix absolute URLs in Markdown with `BASE_PATH`.
 
 ### Fixed
