@@ -30,7 +30,7 @@ Vous pouvez écrire en **gras**, _italique_, ~~barré~~, `code en ligne`,
 ou imbriqué **_gras italique_**. Les URL longues deviennent
 cliquables : visitez [astro.build](https://astro.build). Les liens
 externes s'ouvrent dans un nouvel onglet avec `rel="nofollow noopener"`
-grâce à `rehype-external-links`.
+grâce à `satteri-external-links`.
 
 Utilisez la balise `<kbd>` pour les raccourcis clavier : appuyez sur
 
@@ -45,9 +45,9 @@ confortable sur mobile et desktop.
 
 ## Titres
 
-Les titres sont auto-slugifiés par `rehype-slug` et reçoivent une ancre
-au survol par `rehype-autolink-headings` — survolez la gauche d'un
-titre pour révéler le lien `#`.
+Les titres sont auto-slugifiés nativement par Sätteri et reçoivent une ancre
+au survol par notre plugin personnalisé `satteri-autolink-headings` — survolez la gauche d'un
+titre sur cette page pour révéler le lien `#`.
 
 ### Titre de niveau 3
 
@@ -78,7 +78,7 @@ Liste ordonnée :
 4. Dormir dessus.
 5. Éditer sans pitié.
 
-Liste de tâches GFM (grâce à `remark-gfm`) :
+Liste de tâches GFM (nativement par Sätteri) :
 
 - [x] Brancher Tailwind v4
 - [x] Bouton de bascule de thème animé
@@ -106,7 +106,7 @@ Liste de tâches GFM (grâce à `remark-gfm`) :
 | Expressions JS |          |  ✓  | `{new Date().toDateString()}` |
 | Notes          |    ✓     |  ✓  | Style GFM[^1]                 |
 
-[^1]: Les notes de bas de page sont fournies par `remark-gfm`.
+[^1]: Les notes de bas de page sont fournies nativement par Sätteri.
 
 ## Code en ligne et raccourcis clavier
 

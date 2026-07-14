@@ -1,0 +1,68 @@
+---
+/**
+ * Mermaid client island.
+ * Loaded dynamically only on pages with `mermaid: true` frontmatter.
+ */
+---
+
+<script>
+  import mermaid from 'mermaid';
+
+  function getMermaidTheme() {
+    const t = document.documentElement.getAttribute('data-theme');
+    return t === 'chirpy-dark' ? 'dark' : 'default';
+  }
+
+  let renderId = 0;
+  let isRendering = false;
+
+  async function renderMermaid() {
+    if (isRendering) return;
+
+    const theme = getMermaidTheme();
+    isRendering = true;
+
+    try {
+      // Re-initialize config with the current theme
+      mermaid.initialize({ startOnLoad: false, theme });
+
+      const wrappers = document.querySelectorAll('.chirpy-mermaid-wrapper');
+      renderId++;
+
+      for (let i = 0; i < wrappers.length; i++) {
+        const wrapper = wrappers[i];
+
+        // Skip if this wrapper is already rendered with the current theme
+        if (wrapper.dataset.renderedTheme === theme) continue;
+
+        const src = wrapper.getAttribute('data-mermaid-src');
+        if (!src) continue;
+
+        const container = wrapper.querySelector('.chirpy-mermaid');
+        if (!container) continue;
+
+        // Use a unique ID to prevent Mermaid ID collisions on re-renders
+        const id = `mermaid-svg-${i}-${renderId}`;
+        const { svg } = await mermaid.render(id, src);
+        container.innerHTML = svg;
+        wrapper.dataset.renderedTheme = theme;
+      }
+    } catch (e) {
+      console.error('Mermaid render error:', e);
+    } finally {
+      isRendering = false;
+    }
+  }
+
+  // Initial render when the page loads
+  document.addEventListener('astro:page-load', renderMermaid);
+  // Re-render when the theme changes (triggered by ThemeToggle.astro)
+  document.addEventListener('theme-change', renderMermaid);
+
+  // In case astro:page-load doesn't fire if not using ViewTransitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+</script>

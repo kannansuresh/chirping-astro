@@ -15,7 +15,7 @@ theme built on **Astro 7.x**. It targets technical writers who need a fast,
 accessible blog with first-class i18n, dark mode, MDX authoring, and zero
 server-side runtime.
 
-Markdown authoring also includes two custom remark code-block transforms:
+Markdown authoring also includes two custom Sätteri code-block transforms:
 
 - `ashtml` → raw HTML rendering
 - `alert` → daisyUI alert markup with icon, title/description, and variant classes
@@ -69,8 +69,8 @@ Markdown authoring also includes two custom remark code-block transforms:
     │   ├── utils.ts           # localePrefix(), formatDate(), etc.
     │   └── index.ts           # Re-exports
     ├── plugins/
-    │   ├── remark-ashtml.ts   # `ashtml` fenced code block -> raw HTML
-    │   └── remark-alert.ts    # `alert` fenced code block -> daisyUI alert HTML
+    │   ├── satteri-ashtml.ts   # `ashtml` fenced code block -> raw HTML (Sätteri mdast)
+    │   └── satteri-alert.ts    # `alert` fenced code block -> daisyUI alert HTML (Sätteri mdast)
     ├── layouts/
     │   ├── BaseLayout.astro   # Shell: topbar, sidebar, footer, no-FOUC script
     │   ├── PageLayout.astro   # Wrapper for static pages
@@ -183,6 +183,7 @@ the file path — **do not add a `lang:` field** unless overriding.
 | `pinned` | boolean | ❌ | Float to top of listing |
 | `toc` | boolean | ❌ | Enable sticky TOC (default: true on posts) |
 | `math` | boolean | ❌ | Loads KaTeX stylesheet for this page only |
+| `mermaid` | boolean | ❌ | Loads Mermaid client library for this page only |
 | `comments` | boolean | ❌ | `false` disables Giscus on this post |
 | `translationKey` | string | ❌ | Pairs the same post across locales; auto-pairs on matching slug |
 | `dynamicPostCardHeight` | boolean | ❌ | Per-post override of `SITE.dynamicPostCardHeight` |
@@ -571,7 +572,7 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | **Pagefind needs a build** | Search is not available in `bun run dev`. Run `bun run build` + `bun run preview`. |
 | **Zero ESLint warnings** | `bun run lint` must pass with no warnings before merging. |
 | **Math is opt-in** | Never load KaTeX globally — use `math: true` frontmatter per post. |
-| **Alert classes need safelisting** | `remark-alert` emits classes at build-time HTML generation. Keep `@source inline(...)` safelist entries in `src/styles/global.css` aligned with supported alert variants. |
+| **Alert classes need safelisting** | `satteri-alert` emits classes at build-time HTML generation. Keep `@source inline(...)` safelist entries in `src/styles/global.css` aligned with supported alert variants. |
 | **Five places for theme names** | Renaming `chirpy-light`/`chirpy-dark` requires updating all five locations atomically. |
 | **Fonts are config-driven** | Keep font definitions in `astro.config.mjs` + `<Font />` tags in `BaseLayout.astro`; avoid ad-hoc `<link>` tags or CSS `@import` font files. |
 | **SVG optimizer is still experimental in Astro 7.x** | Keep it under `experimental.svgOptimizer`; do not move it to a top-level `svgOptimizer` key unless Astro docs explicitly promote it. |
@@ -614,8 +615,8 @@ Edit the keydown handler at the bottom of `src/components/islands/SearchButton.a
 | `@tailwindcss/vite` | v4 | Tailwind Vite integration |
 | `daisyui` | v5 | Component/theme library |
 | `astro-expressive-code` | latest | Syntax-highlighted code blocks |
-| `@iconify/utils` | latest | Build-time icon resolution for `remark-alert` |
-| `remark-math` + `rehype-katex` | latest | LaTeX math support |
+| `@iconify/utils` | latest | Build-time icon resolution for `satteri-alert` |
+| `@nullpinter/satteri-katex` | latest | LaTeX math support |
 | `pagefind` | latest | Static search index |
 | `@astrojs/sitemap` | latest | Sitemap generation |
 | `@astrojs/mdx` | latest | MDX support |

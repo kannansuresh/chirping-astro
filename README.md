@@ -62,10 +62,10 @@ authoring experience — without writing your own theme from scratch.
   (syntax highlighting, frame titles, copy buttons, line markers,
   diffs, collapsible sections), raw HTML rendering from `ashtml` blocks,
   daisyUI alerts from `alert` blocks, GFM, autolinked headings, callouts
-- **LaTeX math** via [KaTeX](https://katex.org) (`remark-math` +
-  `rehype-katex`), pre-rendered at build time. The stylesheet is
+- **LaTeX math** via [KaTeX](https://katex.org) (`@nullpinter/satteri-katex`), pre-rendered at build time. The stylesheet is
   loaded **only on pages that opt in** with `math: true` in
   frontmatter, so non-math pages stay lean
+- **Mermaid diagrams** natively rendered via Sätteri (`mermaid` frontmatter). The client library is bundled and injected only on pages that need it, keeping the rest of the site zero-JS
 - **Pagefind** static search (modal + dedicated page, lazy-loaded,
   locale-filtered)
 - **Giscus** comments synced with theme and locale, per-post
@@ -123,7 +123,7 @@ bun install
 ```
 
 This installs Astro, the daisyUI v5 plugin, MDX, Expressive Code,
-remark/rehype plugins, Pagefind, KaTeX, and the dev tooling.
+Sätteri plugins, Pagefind, KaTeX, and the dev tooling.
 
 ### 3. Configure environment variables
 
@@ -394,7 +394,7 @@ pubDate: 2026-05-01
 ```
 
 The full schema (including `tags`, `categories`, `heroImage`,
-`dynamicPostCardHeight`, `math`, `comments`, `pinned`, `toc`,
+`dynamicPostCardHeight`, `math`, `mermaid`, `comments`, `pinned`, `toc`,
 `translationKey`, etc.) is documented
 in the demo post **/posts/frontmatter-reference** and codified in
 `src/content.config.ts`.
@@ -566,8 +566,8 @@ working examples of the Expressive Code features, and
 
 ## LaTeX math (KaTeX)
 
-Math is parsed by `remark-math` and rendered to plain HTML + CSS at
-build time by `rehype-katex`. **No JavaScript ships to the client**
+Math is parsed and rendered to plain HTML + CSS at
+build time by `@nullpinter/satteri-katex`. **No JavaScript ships to the client**
 for math.
 
 ### Performance: opt-in stylesheet
@@ -596,6 +596,30 @@ font assets) is emitted **only on pages that include it**.
 
 See the demo **/posts/latex-math-with-katex** for a full showcase
 (matrices, integrals, Maxwell's equations, etc.).
+
+---
+
+## Mermaid diagrams
+
+You can natively render Mermaid diagrams by adding `mermaid: true` to a post's frontmatter.
+
+To keep the site as fast and lightweight as possible, the Mermaid JavaScript library is **bundled locally** (no CDNs) and is **strictly excluded** from pages that don't have the `mermaid: true` flag.
+
+### Authoring
+
+Wrap your diagram code in a fenced block with the `mermaid` language identifier:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Still
+    Still --> [*]
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]
+```
+
+The diagram will automatically redraw itself in matching colors when the visitor toggles the site's dark/light mode. See the demo **/posts/mermaid-diagrams** for a full showcase.
 
 ---
 

@@ -1,5 +1,5 @@
 // @ts-check
-import { unified } from '@astrojs/markdown-remark';
+import { satteri, satteriHeadingIdsPlugin } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -10,15 +10,13 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeExternalLinks from 'rehype-external-links';
-import rehypeKatex from 'rehype-katex';
-import rehypeSlug from 'rehype-slug';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import { remarkAlert } from './src/plugins/remark-alert.ts';
-import { remarkAsHtml } from './src/plugins/remark-ashtml.ts';
-import { rehypeBaseLinks } from './src/plugins/rehype-base-links.ts';
+import satteriExternalLinks from 'satteri-external-links';
+import { katex } from '@nullpinter/satteri-katex';
+import { satteriAlert } from './src/plugins/satteri-alert';
+import { satteriAsHTML } from './src/plugins/satteri-ashtml';
+import { satteriBaseLinks } from './src/plugins/satteri-base-links';
+import { satteriAutolinkHeadings } from './src/plugins/satteri-autolink-headings.ts';
+import { satteriMermaid } from './src/plugins/satteri-mermaid.ts';
 
 import { SITE } from './src/config';
 
@@ -180,32 +178,18 @@ export default defineConfig({
     // loaded ONLY on pages that opt in via `math: true` in frontmatter,
     // through `<MathStyles />` in the post / page layouts. This keeps the
     // CSS (~25kB gzipped) off pages that don't need it.
-    processor: unified({
-      remarkPlugins: [remarkAlert, remarkAsHtml, remarkGfm, remarkMath],
-      rehypePlugins: [
-        rehypeKatex,
-        rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: 'wrap',
-            properties: {
-              className: ['heading-anchor'],
-              ariaHidden: 'true',
-              tabIndex: -1,
-            },
-          },
-        ],
-        [
-          rehypeExternalLinks,
-          {
-            target: '_blank',
-            rel: ['nofollow', 'noopener', 'noreferrer'],
-          },
-        ],
-        [rehypeBaseLinks, { base: BASE }],
+    processor: satteri({
+      features: { math: true },
+      mdastPlugins: [satteriAlert(), satteriAsHTML(), katex(), satteriMermaid()],
+      hastPlugins: [
+        satteriHeadingIdsPlugin(),
+        satteriAutolinkHeadings(),
+        satteriExternalLinks({
+          target: '_blank',
+          rel: ['nofollow', 'noopener', 'noreferrer']
+        }),
+        satteriBaseLinks({ base: BASE }),
       ],
-      gfm: true,
     }),
   },
 

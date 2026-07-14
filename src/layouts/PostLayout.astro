@@ -92,6 +92,11 @@ let MathStylesComponent;
 if (post.data.math) {
   MathStylesComponent = (await import('../components/MathStyles.astro')).default;
 }
+
+let MermaidComponent;
+if (post.data.mermaid) {
+  MermaidComponent = (await import('../components/islands/Mermaid.astro')).default;
+}
 ---
 
 <BaseLayout
@@ -106,6 +111,7 @@ if (post.data.math) {
   availableLocales={availableLocales}
 >
   {post.data.math && MathStylesComponent && <MathStylesComponent />}
+  {post.data.mermaid && MermaidComponent && <MermaidComponent />}
   {
     post.data.toc && headings.length > 0 && (
       <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />

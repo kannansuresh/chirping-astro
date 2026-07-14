@@ -59,6 +59,13 @@ const baseFrontmatter = ({ image }: SchemaContext) =>
      * off posts/pages that don't use math.
      */
     math: z.boolean().default(false),
+    /**
+     * Opt in to Mermaid diagram rendering. When `true`, the layout
+     * loads the Mermaid client library and initializes diagrams.
+     * Defaults to `false` to keep the heavy Mermaid library off posts/pages
+     * that don't use it.
+     */
+    mermaid: z.boolean().default(false),
     /** Optional locale override; otherwise inferred from path. */
     lang: localeEnum.optional(),
     /**

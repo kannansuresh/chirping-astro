@@ -32,7 +32,7 @@ function saluer(nom: string) {
 
 ## HTML Brut (ashtml)
 
-Si vous souhaitez écrire du HTML brut dans un bloc de code markdown et le faire rendre directement au lieu de le coloriser comme du code, utilisez l'identifiant de langage `ashtml`. Un plugin remark personnalisé convertit ces blocs en nœuds HTML bruts lors de la compilation.
+Si vous souhaitez écrire du HTML brut dans un bloc de code markdown et le faire rendre directement au lieu de le coloriser comme du code, utilisez l'identifiant de langage `ashtml`. Un plugin Sätteri personnalisé convertit ces blocs en nœuds HTML bruts lors de la compilation.
 
 ````markdown
 ```ashtml
@@ -53,8 +53,7 @@ Rendu final :
 ## Blocs d'alerte (daisyUI)
 
 Si vous voulez des composants d'alerte daisyUI directement depuis
-Markdown/MDX, utilisez l'identifiant de langage `alert`. Un plugin
-remark dédié convertit chaque bloc en markup d'alerte compatible daisyUI.
+Markdown/MDX, utilisez l'identifiant de langage `alert`. Un plugin Sätteri dédié convertit chaque bloc en markup d'alerte compatible daisyUI.
 
 ````markdown
 ```alert

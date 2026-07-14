@@ -28,7 +28,7 @@ The theme's body font is **Source Sans 3**, the code font is
 You can write **bold**, _italic_, ~~strikethrough~~, `inline code`, and
 nested **_bold italic_**. Long URLs become clickable: visit
 [astro.build](https://astro.build). External links open in a new tab
-with `rel="nofollow noopener"` thanks to `rehype-external-links`.
+with `rel="nofollow noopener"` thanks to `satteri-external-links`.
 
 Use the `<kbd>` tag for keyboard shortcuts: press <kbd>Cmd</kbd> + <kbd>K</kbd>
 or <kbd>/</kbd> to open the search modal.
@@ -42,8 +42,8 @@ desktop.
 
 ## Headings
 
-Headings are auto-slugged by `rehype-slug` and given hover anchors by
-`rehype-autolink-headings` — hover to the left of any heading on this
+Headings are auto-slugged natively by Sätteri and given hover anchors by
+our custom `satteri-autolink-headings` plugin — hover to the left of any heading on this
 page to reveal the `#` link.
 
 ### Third-level heading
@@ -75,7 +75,7 @@ Ordered list:
 4. Sleep on it.
 5. Edit ruthlessly.
 
-GitHub-flavoured task list (thanks to `remark-gfm`):
+GitHub-flavoured task list (natively supported by Sätteri):
 
 - [x] Wire up Tailwind v4
 - [x] Animated theme switcher
@@ -103,7 +103,7 @@ GitHub-flavoured task list (thanks to `remark-gfm`):
 | JS expressions |          |  ✓  | `{new Date().toDateString()}` |
 | Footnotes      |    ✓     |  ✓  | GFM-style[^1]                 |
 
-[^1]: Footnote rendering is provided by `remark-gfm`.
+[^1]: Footnote rendering is provided natively by Sätteri.
 
 ## Inline code, code spans and keyboard shortcuts
 
@@ -190,7 +190,7 @@ Term
 
 Another term
 : With a longer definition spread across multiple lines, useful for
-glossary-style content. Definition lists come from `remark-gfm` /
+glossary-style content. Definition lists come natively from Sätteri /
 plain Markdown extensions and are styled by the prose stack.
 
 ## Math (inline)

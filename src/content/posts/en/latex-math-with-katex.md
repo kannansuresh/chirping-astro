@@ -9,10 +9,8 @@ math: true
 toc: true
 ---
 
-This site supports **LaTeX-style math** out of the box. Equations are
-parsed by [`remark-math`](https://github.com/remarkjs/remark-math) and
-rendered to plain HTML + CSS at build time by
-[`rehype-katex`](https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex).
+The math is compiled statically at build time using `@nullpinter/satteri-katex` and
+rendered to plain HTML + CSS.
 
 > **Zero client JavaScript.** Every equation below is server-rendered
 > static markup. KaTeX runs only on the build server.

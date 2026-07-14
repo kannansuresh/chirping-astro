@@ -32,7 +32,7 @@ function greet(name: string) {
 
 ## Raw HTML (ashtml)
 
-If you want to write raw HTML inside a markdown code block and have it rendered directly instead of highlighted as code, use the `ashtml` language identifier. A custom remark plugin converts these blocks into raw HTML nodes at build time.
+If you want to write raw HTML inside a markdown code block and have it rendered directly instead of highlighted as code, use the `ashtml` language identifier. A custom Sätteri plugin converts these blocks into raw HTML nodes at build time.
 
 ````markdown
 ```ashtml
@@ -53,7 +53,7 @@ Renders as:
 ## Alert blocks (daisyUI)
 
 If you want daisyUI alert components directly from Markdown/MDX, use the
-`alert` language identifier. A dedicated remark plugin converts each block
+`alert` language identifier. A dedicated Sätteri plugin converts each block
 into daisyUI-compatible alert markup.
 
 ````markdown

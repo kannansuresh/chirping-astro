@@ -215,29 +215,18 @@ function buildAlertHtml(opts: AlertOptions): string {
 // Remark plugin
 // ---------------------------------------------------------------------------
 
-type MdNode = {
-  type: string;
-  lang?: string | null;
-  value?: string | null;
-  children?: MdNode[];
-};
+import { defineMdastPlugin } from 'satteri';
 
-export function remarkAlert() {
-  return (tree: MdNode) => {
-    function visit(node: MdNode) {
-      if (!Array.isArray(node.children)) return;
-
-      for (const child of node.children) {
-        if (child.type === 'code' && child.lang === 'alert') {
-          child.type = 'html';
-          child.value = buildAlertHtml(parseAlertBlock(child.value ?? ''));
-          // No need to recurse into this node — it is now raw HTML.
-        } else {
-          visit(child);
-        }
+export function satteriAlert() {
+  return defineMdastPlugin({
+    name: 'remark-alert',
+    code(node, ctx) {
+      if (node.lang === 'alert') {
+        ctx.replaceNode(node, {
+          type: 'html',
+          value: buildAlertHtml(parseAlertBlock(node.value ?? '')),
+        });
       }
-    }
-
-    visit(tree);
-  };
+    },
+  });
 }

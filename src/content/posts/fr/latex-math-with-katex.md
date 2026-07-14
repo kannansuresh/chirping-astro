@@ -10,10 +10,7 @@ toc: true
 ---
 
 Ce site supporte les **mathématiques de style LaTeX** prêtes à
-l'emploi. Les équations sont parsées par
-[`remark-math`](https://github.com/remarkjs/remark-math) et rendues
-en HTML + CSS pur à la compilation par
-[`rehype-katex`](https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex).
+l'emploi. Les équations sont compilées statiquement à l'aide de `@nullpinter/satteri-katex` et rendues en HTML + CSS pur lors de la compilation.
 
 > **Zéro JavaScript côté client.** Toutes les équations ci-dessous sont
 > du markup statique rendu côté serveur. KaTeX ne tourne que sur le

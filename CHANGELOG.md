@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-07-14
+
+### Added
+
+- **Native Mermaid Diagram Support**: Added built-in support for rendering Mermaid diagrams via the `mermaid: true` frontmatter flag.
+  - Implemented a custom `satteri-mermaid` mdast plugin to safely intercept and parse Mermaid fenced code blocks.
+  - Dynamically injected client-side island (`Mermaid.astro`) handles rendering, responsive resizing, and reacts instantly to site theme changes (Dark/Light mode).
+  - Ensured zero-JS footprint for pages without the `mermaid: true` flag by bundling the library natively via Vite.
+  - Implemented view transition rendering locks and unique SVG ID assignment to prevent client-side double-render collisions.
+
+### Changed
+
+- **Sätteri Pipeline Modernization**: Completed the migration of all internal markdown plugins to native Sätteri naming conventions.
+  - Renamed `remark-alert` to `satteri-alert`.
+  - Renamed `remark-ashtml` to `satteri-ashtml`.
+  - Renamed `rehype-base-links` to `satteri-base-links`.
+  - Updated `astro.config.mjs` to reflect the modernized Sätteri Markdown pipeline imports.
+- Updated `AGENTS.md` and `README.md` to document the new `mermaid: true` frontmatter configuration and authoring steps.
+
+---
+
+## [1.1.1] - 2026-07-13
+
+### Added
+
+- Added `minimumReleaseAge` to `bunfig.toml` to prevent supply chain attacks.
+- Added `rehype-base-links` (now `satteri-base-links`) plugin to prefix absolute URLs in Markdown with `BASE_PATH`.
+
+### Fixed
+
+- Auto-detect `SITE_URL` and `BASE_PATH` in GitHub Actions and updated documentation.
+- Skip generating Satori OG images for posts that already specify a custom `heroImage`, optimizing build times.
+
+---
+
 ## [1.1.0] - 2026-07-02
 
 ### Changed
@@ -32,5 +67,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial stable release of **Chirping Astro** theme.
 - Multilingual i18n support for post and static page templates.
 - Tailwind CSS v4 and daisyUI v5 styling integrations.
-- Built-in remark/rehype plugins for alerts (`remark-alert`), raw HTML rendering (`remark-ashtml`), and math equations (KaTeX).
+- Built-in Sätteri plugins for alerts (`remark-alert`), raw HTML rendering (`remark-ashtml`), and math equations (KaTeX).
 - Client-side interactive islands for Theme Toggle, Language Switcher, Table of Contents, Search, and Giscus comments.
