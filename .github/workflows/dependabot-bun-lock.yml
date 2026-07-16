@@ -1,0 +1,39 @@
+name: Dependabot Bun Lockfile
+
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+
+permissions:
+  contents: write
+
+jobs:
+  update-lockfile:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [[ -n $(git status --porcelain bun.lock bun.lockb 2>/dev/null) ]]; then
+            git add bun.lock bun.lockb || true
+            git commit -m "chore(dependabot): update bun.lock"
+            git push
+          else
+            echo "No changes to bun.lock"
+          fi
