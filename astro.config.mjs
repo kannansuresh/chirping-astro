@@ -129,6 +129,7 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  prefetch: true,
 
   // Image optimization (https://docs.astro.build/en/guides/images/).
   //
