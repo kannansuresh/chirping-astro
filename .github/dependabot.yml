@@ -5,6 +5,8 @@ updates:
     schedule:
       interval: 'weekly'
     open-pull-requests-limit: 10
+    # Wait 2 days before opening PRs to avoid Bun's 24-hour 'minimum-release-age' block
+    cooldown: 2
     labels:
       - dependencies
     ignore:
